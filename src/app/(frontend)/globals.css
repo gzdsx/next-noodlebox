@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #ffffff;
+  --color-foreground: #1a1a1a;
+  --color-primary: #1677ff;
+  --color-border: #f0f0f0;
+  --color-muted: #8c8c8c;
+  --color-surface: #fafafa;
+}
+
+/* Override backend dark theme with frontend light theme */
+body {
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
