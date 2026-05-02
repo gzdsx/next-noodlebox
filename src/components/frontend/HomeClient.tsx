@@ -2,8 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import {Button} from 'antd';
-import {ArrowRight, ShoppingCart} from 'lucide-react';
+import {ArrowRight} from 'lucide-react';
 import {useTranslations} from '@/contexts/LocaleContext';
 
 interface HomeClientProps {
@@ -17,11 +16,10 @@ export default function HomeClient({section}: HomeClientProps) {
         return (
             <>
                 <h2 className="text-2xl font-bold text-gray-900">{t('home.hotProducts')}</h2>
-                <Link href="/products?sort=sales">
-                    <Button type="link" icon={<ArrowRight size={16}/>}
-                            className="!flex !items-center !gap-1">
-                        {t('home.viewAll')}
-                    </Button>
+                <Link href="/products?sort=sales"
+                      className="text-primary hover:underline flex items-center gap-1 text-sm">
+                    {t('home.viewAll')}
+                    <ArrowRight size={16}/>
                 </Link>
             </>
         );
@@ -33,10 +31,10 @@ export default function HomeClient({section}: HomeClientProps) {
                 <h2 className="text-3xl font-bold mb-3">{t('home.promotions')}</h2>
                 <p className="text-orange-100 mb-6">{t('home.heroSubtitle')}</p>
                 <Link href="/products">
-                    <Button size="large"
-                            className="!bg-white !text-orange-600 !font-semibold !border-0 hover:!bg-gray-100 !h-11 !px-8">
+                    <button
+                        className="bg-white text-orange-600 font-semibold border-0 hover:bg-gray-100 h-11 px-8 rounded-md">
                         {t('home.shopNow')}
-                    </Button>
+                    </button>
                 </Link>
             </>
         );
@@ -46,11 +44,10 @@ export default function HomeClient({section}: HomeClientProps) {
         return (
             <>
                 <h2 className="text-2xl font-bold text-gray-900">{t('home.newArrivals')}</h2>
-                <Link href="/products?sort=created_at">
-                    <Button type="link" icon={<ArrowRight size={16}/>}
-                            className="!flex !items-center !gap-1">
-                        {t('home.viewAll')}
-                    </Button>
+                <Link href="/products?sort=created_at"
+                      className="text-primary hover:underline flex items-center gap-1 text-sm">
+                    {t('home.viewAll')}
+                    <ArrowRight size={16}/>
                 </Link>
             </>
         );

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import {Tag} from 'antd';
+import {Badge} from '@/components/ui/badge';
 import {useTranslations} from '@/contexts/LocaleContext';
 
 interface ProductCardProps {
@@ -52,15 +52,15 @@ export default function ProductCard({product}: ProductCardProps) {
                 )}
                 {/* Badge */}
                 {product.icon && (
-                    <Tag color="red" className="!absolute !top-2 !left-2 !text-xs !m-0">
+                    <Badge variant="destructive" className="absolute top-2 left-2 text-xs m-0">
                         {product.icon}
-                    </Tag>
+                    </Badge>
                 )}
                 {/* Discount badge */}
                 {hasDiscount && (
-                    <Tag color="orange" className="!absolute !top-2 !right-2 !text-xs !m-0">
+                    <Badge className="absolute top-2 right-2 text-xs m-0 bg-orange-500 hover:bg-orange-500">
                         -{discountPercent}%
-                    </Tag>
+                    </Badge>
                 )}
             </div>
 

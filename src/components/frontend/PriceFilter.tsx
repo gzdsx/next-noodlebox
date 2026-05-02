@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
-import {Slider, InputNumber, Button} from 'antd';
+import {Slider} from '@/components/ui/slider';
+import {Input} from '@/components/ui/input';
+import {Button} from '@/components/ui/button';
 import {useTranslations} from '@/contexts/LocaleContext';
 
 interface PriceFilterProps {
@@ -27,37 +29,40 @@ export default function PriceFilter({min = 0, max = 10000, onChange}: PriceFilte
         <div className="space-y-4">
             <h4 className="text-sm font-semibold text-gray-700">{t('filter.priceRange')}</h4>
             <Slider
-                range
                 min={0}
                 max={10000}
                 step={10}
                 value={range}
-                onChange={(val) => setRange(val as [number, number])}
+                onValueChange={(val) => setRange(val as [number, number])}
             />
             <div className="flex items-center gap-2">
-                <InputNumber
-                    min={0}
-                    max={10000}
-                    value={range[0]}
-                    onChange={(val) => setRange([val ?? 0, range[1]])}
-                    className="!w-24"
-                    size="small"
-                    prefix="¥"
-                />
+                <div className="relative w-24">
+                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-sm">¥</span>
+                    <Input
+                        type="number"
+                        min={0}
+                        max={10000}
+                        value={range[0]}
+                        onChange={(e) => setRange([Number(e.target.value) || 0, range[1]])}
+                        className="h-8 pl-6 text-sm"
+                    />
+                </div>
                 <span className="text-gray-400">-</span>
-                <InputNumber
-                    min={0}
-                    max={10000}
-                    value={range[1]}
-                    onChange={(val) => setRange([range[0], val ?? 10000])}
-                    className="!w-24"
-                    size="small"
-                    prefix="¥"
-                />
+                <div className="relative w-24">
+                    <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-sm">¥</span>
+                    <Input
+                        type="number"
+                        min={0}
+                        max={10000}
+                        value={range[1]}
+                        onChange={(e) => setRange([range[0], Number(e.target.value) || 10000])}
+                        className="h-8 pl-6 text-sm"
+                    />
+                </div>
             </div>
             <div className="flex gap-2">
-                <Button size="small" type="primary" onClick={handleApply}>{t('filter.apply')}</Button>
-                <Button size="small" onClick={handleReset}>{t('filter.reset')}</Button>
+                <Button size="sm" onClick={handleApply}>{t('filter.apply')}</Button>
+                <Button size="sm" variant="outline" onClick={handleReset}>{t('filter.reset')}</Button>
             </div>
         </div>
     );

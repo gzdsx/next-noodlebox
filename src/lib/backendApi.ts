@@ -72,7 +72,7 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
         const response = await fetch(url, {
             ...options,
             headers: headers,
-            //credentials: 'include',
+            credentials: 'include',
         });
 
         // 4. 统一错误拦截

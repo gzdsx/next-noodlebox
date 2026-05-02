@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Button} from 'antd';
+import {Button} from '@/components/ui/button';
 import {useTranslations} from '@/contexts/LocaleContext';
 
 interface SkuItem {
@@ -78,8 +78,8 @@ export default function VariantSelector({variants, skus, onSkuChange}: VariantSe
                             return (
                                 <Button
                                     key={`option-${index}-${idx}`}
-                                    type={isActive ? 'primary' : 'default'}
-                                    className={`px-2! ${isActive ? '' : 'hover:border-gray-400! hover:text-gray-700!'}`}
+                                    variant={isActive ? 'default' : 'outline'}
+                                    className={`px-2 ${isActive ? '' : 'hover:border-gray-400 hover:text-gray-700'}`}
                                     onClick={() => handleSelect(variant, option)}
                                 >
                                     {option.title}

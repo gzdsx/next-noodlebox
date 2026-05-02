@@ -2,38 +2,53 @@
 
 import React from 'react';
 import Link from 'next/link';
-import {Button} from 'antd';
-import {ShoppingCart} from 'lucide-react';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {ShoppingBag, Gift} from 'lucide-react';
 
 export default function HeroBanner() {
-    const {t} = useTranslations('ecommerce');
-
     return (
-        <section className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-            <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
-                <div className="max-w-2xl">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                        {t('home.heroTitle')}
-                    </h1>
-                    <p className="text-lg md:text-xl text-blue-100 mb-8">
-                        {t('home.heroSubtitle')}
-                    </p>
-                    <Link href="/products">
-                        <Button type="primary" size="large"
-                                icon={<ShoppingCart size={18}/>}
-                                className="!h-12 !px-8 !text-base !font-semibold !bg-white !text-blue-700 hover:!bg-gray-100 !border-0">
-                            {t('home.shopNow')}
-                        </Button>
+        <section className="relative w-full h-screen min-h-150 overflow-hidden">
+            {/* Video Background */}
+            <video
+                src="https://www.noodlebox.ie/storage/video/2024/04/kwiLVFCL6im9jE3SOoC7df0EVX3cZWy91tru8y96.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+            />
+
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/40"/>
+
+            {/* Content */}
+            <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
+                <img
+                    src="https://www.noodlebox.ie/storage/image/2024/04/EorwaqdQLuw4FZ7vxOL3rcLne0pXvI8NMNenWDYq.png"
+                    alt="Noodle Box"
+                    className="w-48 md:w-64 mb-8"
+                />
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                    Order Online!
+                </h3>
+                <h3 className="text-2xl md:text-3xl font-bold text-orange-400 mb-10">
+                    Choose The Shop Closest To You
+                </h3>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <Link
+                        href="/shop"
+                        className="inline-flex items-center gap-2 bg-crimson hover:bg-red-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors text-lg"
+                    >
+                        <ShoppingBag size={22}/>
+                        <span>DROGHEDA SHOP</span>
+                    </Link>
+                    <Link
+                        href="/points-mall"
+                        className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-lg transition-colors text-lg"
+                    >
+                        <Gift size={22}/>
+                        <span>POINTS MALL</span>
                     </Link>
                 </div>
-            </div>
-            {/* Decorative shape */}
-            <div className="absolute bottom-0 left-0 right-0">
-                <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 60L1440 60L1440 0C1440 0 1080 60 720 60C360 60 0 0 0 0L0 60Z"
-                          fill="white"/>
-                </svg>
             </div>
         </section>
     );

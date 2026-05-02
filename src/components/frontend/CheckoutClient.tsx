@@ -3,10 +3,13 @@
 import React, {useState} from 'react';
 import {useSession} from 'next-auth/react';
 import {useRouter} from 'next/navigation';
-import {App, Result, Button, Spin} from 'antd';
+import {Button} from '@/components/ui/button';
+import {Spinner} from '@/components/ui/spinner';
+import {ResultPage} from '@/components/ui/result-page';
 import {useCart} from '@/contexts/CartContext';
 import {useTranslations} from '@/contexts/LocaleContext';
 import {apiPost} from '@/lib/api';
+import {toast} from 'sonner';
 import CheckoutForm from '@/components/frontend/CheckoutForm';
 import CartSummary from '@/components/frontend/CartSummary';
 import Link from 'next/link';
@@ -16,12 +19,11 @@ export default function CheckoutClient() {
     const router = useRouter();
     const {items, totalPrice, clearCart} = useCart();
     const {t} = useTranslations('ecommerce');
-    const {message} = App.useApp();
     const [submitting, setSubmitting] = useState(false);
     const [orderPlaced, setOrderPlaced] = useState(false);
 
     if (status === 'loading') {
-        return <div className="flex justify-center py-24"><Spin size="large"/></div>;
+        return <div className="flex justify-center py-24"><Spinner size="lg"/></div>;
     }
 
     if (!session) {
@@ -57,14 +59,13 @@ export default function CheckoutClient() {
                 total: totalPrice,
                 payment_method: values.payment_method,
             };
-            //console.log(orderData);return;
             await apiPost('/orders', orderData);
             clearCart();
             setOrderPlaced(true);
         } catch (e: unknown) {
             console.error(e);
             if (e instanceof Error) {
-                message.error(e.message || t('createError'));
+                toast.error(e.message || t('createError'));
             }
         } finally {
             setSubmitting(false);
@@ -74,19 +75,18 @@ export default function CheckoutClient() {
     if (orderPlaced) {
         return (
             <div className="max-w-7xl mx-auto px-4 py-16">
-                <Result
+                <ResultPage
                     status="success"
                     title={t('checkout.orderPlaced')}
-                    subTitle={t('checkout.orderPlacedSubtitle')}
-                    extra={[
-                        <Link key="orders" href="/user/orders">
-                            <Button type="primary">{t('header.myOrders')}</Button>
-                        </Link>,
-                        <Link key="home" href="/">
-                            <Button>{t('checkout.backToHome')}</Button>
-                        </Link>,
-                    ]}
-                />
+                    description={t('checkout.orderPlacedSubtitle')}
+                >
+                    <Link href="/user/orders">
+                        <Button>{t('header.myOrders')}</Button>
+                    </Link>
+                    <Link href="/">
+                        <Button variant="outline">{t('checkout.backToHome')}</Button>
+                    </Link>
+                </ResultPage>
             </div>
         );
     }

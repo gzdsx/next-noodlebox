@@ -1,9 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Form, Input, Button, Card, message, Avatar } from 'antd';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { User } from 'lucide-react';
 import { useTranslations } from '@/contexts/LocaleContext';
+import { toast } from 'sonner';
 
 interface ProfileClientProps {
     session: any;
@@ -12,58 +17,110 @@ interface ProfileClientProps {
 export default function ProfileClient({ session }: ProfileClientProps) {
     const {t} = useTranslations('ecommerce');
     const [loading, setLoading] = useState(false);
+    const [name, setName] = useState(session.user?.name || '');
+    const [email] = useState(session.user?.email || '');
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-    const handleProfileSubmit = async (values: any) => {
+    const handleProfileSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         setLoading(true);
         try {
-            message.success(t('user.updateSuccess'));
+            toast.success(t('user.updateSuccess'));
         } catch {
-            message.error(t('user.updateFailed'));
+            toast.error(t('user.updateFailed'));
         } finally {
             setLoading(false);
         }
+    };
+
+    const handlePasswordSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        // Password change logic
     };
 
     return (
         <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('user.profileSettings')}</h1>
             <Card className="border-0 shadow-sm">
-                <div className="flex items-center gap-4 mb-8">
-                    <Avatar size={64} icon={<User size={32}/>} src={session.user?.image}/>
-                    <div>
-                        <h3 className="text-lg font-semibold">{session.user?.name || t('user.defaultName')}</h3>
-                        <p className="text-sm text-gray-500">{session.user?.email}</p>
+                <CardContent className="pt-6">
+                    <div className="flex items-center gap-4 mb-8">
+                        <Avatar className="h-16 w-16">
+                            {session.user?.image ? (
+                                <AvatarImage src={session.user.image} alt="avatar"/>
+                            ) : null}
+                            <AvatarFallback>
+                                <User size={32}/>
+                            </AvatarFallback>
+                        </Avatar>
+                        <div>
+                            <h3 className="text-lg font-semibold">{session.user?.name || t('user.defaultName')}</h3>
+                            <p className="text-sm text-gray-500">{session.user?.email}</p>
+                        </div>
                     </div>
-                </div>
-                <Form layout="vertical" onFinish={handleProfileSubmit}
-                      initialValues={{ name: session.user?.name || '', email: session.user?.email || '' }}>
-                    <Form.Item name="name" label={t('user.nickname')}>
-                        <Input size="large" placeholder={t('user.nickname')}/>
-                    </Form.Item>
-                    <Form.Item name="email" label="Email">
-                        <Input size="large" placeholder="Email" disabled/>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" loading={loading} size="large">{t('user.updateProfile')}</Button>
-                    </Form.Item>
-                </Form>
-                <div className="border-t border-gray-100 pt-6 mt-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.changePassword')}</h3>
-                    <Form layout="vertical">
-                        <Form.Item name="current_password" label={t('user.currentPassword')}>
-                            <Input.Password size="large"/>
-                        </Form.Item>
-                        <Form.Item name="new_password" label={t('user.newPassword')}>
-                            <Input.Password size="large"/>
-                        </Form.Item>
-                        <Form.Item name="confirm_new_password" label={t('user.confirmNewPassword')}>
-                            <Input.Password size="large"/>
-                        </Form.Item>
-                        <Form.Item>
-                            <Button type="primary" size="large">{t('user.changePassword')}</Button>
-                        </Form.Item>
-                    </Form>
-                </div>
+                    <form onSubmit={handleProfileSubmit} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="name">{t('user.nickname')}</Label>
+                            <Input
+                                id="name"
+                                className="h-11"
+                                placeholder={t('user.nickname')}
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                                id="email"
+                                className="h-11"
+                                placeholder="Email"
+                                value={email}
+                                disabled
+                            />
+                        </div>
+                        <Button type="submit" disabled={loading} size="lg">
+                            {loading ? '...' : t('user.updateProfile')}
+                        </Button>
+                    </form>
+                    <div className="border-t border-gray-100 pt-6 mt-6">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.changePassword')}</h3>
+                        <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="current_password">{t('user.currentPassword')}</Label>
+                                <Input
+                                    id="current_password"
+                                    type="password"
+                                    className="h-11"
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="new_password">{t('user.newPassword')}</Label>
+                                <Input
+                                    id="new_password"
+                                    type="password"
+                                    className="h-11"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="confirm_new_password">{t('user.confirmNewPassword')}</Label>
+                                <Input
+                                    id="confirm_new_password"
+                                    type="password"
+                                    className="h-11"
+                                    value={confirmNewPassword}
+                                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                                />
+                            </div>
+                            <Button type="submit" size="lg">{t('user.changePassword')}</Button>
+                        </form>
+                    </div>
+                </CardContent>
             </Card>
         </div>
     );

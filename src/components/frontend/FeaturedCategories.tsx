@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import {Tag} from 'antd';
 import {useTranslations} from '@/contexts/LocaleContext';
 
 interface Category {
@@ -32,8 +31,7 @@ export default function FeaturedCategories({categories}: FeaturedCategoriesProps
                 {categories.map((cat, i) => (
                     <Link key={cat.id} href={`/products?category=${cat.id}`}
                           className={`flex flex-col items-center justify-center rounded-xl p-4 ${colors[i % colors.length]} hover:shadow-md transition-all hover:-translate-y-0.5`}>
-                        <Tag className="!text-xs !mb-1 !bg-transparent !border-0 !p-0"
-                             color={undefined}>{cat.name}</Tag>
+                        <span className="text-xs mb-1">{cat.name}</span>
                         <span className="text-sm font-medium">{cat.name}</span>
                     </Link>
                 ))}

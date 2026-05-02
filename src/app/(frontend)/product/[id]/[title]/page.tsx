@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import {Button} from 'antd';
+import {Button} from '@/components/ui/button';
 import {apiGet} from '@/lib/api';
 import { getTranslations } from '@/lib/i18n';
 import ProductDetailClient, {Product} from '@/components/frontend/ProductDetailClient';
@@ -23,7 +23,7 @@ export default async function ProductDetailPage({params}: { params: Promise<{ id
             <div className="max-w-7xl mx-auto px-4 py-16 text-center">
                 <p className="text-gray-500">{t('page.productNotFound')}</p>
                 <Link href="/products">
-                    <Button type="primary" className="mt-4">{t('page.backToProducts')}</Button>
+                    <Button className="mt-4">{t('page.backToProducts')}</Button>
                 </Link>
             </div>
         );

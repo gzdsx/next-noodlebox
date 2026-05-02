@@ -1,9 +1,15 @@
 import React, {Suspense} from 'react';
-import {Breadcrumb, Button, Drawer, Pagination, Spin} from 'antd';
+import {
+    Breadcrumb,
+    BreadcrumbList,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import {Spinner} from '@/components/ui/spinner';
 import {apiGet} from "@/lib/api";
 import Link from "next/link";
-import ProductListFilters from "@/components/frontend/ProductListFilters";
-import {Filter} from "lucide-react";
 import ProductGrid from "@/components/frontend/ProductGrid";
 import CustomPagination from "@/components/frontend/CustomPagination";
 
@@ -30,16 +36,22 @@ export default async function ProductsPage({searchParams}: any) {
     const {q = '', page = 1} = await searchParams;
     const {items: products, total} = await getProducts({q, limit: 20, offset: (page - 1) * 20});
     return (
-        <Suspense fallback={<div className="flex justify-center py-24"><Spin size="large"/></div>}>
+        <Suspense fallback={<div className="flex justify-center py-24"><Spinner size="lg"/></div>}>
             <div className="max-w-7xl mx-auto px-4 py-6">
                 {/* Breadcrumb */}
-                <Breadcrumb
-                    items={[
-                        {title: <Link href="/">首页</Link>},
-                        {title: '全部商品'},
-                    ]}
-                    className="mb-6"
-                />
+                <Breadcrumb className="mb-6">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <Link href="/public">首页</Link>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator/>
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>全部商品</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
 
                 {/* Search results indicator */}
                 {q && (
@@ -58,7 +70,6 @@ export default async function ProductsPage({searchParams}: any) {
 
                     {/* Main Content */}
                     <div className="flex-1 min-w-0">
-
 
                         {/* Product Grid */}
                         <ProductGrid products={products} columns={4}/>

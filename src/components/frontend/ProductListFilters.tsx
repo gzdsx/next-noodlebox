@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import {Select} from 'antd';
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {useTranslations} from '@/contexts/LocaleContext';
 
 interface ProductListFiltersProps {
@@ -25,14 +25,19 @@ export default function ProductListFilters({sort, onSortChange}: ProductListFilt
             <span className="text-sm text-gray-500">{t('filter.sort')}:</span>
             <Select
                 value={sort || 'default'}
-                onChange={onSortChange}
-                size="middle"
-                className="!w-40"
-                options={sortOptions.map(opt => ({
-                    value: opt.value,
-                    label: t(`filter.${opt.key}`),
-                }))}
-            />
+                onValueChange={onSortChange}
+            >
+                <SelectTrigger className="w-40">
+                    <SelectValue/>
+                </SelectTrigger>
+                <SelectContent>
+                    {sortOptions.map(opt => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                            {t(`filter.${opt.key}`)}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
         </div>
     );
 }

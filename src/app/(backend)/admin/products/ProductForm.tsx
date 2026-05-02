@@ -201,7 +201,7 @@ export const ProductForm = ({
                         label={t('category')}
                         name="categories"
                     >
-                        <CategoryCheckboxGroup taxonomy="product_category"/>
+                        <CategoryCheckboxGroup taxonomy="product"/>
                     </Form.Item>
 
                     <Form.Item

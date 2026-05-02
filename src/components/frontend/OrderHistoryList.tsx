@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Tag, Empty, Spin } from 'antd';
+import { Badge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Spinner } from '@/components/ui/spinner';
 import { apiGet } from '@/lib/api';
 import { useTranslations } from '@/contexts/LocaleContext';
 
@@ -32,6 +34,16 @@ const statusMap: Record<string, { color: string; key: string }> = {
     refunded: { color: 'purple', key: 'refunded' },
 };
 
+const statusBadgeClass: Record<string, string> = {
+    orange: 'bg-orange-100 text-orange-700 hover:bg-orange-100',
+    blue: 'bg-blue-100 text-blue-700 hover:bg-blue-100',
+    cyan: 'bg-cyan-100 text-cyan-700 hover:bg-cyan-100',
+    green: 'bg-green-100 text-green-700 hover:bg-green-100',
+    red: 'bg-red-100 text-red-700 hover:bg-red-100',
+    purple: 'bg-purple-100 text-purple-700 hover:bg-purple-100',
+    default: '',
+};
+
 export default function OrderHistoryList() {
     const {t} = useTranslations('ecommerce');
     const [orders, setOrders] = useState<Order[]>([]);
@@ -49,13 +61,13 @@ export default function OrderHistoryList() {
     if (loading) {
         return (
             <div className="flex justify-center py-12">
-                <Spin size="large"/>
+                <Spinner size="lg"/>
             </div>
         );
     }
 
     if (orders.length === 0) {
-        return <Empty description={t('order.noOrders')}/>;
+        return <EmptyState description={t('order.noOrders')}/>;
     }
 
     return (
@@ -71,7 +83,9 @@ export default function OrderHistoryList() {
                                 <span>{t('order.orderNo')}: {order.order_no}</span>
                                 <span>{new Date(order.created_at).toLocaleDateString()}</span>
                             </div>
-                            <Tag color={statusInfo.color}>{t(`order.${statusInfo.key}`)}</Tag>
+                            <Badge variant="secondary" className={statusBadgeClass[statusInfo.color]}>
+                                {t(`order.${statusInfo.key}`)}
+                            </Badge>
                         </div>
 
                         {/* Order Items */}

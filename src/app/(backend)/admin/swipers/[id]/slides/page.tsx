@@ -120,7 +120,7 @@ function SortableSlideCard({
                 )}
             </div>
 
-            <div style={{display: 'flex', gap: 8, flexShrink: 0}}>
+            <div style={{display: 'flex', gap: 0, flexShrink: 0}}>
                 <Button type="link" size="small" icon={<EditOutlined/>} onClick={() => onEdit(slide)}>
                     {tc('edit')}
                 </Button>

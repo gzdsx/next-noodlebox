@@ -1,11 +1,23 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 import {useSession, signOut} from 'next-auth/react';
-import {Badge, Dropdown, Drawer} from 'antd';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+} from '@/components/ui/sheet';
 import {
     ShoppingCart,
     User,
@@ -13,10 +25,26 @@ import {
     LogOut,
     Package,
     Settings,
+    ChevronDown,
+    Gift,
+    Store,
 } from 'lucide-react';
 import {useCart} from '@/contexts/CartContext';
 import {useTranslations, useLocale} from '@/contexts/LocaleContext';
 import SearchBar from './SearchBar';
+
+const foodCategories = [
+    {href: '/category/01-munchie-box', label: 'MUNCHIE BOX'},
+    {href: '/category/02-a-bit-on-the-side', label: 'A BIT ON THE SIDE'},
+    {href: '/category/03-soup', label: 'SOUP'},
+    {href: '/category/04-noodlebox-ricebox', label: 'NOODLE BOX & RICE BOX'},
+    {href: '/category/05-mix-match-bento-box', label: 'MIX & MATCH / BENTO BOX'},
+    {href: '/category/06-european', label: 'EUROPEAN MENU'},
+    {href: '/category/07-kids', label: 'KIDS MENU'},
+    {href: '/category/08-extra-portions', label: 'EXTRA PORTIONS'},
+    {href: '/category/09-dessert', label: 'DESSERT'},
+    {href: '/category/10-drink', label: 'DRINK'},
+];
 
 export default function HeaderClient() {
     const {data: session} = useSession();
@@ -25,138 +53,246 @@ export default function HeaderClient() {
     const {locale, setLocale} = useLocale();
     const router = useRouter();
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+    const [mobileSubmenu, setMobileSubmenu] = useState<string | null>(null);
 
-    const navLinks = [
-        {href: '/', label: t('header.home')},
-        {href: '/products', label: t('header.products')},
-    ];
-
-    const userMenuItems = session ? [
-        {
-            key: 'orders',
-            icon: <Package size={14}/>,
-            label: t('header.myOrders'),
-            onClick: () => router.push('/user/orders'),
-        },
-        {
-            key: 'profile',
-            icon: <Settings size={14}/>,
-            label: t('header.profile'),
-            onClick: () => router.push('/user/profile'),
-        },
-        {type: 'divider' as const},
-        {
-            key: 'logout',
-            icon: <LogOut size={14}/>,
-            label: t('header.logout'),
-            onClick: () => signOut({redirectTo: window.location.pathname}),
-        },
-    ] : [
-        {
-            key: 'login',
-            icon: <User size={14}/>,
-            label: t('header.login'),
-            onClick: () => router.push('/login?callbackUrl=' + encodeURIComponent(window.location.pathname)),
-        },
-        {
-            key: 'register',
-            icon: <User size={14}/>,
-            label: t('header.register'),
-            onClick: () => router.push('/register'),
-        },
-    ];
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     return (
         <>
             {/* Desktop Header */}
-            <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+            <header
+                className={`fixed w-full top-0 z-50 transition-colors duration-300 ${scrolled ? 'bg-crimson text-gray-200' : 'text-gray-100'}`}>
+                <div className="w-full mx-auto px-4 h-16 flex items-center justify-between gap-4">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2 shrink-0">
-                        <img src="/logo.png" alt="Logo" style={{height:50}}/>
+                        <img src="/logo.png" alt="Noodle Box" style={{height: 45}}/>
                     </Link>
 
                     {/* Nav Links - Desktop */}
-                    <nav className="hidden md:flex items-center gap-6">
-                        {navLinks.map(link => (
-                            <Link key={link.href} href={link.href}
-                                  className="text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium">
-                                {link.label}
-                            </Link>
-                        ))}
+                    <nav className="hidden lg:flex items-center gap-1">
+                        {/* OUR SHOP */}
+                        <div
+                            className="relative group"
+                            onMouseEnter={() => setOpenSubmenu('shop')}
+                            onMouseLeave={() => setOpenSubmenu(null)}
+                        >
+                            <button
+                                className={`flex items-center gap-1 px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? 'hover:bg-white/10 color-gray-800' : 'hover:bg-gray-100'}`}>
+                                <Store size={16}/>
+                                OUR SHOP
+                                <ChevronDown size={14} className={`transition-transform ${openSubmenu === 'shop' ? 'rotate-180' : ''}`}/>
+                            </button>
+                            {openSubmenu === 'shop' && (
+                                <div
+                                    className="absolute top-full left-0 bg-white rounded-lg shadow-xl border border-gray-100 py-2 min-w-50 z-50">
+                                    <Link href="/shop"
+                                          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50 text-sm">
+                                        <ShoppingCart size={14}/>
+                                        DROGHEDA SHOP
+                                    </Link>
+                                    <Link href="/points-mall"
+                                          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50 text-sm">
+                                        <Gift size={14}/>
+                                        POINTS MALL
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* NOODLEBOX FOOD MENU */}
+                        <div
+                            className="relative group"
+                            onMouseEnter={() => setOpenSubmenu('food')}
+                            onMouseLeave={() => setOpenSubmenu(null)}
+                        >
+                            <button
+                                className={`flex items-center gap-1 px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                                FOOD MENU
+                                <ChevronDown size={14} className={`transition-transform ${openSubmenu === 'food' ? 'rotate-180' : ''}`}/>
+                            </button>
+                            {openSubmenu === 'food' && (
+                                <div
+                                    className="absolute top-full left-0 bg-white rounded-lg shadow-xl border border-gray-100 py-2 min-w-65 max-h-100 overflow-y-auto z-50">
+                                    {foodCategories.map(cat => (
+                                        <Link key={cat.href} href={cat.href}
+                                              className="block px-4 py-2 text-gray-700 hover:bg-gray-50 text-sm">
+                                            {cat.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <Link href="/our-memory"
+                              className={`px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                            OUR MEMORY
+                        </Link>
+                        <Link href="/food-allergies"
+                              className={`px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                            FOOD ALLERGIES
+                        </Link>
+                        <Link href="/about-us"
+                              className={`px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                            ABOUT US
+                        </Link>
                     </nav>
 
                     {/* Right Section */}
                     <div className="flex items-center gap-3">
                         {/* Search */}
-                        <div className="hidden sm:block w-64">
+                        <div className="hidden sm:block w-48 lg:w-64">
                             <SearchBar/>
                         </div>
 
-                        {/* Language Switch */}
-                        <button
-                            className="p-2 text-gray-600 hover:text-gray-900 transition-colors text-sm font-medium"
-                            onClick={() => setLocale(locale === 'zh' ? 'en' : 'zh')}
-                        >
-                            {locale === 'zh' ? 'EN' : '中文'}
-                        </button>
-
                         {/* Cart */}
-                        <Link href="/cart" className="relative p-2 text-gray-600 hover:text-gray-900 transition-colors">
-                            <Badge count={totalItems} size="small" color="#1677ff">
-                                <ShoppingCart size={22}/>
-                            </Badge>
+                        <Link href="/cart"
+                              className={`relative p-2 transition-colors ${scrolled ? 'text-white hover:text-gray-200' : 'text-gray-100 hover:text-gray-200'}`}>
+                            <ShoppingCart size={22}/>
+                            {totalItems > 0 && (
+                                <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 text-[10px] font-medium leading-4 text-center text-white bg-red-600 rounded-full">
+                                    {totalItems}
+                                </span>
+                            )}
                         </Link>
 
-                        {/* User Menu */}
-                        <Dropdown menu={{items: userMenuItems}} trigger={['click']}>
-                            <button className="p-2 text-gray-600 hover:text-gray-900 transition-colors">
-                                {session?.user?.image ? (
-                                    <Image src={session.user.image} alt="avatar" width={28} height={28}
-                                           className="rounded-full"/>
+                        {/* User Dropdown */}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button
+                                    className={`p-2 transition-colors ${scrolled ? 'text-white hover:text-gray-200' : 'text-gray-100 hover:text-gray-200'}`}>
+                                    {session?.user?.image ? (
+                                        <Image src={session.user.image} alt="avatar" width={28} height={28}
+                                               className="rounded-full"/>
+                                    ) : (
+                                        <User size={22}/>
+                                    )}
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                {session ? (
+                                    <>
+                                        <DropdownMenuItem onClick={() => router.push('/user/orders')}>
+                                            <Package size={14}/>
+                                            {t('header.myOrders')}
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => router.push('/user/profile')}>
+                                            <Settings size={14}/>
+                                            {t('header.profile')}
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator/>
+                                        <DropdownMenuItem variant="destructive" onClick={() => signOut({redirectTo: window.location.pathname})}>
+                                            <LogOut size={14}/>
+                                            {t('header.logout')}
+                                        </DropdownMenuItem>
+                                    </>
                                 ) : (
-                                    <User size={22}/>
+                                    <>
+                                        <DropdownMenuItem onClick={() => router.push('/login?callbackUrl=' + encodeURIComponent(window.location.pathname))}>
+                                            <User size={14}/>
+                                            {t('header.login')}
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => router.push('/register')}>
+                                            <User size={14}/>
+                                            {t('header.register')}
+                                        </DropdownMenuItem>
+                                    </>
                                 )}
-                            </button>
-                        </Dropdown>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
 
                         {/* Mobile Menu Button */}
-                        <button className="md:hidden p-2 text-gray-600" onClick={() => setDrawerOpen(true)}>
+                        <button
+                            className={`lg:hidden p-2 transition-colors ${scrolled ? 'text-white' : 'text-gray-600'}`}
+                            onClick={() => setDrawerOpen(true)}>
                             <Menu size={22}/>
                         </button>
                     </div>
                 </div>
-
-                {/* Mobile Search */}
-                <div className="sm:hidden px-4 pb-3">
-                    <SearchBar/>
-                </div>
             </header>
 
             {/* Mobile Drawer */}
-            <Drawer
-                title={t('brandName')}
-                placement="left"
-                onClose={() => setDrawerOpen(false)}
-                open={drawerOpen}
-                size="default"
-            >
-                <nav className="flex flex-col gap-1">
-                    {navLinks.map(link => (
-                        <Link key={link.href} href={link.href}
-                              className="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-                              onClick={() => setDrawerOpen(false)}>
-                            {link.label}
-                        </Link>
-                    ))}
-                    <button
-                        className="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors text-left"
-                        onClick={() => { setLocale(locale === 'zh' ? 'en' : 'zh'); }}
-                    >
-                        {locale === 'zh' ? 'English' : '中文'}
-                    </button>
-                </nav>
-            </Drawer>
+            <Sheet open={drawerOpen} onOpenChange={(open) => {
+                setDrawerOpen(open);
+                if (!open) setMobileSubmenu(null);
+            }}>
+                <SheetContent side="left">
+                    <SheetHeader>
+                        <SheetTitle>
+                            <div className="flex items-center gap-2">
+                                <img src="/logo.png" alt="Noodle Box" style={{height: 35}}/>
+                            </div>
+                        </SheetTitle>
+                    </SheetHeader>
+                    <nav className="flex flex-col gap-1 px-4">
+                        {/* OUR SHOP */}
+                        <button
+                            className="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-semibold"
+                            onClick={() => setMobileSubmenu(mobileSubmenu === 'shop' ? null : 'shop')}
+                        >
+                            <span className="flex items-center gap-2"><Store size={16}/> OUR SHOP</span>
+                            <ChevronDown size={14}
+                                         className={`transition-transform ${mobileSubmenu === 'shop' ? 'rotate-180' : ''}`}/>
+                        </button>
+                        {mobileSubmenu === 'shop' && (
+                            <div className="pl-6 flex flex-col gap-1">
+                                <Link href="/products"
+                                      className="px-3 py-2 text-gray-600 hover:bg-gray-50 text-sm rounded"
+                                      onClick={() => setDrawerOpen(false)}>DROGHEDA SHOP</Link>
+                                <Link href="/products"
+                                      className="px-3 py-2 text-gray-600 hover:bg-gray-50 text-sm rounded"
+                                      onClick={() => setDrawerOpen(false)}>POINTS MALL</Link>
+                            </div>
+                        )}
+
+                        {/* FOOD MENU */}
+                        <button
+                            className="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-semibold"
+                            onClick={() => setMobileSubmenu(mobileSubmenu === 'food' ? null : 'food')}
+                        >
+                            FOOD MENU
+                            <ChevronDown size={14}
+                                         className={`transition-transform ${mobileSubmenu === 'food' ? 'rotate-180' : ''}`}/>
+                        </button>
+                        {mobileSubmenu === 'food' && (
+                            <div className="pl-6 flex flex-col gap-1">
+                                {foodCategories.map(cat => (
+                                    <Link key={cat.href} href={cat.href}
+                                          className="px-3 py-2 text-gray-600 hover:bg-gray-50 text-sm rounded"
+                                          onClick={() => setDrawerOpen(false)}>{cat.label}</Link>
+                                ))}
+                            </div>
+                        )}
+
+                        <Link href="/our-memory"
+                              className="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-semibold"
+                              onClick={() => setDrawerOpen(false)}>OUR MEMORY</Link>
+                        <Link href="/food-allergies"
+                              className="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-semibold"
+                              onClick={() => setDrawerOpen(false)}>FOOD ALLERGIES</Link>
+                        <Link href="/about-us"
+                              className="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-semibold"
+                              onClick={() => setDrawerOpen(false)}>ABOUT US</Link>
+
+                        <div className="border-t mt-4 pt-4">
+                            <button
+                                className="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm w-full text-left"
+                                onClick={() => {
+                                    setLocale(locale === 'zh' ? 'en' : 'zh');
+                                }}>
+                                {locale === 'zh' ? 'English' : '中文'}
+                            </button>
+                        </div>
+                    </nav>
+                </SheetContent>
+            </Sheet>
         </>
     );
 }

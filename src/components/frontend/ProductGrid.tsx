@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import {Spin} from 'antd';
+import {Spinner} from '@/components/ui/spinner';
 import ProductCard from './ProductCard';
 import {useTranslations} from '@/contexts/LocaleContext';
 
@@ -26,7 +26,7 @@ export default function ProductGrid({products, loading, columns = 5}: ProductGri
     if (loading) {
         return (
             <div className="flex justify-center py-12">
-                <Spin size="large"/>
+                <Spinner size="lg"/>
             </div>
         );
     }

@@ -2,7 +2,21 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Breadcrumb, Pagination, Drawer, Button } from 'antd';
+import {
+    Breadcrumb,
+    BreadcrumbList,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import {Button} from '@/components/ui/button';
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+} from '@/components/ui/sheet';
 import { Filter } from 'lucide-react';
 import Link from 'next/link';
 import { apiGet } from '@/lib/api';
@@ -11,6 +25,7 @@ import ProductGrid from '@/components/frontend/ProductGrid';
 import CategorySidebar from '@/components/frontend/CategorySidebar';
 import PriceFilter from '@/components/frontend/PriceFilter';
 import ProductListFilters from '@/components/frontend/ProductListFilters';
+import CustomPagination from '@/components/frontend/CustomPagination';
 
 interface Product {
     id: number;
@@ -121,13 +136,19 @@ export default function ProductsClient() {
     return (
         <div className="max-w-7xl mx-auto px-4 py-6">
             {/* Breadcrumb */}
-            <Breadcrumb
-                items={[
-                    { title: <Link href="/">{t('header.home')}</Link> },
-                    { title: t('header.products') },
-                ]}
-                className="mb-6"
-            />
+            <Breadcrumb className="mb-6">
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink asChild>
+                            <Link href="/">{t('header.home')}</Link>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator/>
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>{t('header.products')}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
 
             {/* Search results indicator */}
             {q && (
@@ -150,10 +171,11 @@ export default function ProductsClient() {
                     <div className="flex items-center justify-between mb-6">
                         <ProductListFilters sort={sortParam} onSortChange={handleSortChange}/>
                         <Button
+                            variant="outline"
                             className="lg:hidden"
-                            icon={<Filter size={16}/>}
                             onClick={() => setMobileFilterOpen(true)}
                         >
+                            <Filter size={16} className="mr-2"/>
                             {t('filter.filter')}
                         </Button>
                     </div>
@@ -163,29 +185,26 @@ export default function ProductsClient() {
 
                     {/* Pagination */}
                     {total > limit && (
-                        <div className="flex justify-center mt-8">
-                            <Pagination
-                                current={pageParam}
-                                total={total}
-                                pageSize={limit}
-                                onChange={handlePageChange}
-                                showSizeChanger={false}
-                            />
-                        </div>
+                        <CustomPagination
+                            total={total}
+                            current={pageParam}
+                            pageSize={limit}
+                        />
                     )}
                 </div>
             </div>
 
             {/* Mobile Filter Drawer */}
-            <Drawer
-                title={t('filter.filter')}
-                placement="left"
-                onClose={() => setMobileFilterOpen(false)}
-                open={mobileFilterOpen}
-                size="default"
-            >
-                {filterContent}
-            </Drawer>
+            <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
+                <SheetContent side="left">
+                    <SheetHeader>
+                        <SheetTitle>{t('filter.filter')}</SheetTitle>
+                    </SheetHeader>
+                    <div className="px-4">
+                        {filterContent}
+                    </div>
+                </SheetContent>
+            </Sheet>
         </div>
     );
 }

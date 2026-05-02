@@ -73,6 +73,15 @@ export default function ProductsManagement() {
 
     const columns: ColumnsType<ProductType> = [
         {
+            title: tc('image'),
+            dataIndex: 'thumbnail',
+            key: 'thumbnail',
+            width: 80,
+            render: (thumbnail: string) => (
+                <img src={thumbnail} width={80} height={80} alt={thumbnail} className={'object-cover rounded-sm'} />
+            ),
+        },
+        {
             title: t('title'),
             dataIndex: 'title',
             key: 'title',
@@ -87,7 +96,7 @@ export default function ProductsManagement() {
             title: t('category'),
             dataIndex: 'categories',
             key: 'categories',
-            width: 100,
+            width: 160,
             render: (categories: CategoryOption[]) => {
                 return categories?.map(category => (
                     <a key={category.id}>{category.name}</a>
@@ -238,7 +247,7 @@ export default function ProductsManagement() {
                     />
                     <CategoryCascader
                         value={filterCategory}
-                        taxonomy={'product_category'}
+                        taxonomy={'product'}
                         onChange={setFilterCategory}
                         extraOptions={[{label: t('allCategories'), value: ''}]}
                     />

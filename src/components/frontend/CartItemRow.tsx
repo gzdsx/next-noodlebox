@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Image from 'next/image';
-import {InputNumber, Button} from 'antd';
+import {NumberInput} from '@/components/ui/number-input';
+import {Button} from '@/components/ui/button';
 import {Trash2} from 'lucide-react';
 import {CartItem, useCart} from '@/contexts/CartContext';
 import {useTranslations} from '@/contexts/LocaleContext';
@@ -53,13 +54,11 @@ export default function CartItemRow({item}: CartItemRowProps) {
 
             {/* Quantity */}
             <div className="shrink-0">
-                <InputNumber
+                <NumberInput
                     min={1}
                     max={999}
                     value={item.quantity}
-                    onChange={val => updateQuantity(item.product_id, val || 1, item.sku_id)}
-                    size="small"
-                    className="w-24!"
+                    onChange={val => updateQuantity(item.product_id, val, item.sku_id)}
                 />
             </div>
 
@@ -70,12 +69,13 @@ export default function CartItemRow({item}: CartItemRowProps) {
 
             {/* Remove */}
             <Button
-                type="text"
-                danger
-                icon={<Trash2 size={16}/>}
+                variant="ghost"
+                size="icon"
+                className="shrink-0 text-destructive hover:text-destructive"
                 onClick={() => removeItem(item.product_id, item.sku_id)}
-                className="shrink-0!"
-            />
+            >
+                <Trash2 size={16}/>
+            </Button>
         </div>
     );
 }

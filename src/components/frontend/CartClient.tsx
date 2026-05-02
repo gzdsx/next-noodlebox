@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Button, Empty } from 'antd';
+import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useTranslations } from '@/contexts/LocaleContext';
@@ -16,14 +17,14 @@ export default function CartClient() {
     if (items.length === 0) {
         return (
             <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-                <Empty
-                    image={<ShoppingBag size={64} className="mx-auto text-gray-300"/>}
+                <EmptyState
+                    icon={ShoppingBag}
                     description={t('cart.empty')}
                 >
                     <Link href="/products">
-                        <Button type="primary" size="large">{t('cart.startShopping')}</Button>
+                        <Button size="lg">{t('cart.startShopping')}</Button>
                     </Link>
-                </Empty>
+                </EmptyState>
             </div>
         );
     }
@@ -32,7 +33,7 @@ export default function CartClient() {
         <div className="max-w-7xl mx-auto px-4 py-6">
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold text-gray-900">{t('cart.title')}</h1>
-                <Button type="text" danger onClick={clearCart}>{t('cart.deleteSelected')}</Button>
+                <Button variant="ghost" className="text-destructive hover:text-destructive" onClick={clearCart}>{t('cart.deleteSelected')}</Button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

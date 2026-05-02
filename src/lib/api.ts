@@ -44,10 +44,7 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
             const headerStore = await getHeaders();
 
             // 按照优先级获取真实 IP：Cloudflare -> 现有转发链路 -> 节点 IP
-            const realIp = headerStore.get('cf-connecting-ip') ||
-                headerStore.get('x-forwarded-for')?.split(',')[0] ||
-                '';
-
+            const realIp = headerStore.get('x-forwarded-for')?.split(',')[0] || '';
             if (realIp) {
                 // 显式设置，让 Laravel 的 TrustProxies 能够识别
                 headers.set('X-Real-IP', realIp);
@@ -72,7 +69,7 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
         const response = await fetch(url, {
             ...options,
             headers: headers,
-            //credentials: 'include',
+            credentials: 'include',
         });
 
         // 4. 统一错误拦截

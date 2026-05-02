@@ -8,8 +8,8 @@ import {useTranslations} from "@/contexts/LocaleContext";
 
 
 interface MailConfig {
-    mail_form_name: string;
-    mail_form_address: string;
+    mail_from_name: string;
+    mail_from_address: string;
     mail_host: string;
     mail_port: number;
     mail_encryption: 'none' | 'ssl' | 'tls';
@@ -33,10 +33,10 @@ export default function MailSettingsPage() {
         setLoading(true);
         try {
             const response = await apiGet('/settings');
-            const {mail_form_name, mail_form_address, mail_host, mail_port, mail_encryption, mail_username, mail_password} = response.data;
+            const {mail_from_name, mail_from_address, mail_host, mail_port, mail_encryption, mail_username, mail_password} = response.data;
             form.setFieldsValue({
-                mail_form_name,
-                mail_form_address,
+                mail_from_name,
+                mail_from_address,
                 mail_host,
                 mail_port,
                 mail_encryption,
@@ -53,15 +53,7 @@ export default function MailSettingsPage() {
     const handleSubmit = async (values: MailConfig) => {
         setSaving(true);
         try {
-            await apiPost(`/settings`,{
-                mail_form_name: values.mail_form_name,
-                mail_form_address: values.mail_form_address,
-                mail_host: values.mail_host,
-                mail_port: values.mail_port,
-                mail_encryption: values.mail_encryption,
-                mail_username: values.mail_username,
-                mail_password: values.mail_password
-            });
+            await apiPost(`/settings`,values);
             message.success(tc('saveSuccess'));
         } catch (error) {
             message.error(tc('saveError'));
@@ -85,7 +77,7 @@ export default function MailSettingsPage() {
                     >
                         <Form.Item
                             label={t('senderName')}
-                            name="mail_form_name"
+                            name="mail_from_name"
                             rules={[{required: true, message: t('senderNameRequired')}]}
                         >
                             <Input placeholder={t('senderNamePlaceholder')} className={'w-80!'}/>
@@ -93,7 +85,7 @@ export default function MailSettingsPage() {
 
                         <Form.Item
                             label={t('senderEmail')}
-                            name="mail_form_address"
+                            name="mail_from_address"
                             rules={[
                                 {required: true, message: t('senderEmailRequired')},
                                 {type: 'email', message: t('senderEmailInvalid')},

@@ -10,7 +10,7 @@ import {
     Modal,
     Form,
     App,
-    Popconfirm,
+    Popconfirm, Space,
 } from 'antd';
 import {
     PlusOutlined,
@@ -131,51 +131,7 @@ export default function SwipersManagement() {
             render: (title: string, record) => (
                 <div>
                     <strong className="text-gray-600">{title}</strong>
-                    <div style={{marginTop: 4}}>
-                        <Button
-                            type="link"
-                            size="small"
-                            icon={<PictureOutlined/>}
-                            onClick={() => router.push(`/admin/swipers/${record.id}/slides`)}
-                            className="px-0"
-                            style={{paddingLeft: 0}}
-                        >
-                            {t('manageSlides')}
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            icon={<EditOutlined/>}
-                            onClick={() => handleEdit(record)}
-                            className="px-0"
-                        >
-                            {tc('edit')}
-                        </Button>
-                        <Popconfirm
-                            title={t('deleteSlideConfirm')}
-                            onConfirm={async () => {
-                                try {
-                                    await apiDelete(`/swipers/${record.id}`);
-                                    message.success(t('deleteSuccess'));
-                                    fetchSwipers();
-                                } catch (reason: unknown) {
-                                    if (reason instanceof Error) message.error(reason.message);
-                                }
-                            }}
-                            okText={tc('confirm')}
-                            cancelText={tc('cancel')}
-                        >
-                            <Button
-                                type="link"
-                                size="small"
-                                danger
-                                icon={<DeleteOutlined/>}
-                                className="px-0"
-                            >
-                                {tc('delete')}
-                            </Button>
-                        </Popconfirm>
-                    </div>
+
                 </div>
             ),
         },
@@ -185,6 +141,59 @@ export default function SwipersManagement() {
             key: 'description',
             width: 'auto',
             render: (desc: string) => <span style={{color: '#666'}}>{desc || '-'}</span>,
+        },
+        {
+            title: '操作',
+            dataIndex: 'actions',
+            key: 'actions',
+            width: 260,
+            align: 'end',
+            render: (created_at: string,record) => (
+                <Space size={'small'}>
+                    <Button
+                        type="link"
+                        size="small"
+                        icon={<PictureOutlined/>}
+                        onClick={() => router.push(`/admin/swipers/${record.id}/slides`)}
+                        className="px-0!"
+                    >
+                        {t('manageSlides')}
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        icon={<EditOutlined/>}
+                        onClick={() => handleEdit(record)}
+                        className="px-0!"
+                    >
+                        {tc('edit')}
+                    </Button>
+                    <Popconfirm
+                        title={t('deleteSlideConfirm')}
+                        onConfirm={async () => {
+                            try {
+                                await apiDelete(`/swipers/${record.id}`);
+                                message.success(t('deleteSuccess'));
+                                fetchSwipers();
+                            } catch (reason: unknown) {
+                                if (reason instanceof Error) message.error(reason.message);
+                            }
+                        }}
+                        okText={tc('confirm')}
+                        cancelText={tc('cancel')}
+                    >
+                        <Button
+                            type="link"
+                            size="small"
+                            danger
+                            icon={<DeleteOutlined/>}
+                            className="px-0!"
+                        >
+                            {tc('delete')}
+                        </Button>
+                    </Popconfirm>
+                </Space>
+            ),
         }
     ];
 

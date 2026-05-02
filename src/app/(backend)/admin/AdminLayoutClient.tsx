@@ -72,7 +72,7 @@ export default function AdminLayoutClient({
                 {
                     key: '/admin/categories',
                     icon: <AppstoreOutlined/>,
-                    label: <Link href="/admin/categories?taxonomy=product_category">{t('productCategoryManagement')}</Link>,
+                    label: <Link href="/admin/categories?taxonomy=product">{t('productCategoryManagement')}</Link>,
                 },
                 {
                     key: '/admin/products/variants',
