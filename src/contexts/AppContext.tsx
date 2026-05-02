@@ -1,14 +1,7 @@
 'use client';
 
-import React, {useContext, useEffect, useState} from 'react';
-import {apiGet} from "@/lib/api";
-
-interface Category {
-    id: number;
-    name: string;
-    slug: string;
-    children: Category[];
-}
+import React, {useContext} from 'react';
+import {Category} from "@/types";
 
 interface AppContextType {
     categories: Category[];
@@ -16,20 +9,7 @@ interface AppContextType {
 
 const AppContext = React.createContext<AppContextType | null>(null);
 
-export const AppProvider = ({children}: { children: React.ReactNode }) => {
-    const [categories, setCategories] = useState<Category[]>([]);
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const response = await apiGet('/categories', {taxonomy: 'product'});
-                setCategories(response.data.items);
-            } catch (e) {
-                console.error(e);
-            }
-        };
-        fetchCategories();
-    }, []);
+export const AppProvider = ({children, categories = []}: { children: React.ReactNode, categories: Category[] }) => {
 
     return (
         <AppContext.Provider value={{categories}}>
@@ -44,4 +24,9 @@ export function useAppContext() {
         throw new Error('useAppContext must be used within a AppProvider');
     }
     return context;
+}
+
+export function useCategories() {
+    const context = useAppContext();
+    return context.categories;
 }

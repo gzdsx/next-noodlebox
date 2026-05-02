@@ -1,90 +1,42 @@
 import React, {Suspense} from 'react';
-import {
-    Breadcrumb,
-    BreadcrumbList,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
 import {Spinner} from '@/components/ui/spinner';
 import {apiGet} from "@/lib/api";
-import Link from "next/link";
-import ProductGrid from "@/components/frontend/ProductGrid";
-import CustomPagination from "@/components/frontend/CustomPagination";
+import {Category} from "@/types";
+import HeroCarousel, {Slide} from "@/app/(frontend)/shop/HeroCarousel";
+import CategoryClient from "@/app/(frontend)/shop/CategoryClient";
+import {ProductClientPC} from "@/app/(frontend)/shop/ProductClientPC";
+import ProductClientMobile from "@/app/(frontend)/shop/ProductClientMobile";
 
-interface Product {
-    id: number;
-    title: string;
-    thumbnail: string;
-    price: number;
-    original_price?: number;
-    icon?: string;
-    sales?: number;
-}
 
-const getProducts = async (params: Record<string, any>): Promise<{ items: Product[]; total: number }> => {
+const getProducts = async (): Promise<Category[]> => {
     try {
-        const response = await apiGet('/products', params);
+        const response = await apiGet('/products/grouped');
         return response.data;
     } catch {
-        return {items: [], total: 0};
+        return [];
     }
 }
 
-export default async function ProductsPage({searchParams}: any) {
-    const {q = '', page = 1} = await searchParams;
-    const {items: products, total} = await getProducts({q, limit: 20, offset: (page - 1) * 20});
+const getSlides = async () => {
+    try {
+        const response = await apiGet('/swipers/79/slides');
+        return response.data.items;
+    } catch (e) {
+        console.log('获取轮播图失败:', e);
+        return [];
+    }
+}
+
+export default async function ProductsPage() {
+    const categories = await getProducts();
+    const slides: Slide[] = await getSlides();
     return (
         <Suspense fallback={<div className="flex justify-center py-24"><Spinner size="lg"/></div>}>
-            <div className="max-w-7xl mx-auto px-4 py-6">
-                {/* Breadcrumb */}
-                <Breadcrumb className="mb-6">
-                    <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink asChild>
-                                <Link href="/public">首页</Link>
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator/>
-                        <BreadcrumbItem>
-                            <BreadcrumbPage>全部商品</BreadcrumbPage>
-                        </BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
-
-                {/* Search results indicator */}
-                {q && (
-                    <div className="mb-4 text-sm text-gray-500">
-                        搜索: <span className="font-medium text-gray-800">{q}</span>
-                    </div>
-                )}
-
-                <div className="flex gap-8">
-                    {/* Desktop Sidebar */}
-                    <aside className="hidden lg:block w-56 shrink-0">
-                        <div className="sticky top-20 bg-white rounded-xl border border-gray-100 p-4">
-
-                        </div>
-                    </aside>
-
-                    {/* Main Content */}
-                    <div className="flex-1 min-w-0">
-
-                        {/* Product Grid */}
-                        <ProductGrid products={products} columns={4}/>
-
-                        {/* Pagination */}
-                        {total > 20 && (
-                            <CustomPagination
-                                total={total}
-                                current={page}
-                                pageSize={20}
-                            />
-                        )}
-                    </div>
-                </div>
-
+            <div className={'bg-[url(/shop-bg.png)]'}>
+                <HeroCarousel slides={slides}/>
+                <CategoryClient/>
+                <ProductClientPC categories={categories}/>
+                <ProductClientMobile categories={categories}/>
             </div>
         </Suspense>
     );

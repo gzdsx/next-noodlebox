@@ -18,7 +18,7 @@ export default function SearchBar({className}: SearchBarProps) {
     const handleSearch = () => {
         const trimmed = value.trim();
         if (trimmed) {
-            router.push(`/products?q=${encodeURIComponent(trimmed)}`);
+            router.push(`/search?q=${encodeURIComponent(trimmed)}`);
         }
     };
 

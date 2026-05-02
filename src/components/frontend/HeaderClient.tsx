@@ -32,21 +32,10 @@ import {
 import {useCart} from '@/contexts/CartContext';
 import {useTranslations, useLocale} from '@/contexts/LocaleContext';
 import SearchBar from './SearchBar';
-
-const foodCategories = [
-    {href: '/category/01-munchie-box', label: 'MUNCHIE BOX'},
-    {href: '/category/02-a-bit-on-the-side', label: 'A BIT ON THE SIDE'},
-    {href: '/category/03-soup', label: 'SOUP'},
-    {href: '/category/04-noodlebox-ricebox', label: 'NOODLE BOX & RICE BOX'},
-    {href: '/category/05-mix-match-bento-box', label: 'MIX & MATCH / BENTO BOX'},
-    {href: '/category/06-european', label: 'EUROPEAN MENU'},
-    {href: '/category/07-kids', label: 'KIDS MENU'},
-    {href: '/category/08-extra-portions', label: 'EXTRA PORTIONS'},
-    {href: '/category/09-dessert', label: 'DESSERT'},
-    {href: '/category/10-drink', label: 'DRINK'},
-];
+import {useCategories} from "@/contexts/AppContext";
 
 export default function HeaderClient() {
+    const foodCategories = useCategories();
     const {data: session} = useSession();
     const {totalItems} = useCart();
     const {t} = useTranslations('ecommerce');
@@ -56,6 +45,9 @@ export default function HeaderClient() {
     const [scrolled, setScrolled] = useState(false);
     const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
     const [mobileSubmenu, setMobileSubmenu] = useState<string | null>(null);
+
+    const normalStyle = `hover:bg-gray-100 hover:text-gray-900`;
+    const scrolledStyle = `hover:bg-white/10 hover:text-white`;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -85,10 +77,11 @@ export default function HeaderClient() {
                             onMouseLeave={() => setOpenSubmenu(null)}
                         >
                             <button
-                                className={`flex items-center gap-1 px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? 'hover:bg-white/10 color-gray-800' : 'hover:bg-gray-100'}`}>
+                                className={`flex items-center gap-1 px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? scrolledStyle : normalStyle}`}>
                                 <Store size={16}/>
                                 OUR SHOP
-                                <ChevronDown size={14} className={`transition-transform ${openSubmenu === 'shop' ? 'rotate-180' : ''}`}/>
+                                <ChevronDown size={14}
+                                             className={`transition-transform ${openSubmenu === 'shop' ? 'rotate-180' : ''}`}/>
                             </button>
                             {openSubmenu === 'shop' && (
                                 <div
@@ -114,17 +107,18 @@ export default function HeaderClient() {
                             onMouseLeave={() => setOpenSubmenu(null)}
                         >
                             <button
-                                className={`flex items-center gap-1 px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                                className={`flex items-center gap-1 px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? scrolledStyle : normalStyle}`}>
                                 FOOD MENU
-                                <ChevronDown size={14} className={`transition-transform ${openSubmenu === 'food' ? 'rotate-180' : ''}`}/>
+                                <ChevronDown size={14}
+                                             className={`transition-transform ${openSubmenu === 'food' ? 'rotate-180' : ''}`}/>
                             </button>
                             {openSubmenu === 'food' && (
                                 <div
                                     className="absolute top-full left-0 bg-white rounded-lg shadow-xl border border-gray-100 py-2 min-w-65 max-h-100 overflow-y-auto z-50">
                                     {foodCategories.map(cat => (
-                                        <Link key={cat.href} href={cat.href}
+                                        <Link key={cat.slug} href={`/category/${cat.slug}`}
                                               className="block px-4 py-2 text-gray-700 hover:bg-gray-50 text-sm">
-                                            {cat.label}
+                                            {cat.name}
                                         </Link>
                                     ))}
                                 </div>
@@ -132,15 +126,15 @@ export default function HeaderClient() {
                         </div>
 
                         <Link href="/our-memory"
-                              className={`px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                              className={`px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? scrolledStyle : normalStyle}`}>
                             OUR MEMORY
                         </Link>
                         <Link href="/food-allergies"
-                              className={`px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                              className={`px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? scrolledStyle : normalStyle}`}>
                             FOOD ALLERGIES
                         </Link>
                         <Link href="/about-us"
-                              className={`px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'}`}>
+                              className={`px-3 py-2 rounded text-sm font-semibold transition-colors ${scrolled ? scrolledStyle : normalStyle}`}>
                             ABOUT US
                         </Link>
                     </nav>
@@ -157,7 +151,8 @@ export default function HeaderClient() {
                               className={`relative p-2 transition-colors ${scrolled ? 'text-white hover:text-gray-200' : 'text-gray-100 hover:text-gray-200'}`}>
                             <ShoppingCart size={22}/>
                             {totalItems > 0 && (
-                                <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 text-[10px] font-medium leading-4 text-center text-white bg-red-600 rounded-full">
+                                <span
+                                    className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 text-[10px] font-medium leading-4 text-center text-white bg-red-600 rounded-full">
                                     {totalItems}
                                 </span>
                             )}
@@ -167,6 +162,7 @@ export default function HeaderClient() {
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <button
+                                    tabIndex={-1}
                                     className={`p-2 transition-colors ${scrolled ? 'text-white hover:text-gray-200' : 'text-gray-100 hover:text-gray-200'}`}>
                                     {session?.user?.image ? (
                                         <Image src={session.user.image} alt="avatar" width={28} height={28}
@@ -188,14 +184,16 @@ export default function HeaderClient() {
                                             {t('header.profile')}
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator/>
-                                        <DropdownMenuItem variant="destructive" onClick={() => signOut({redirectTo: window.location.pathname})}>
+                                        <DropdownMenuItem variant="destructive"
+                                                          onClick={() => signOut({redirectTo: window.location.pathname})}>
                                             <LogOut size={14}/>
                                             {t('header.logout')}
                                         </DropdownMenuItem>
                                     </>
                                 ) : (
                                     <>
-                                        <DropdownMenuItem onClick={() => router.push('/login?callbackUrl=' + encodeURIComponent(window.location.pathname))}>
+                                        <DropdownMenuItem
+                                            onClick={() => router.push('/login?callbackUrl=' + encodeURIComponent(window.location.pathname))}>
                                             <User size={14}/>
                                             {t('header.login')}
                                         </DropdownMenuItem>
@@ -210,7 +208,7 @@ export default function HeaderClient() {
 
                         {/* Mobile Menu Button */}
                         <button
-                            className={`lg:hidden p-2 transition-colors ${scrolled ? 'text-white' : 'text-gray-600'}`}
+                            className={`lg:hidden p-2 transition-colors ${scrolled ? 'text-white' : 'text-gray-100'}`}
                             onClick={() => setDrawerOpen(true)}>
                             <Menu size={22}/>
                         </button>
@@ -219,11 +217,14 @@ export default function HeaderClient() {
             </header>
 
             {/* Mobile Drawer */}
-            <Sheet open={drawerOpen} onOpenChange={(open) => {
-                setDrawerOpen(open);
-                if (!open) setMobileSubmenu(null);
-            }}>
-                <SheetContent side="left">
+            <Sheet
+                open={drawerOpen}
+                onOpenChange={(open) => {
+                    setDrawerOpen(open);
+                    if (!open) setMobileSubmenu(null);
+                }}
+            >
+                <SheetContent side="left" className={'border-r-0!'}>
                     <SheetHeader>
                         <SheetTitle>
                             <div className="flex items-center gap-2">
@@ -234,7 +235,7 @@ export default function HeaderClient() {
                     <nav className="flex flex-col gap-1 px-4">
                         {/* OUR SHOP */}
                         <button
-                            className="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-semibold"
+                            className="flex items-center justify-between px-3 py-2 rounded-lg text-gray-100 hover:bg-gray-50 text-sm font-semibold"
                             onClick={() => setMobileSubmenu(mobileSubmenu === 'shop' ? null : 'shop')}
                         >
                             <span className="flex items-center gap-2"><Store size={16}/> OUR SHOP</span>
@@ -243,18 +244,18 @@ export default function HeaderClient() {
                         </button>
                         {mobileSubmenu === 'shop' && (
                             <div className="pl-6 flex flex-col gap-1">
-                                <Link href="/products"
-                                      className="px-3 py-2 text-gray-600 hover:bg-gray-50 text-sm rounded"
+                                <Link href="/shop"
+                                      className="px-3 py-2 text-gray-100 hover:bg-gray-50 text-sm rounded"
                                       onClick={() => setDrawerOpen(false)}>DROGHEDA SHOP</Link>
-                                <Link href="/products"
-                                      className="px-3 py-2 text-gray-600 hover:bg-gray-50 text-sm rounded"
+                                <Link href="/points-mall"
+                                      className="px-3 py-2 text-gray-100 hover:bg-gray-50 text-sm rounded"
                                       onClick={() => setDrawerOpen(false)}>POINTS MALL</Link>
                             </div>
                         )}
 
                         {/* FOOD MENU */}
                         <button
-                            className="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-semibold"
+                            className="flex items-center justify-between px-3 py-2 rounded-lg text-gray-100 hover:bg-gray-50 text-sm font-semibold"
                             onClick={() => setMobileSubmenu(mobileSubmenu === 'food' ? null : 'food')}
                         >
                             FOOD MENU
@@ -264,26 +265,27 @@ export default function HeaderClient() {
                         {mobileSubmenu === 'food' && (
                             <div className="pl-6 flex flex-col gap-1">
                                 {foodCategories.map(cat => (
-                                    <Link key={cat.href} href={cat.href}
-                                          className="px-3 py-2 text-gray-600 hover:bg-gray-50 text-sm rounded"
-                                          onClick={() => setDrawerOpen(false)}>{cat.label}</Link>
+                                    <Link key={cat.slug}
+                                          href={`/category/${cat.slug}`}
+                                          className="px-3 py-2 text-gray-100 hover:bg-gray-50 text-sm rounded"
+                                          onClick={() => setDrawerOpen(false)}>{cat.name}</Link>
                                 ))}
                             </div>
                         )}
 
                         <Link href="/our-memory"
-                              className="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-semibold"
+                              className="px-3 py-2 rounded-lg text-gray-100 hover:bg-gray-50 text-sm font-semibold"
                               onClick={() => setDrawerOpen(false)}>OUR MEMORY</Link>
                         <Link href="/food-allergies"
-                              className="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-semibold"
+                              className="px-3 py-2 rounded-lg text-gray-100 hover:bg-gray-50 text-sm font-semibold"
                               onClick={() => setDrawerOpen(false)}>FOOD ALLERGIES</Link>
                         <Link href="/about-us"
-                              className="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-semibold"
+                              className="px-3 py-2 rounded-lg text-gray-100 hover:bg-gray-50 text-sm font-semibold"
                               onClick={() => setDrawerOpen(false)}>ABOUT US</Link>
 
                         <div className="border-t mt-4 pt-4">
                             <button
-                                className="px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-50 text-sm w-full text-left"
+                                className="px-3 py-2 rounded-lg text-gray-100 hover:bg-gray-50 text-sm w-full text-left"
                                 onClick={() => {
                                     setLocale(locale === 'zh' ? 'en' : 'zh');
                                 }}>

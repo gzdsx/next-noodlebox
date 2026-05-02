@@ -2,9 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {Badge} from '@/components/ui/badge';
 import {useTranslations} from '@/contexts/LocaleContext';
+import {ShoppingCartIcon} from "lucide-react";
 
 interface ProductCardProps {
     product: {
@@ -28,16 +28,14 @@ export default function ProductCard({product}: ProductCardProps) {
         : 0;
 
     return (
-        <Link href={`/product/${product.id}/${encodeURIComponent(product.title)}`}
-              className="group block bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+        <div className="group block overflow-hidden bg-[#444] rounded-sm">
             {/* Image */}
-            <div className="relative aspect-square bg-gray-50 overflow-hidden">
+            <div className="relative aspect-square overflow-hidden rounded-sm">
                 {product.thumbnail ? (
-                    <Image
+                    <img
                         src={product.thumbnail}
                         alt={product.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300 rounded-sm"
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
                     />
                 ) : (
@@ -66,25 +64,19 @@ export default function ProductCard({product}: ProductCardProps) {
 
             {/* Info */}
             <div className="p-3">
-                <h3 className="text-sm font-medium text-gray-800 line-clamp-2 mb-2 min-h-[2.5rem]">
+                <h3 className="font-medium text-white line-clamp-2 mb-1 min-h-8">
                     {product.title}
                 </h3>
-                <div className="flex items-baseline gap-2">
-                    <span className="text-lg font-bold text-red-500">
-                        ¥{product.price}
+                <div className={'flex justify-between items-center'}>
+                    <span className="text-lg font-bold text-[#66beb8]">
+                        €{product.price}
                     </span>
-                    {hasDiscount && (
-                        <span className="text-xs text-gray-400 line-through">
-                            ¥{product.original_price}
-                        </span>
-                    )}
+                    <button className={'flex items-center gap-2 bg-[#66beb8] text-white px-2 py-1.25 rounded-[5px] hover:bg-[#41918b] cursor-pointer'}>
+                        <ShoppingCartIcon size={16}/>
+                        <span>Add</span>
+                    </button>
                 </div>
-                {product.sales !== undefined && product.sales > 0 && (
-                    <span className="text-xs text-gray-400 mt-1 block">
-                        {t('product.sold')} {product.sales}
-                    </span>
-                )}
             </div>
-        </Link>
+        </div>
     );
 }

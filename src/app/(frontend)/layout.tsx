@@ -9,6 +9,8 @@ import MobileTabbar from "@/components/frontend/MobileTabbar";
 import {Toaster} from "sonner";
 import {AppProvider} from "@/contexts/AppContext";
 import './globals.css';
+import {apiGet} from "@/lib/api";
+import {Category} from "@/types";
 
 export const metadata: Metadata = {
     title: "Noodle Box - The Best Chinese Takeaway In Drogheda",
@@ -26,19 +28,30 @@ export const viewport = {
 
 export const dynamic = 'force-dynamic';
 
+const getCategories = async () => {
+    try {
+        const response = await apiGet('/categories', {taxonomy: 'product'});
+        return response.data.items.filter((cat: Category) => cat.id !== 221 && cat.id !== 15);
+    } catch (e) {
+        console.log('获取分类失败:', e);
+        return [];
+    }
+}
+
 export default async function FrontendLayout({
                                                  children,
                                              }: Readonly<{
     children: React.ReactNode;
 }>) {
     const session = await auth();
+    const categories = await getCategories();
 
     return (
         <html lang="en" className="w-full overflow-x-hidden">
         <body className="bg-[#444] text-gray-100 min-h-screen w-full overflow-x-hidden pb-14 lg:pb-0">
         <LocaleProvider>
             <SessionProvider session={session}>
-                <AppProvider>
+                <AppProvider categories={categories}>
                     <CartProvider>
                         <Header/>
                         <main className="min-h-screen">{children}</main>
