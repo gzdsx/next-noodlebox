@@ -50,6 +50,7 @@ export default function ProductDetailClient({product}: { product: Product }) {
             quantity,
             sku_id: selectedSku?.id,
             sku_name: selectedSku?.name,
+            key:''
         });
         toast.success(t('product.addToCart') + ' ✓');
     };

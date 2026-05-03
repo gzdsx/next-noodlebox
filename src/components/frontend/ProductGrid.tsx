@@ -4,16 +4,7 @@ import React from 'react';
 import {Spinner} from '@/components/ui/spinner';
 import ProductCard from './ProductCard';
 import {useTranslations} from '@/contexts/LocaleContext';
-
-interface Product {
-    id: number;
-    title: string;
-    thumbnail: string;
-    price: number;
-    original_price?: number;
-    badge?: string;
-    sales?: number;
-}
+import {Product} from "@/types";
 
 interface ProductGridProps {
     products: Product[];

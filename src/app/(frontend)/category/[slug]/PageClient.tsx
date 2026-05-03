@@ -4,19 +4,7 @@ import Link from "next/link";
 import React from "react";
 import ProductCard from "@/components/frontend/ProductCard";
 import {useCategories} from "@/contexts/AppContext";
-
-interface Product {
-    id: number;
-    title: string;
-    price: number;
-    thumbnail: string;
-}
-
-interface Category {
-    id: number;
-    name: string;
-    slug: string;
-}
+import {Category, Product} from "@/types";
 
 interface PageClientProps {
     category: Category;

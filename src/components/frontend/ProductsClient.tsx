@@ -26,16 +26,7 @@ import CategorySidebar from '@/components/frontend/CategorySidebar';
 import PriceFilter from '@/components/frontend/PriceFilter';
 import ProductListFilters from '@/components/frontend/ProductListFilters';
 import CustomPagination from '@/components/frontend/CustomPagination';
-
-interface Product {
-    id: number;
-    title: string;
-    thumbnail: string;
-    price: number;
-    original_price?: number;
-    badge?: string;
-    sales?: number;
-}
+import {Product} from "@/types";
 
 export default function ProductsClient() {
     const searchParams = useSearchParams();
