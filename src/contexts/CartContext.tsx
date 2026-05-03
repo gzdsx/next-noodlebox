@@ -1,25 +1,31 @@
 'use client';
 
 import React, {createContext, useContext, useState, useEffect, useCallback, ReactNode} from 'react';
+import {CartItem, Product} from "@/types";
+import sha1 from "@/lib/sha1";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import {ProductInfoClient} from "@/components/frontend/ProductInfoClient";
 
-export interface CartItem {
-    product_id: number;
-    title: string;
-    thumbnail: string;
-    price: number;
-    quantity: number;
-    sku_id?: number;
-    sku_name?: string;
-}
 
 interface CartContextType {
     items: CartItem[];
     addItem: (item: CartItem) => void;
-    removeItem: (productId: number, sku_id?: number) => void;
-    updateQuantity: (productId: number, quantity: number, sku_id?: number) => void;
+    removeItem: (key: string) => void;
+    updateQuantity: (key: string, quantity: number) => void;
     clearCart: () => void;
     totalItems: number;
     totalPrice: number;
+    productModal: {
+        open: (product: Product) => void;
+        close: () => void;
+    }
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -28,6 +34,18 @@ const CART_STORAGE_KEY = 'cart_items';
 
 export function CartProvider({children}: { children: ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([]);
+    const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
+    const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
+    const openProductModal = (product: Product) => {
+        setCurrentProduct({...product});
+        setIsProductModalOpen(true);
+    }
+
+    const closeProductModal = () => {
+        setIsProductModalOpen(false);
+        setCurrentProduct(null);
+    }
 
     // Load from localStorage on mount
     useEffect(() => {
@@ -47,37 +65,46 @@ export function CartProvider({children}: { children: ReactNode }) {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     }, [items]);
 
+    const generateKey = (item: CartItem) => {
+        const {product_id, options, additional_options, purchase_via} = item;
+        const key = JSON.stringify({
+            product_id,
+            options,
+            additional_options,
+            purchase_via
+        });
+
+        return sha1(key);
+    }
+
     const addItem = useCallback((newItem: CartItem) => {
         setItems(prev => {
-            const key = (item: CartItem) => `${item.product_id}-${item.sku_id ?? 'default'}`;
-            const newKey = key(newItem);
-            const existing = prev.find(item => key(item) === newKey);
+            const newKey = generateKey(newItem);
+            const existing = prev.find(item => item.key === newKey);
             if (existing) {
                 return prev.map(item =>
-                    key(item) === newKey
+                    item.key === newKey
                         ? {...item, quantity: item.quantity + newItem.quantity}
                         : item
                 );
             }
-            return [...prev, newItem];
+            return [...prev, {...newItem, key: newKey}];
         });
     }, []);
 
-    const removeItem = useCallback((productId: number, sku_id?: number) => {
+    const removeItem = useCallback((key: string) => {
         setItems(prev => prev.filter(item => {
-            const matchSku = sku_id ? item.sku_id === sku_id : true;
-            return !(item.product_id === productId && matchSku);
+            return !(item.key === key);
         }));
     }, []);
 
-    const updateQuantity = useCallback((productId: number, quantity: number, sku_id?: number) => {
+    const updateQuantity = useCallback((key: string, quantity: number) => {
         if (quantity <= 0) {
-            removeItem(productId, sku_id);
+            removeItem(key);
             return;
         }
         setItems(prev => prev.map(item => {
-            const matchSku = sku_id ? item.sku_id === sku_id : true;
-            return (item.product_id === productId && matchSku)
+            return (item.key === key)
                 ? {...item, quantity}
                 : item;
         }));
@@ -91,8 +118,47 @@ export function CartProvider({children}: { children: ReactNode }) {
     const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     return (
-        <CartContext.Provider value={{items, addItem, removeItem, updateQuantity, clearCart, totalItems, totalPrice}}>
+        <CartContext.Provider value={{
+            items,
+            addItem,
+            removeItem,
+            updateQuantity,
+            clearCart,
+            totalItems,
+            totalPrice,
+            productModal: {
+                open: openProductModal,
+                close: closeProductModal
+            }
+        }}>
             {children}
+            {
+                (() => {
+                    if (isProductModalOpen && currentProduct) {
+                        return (
+                            <Dialog open={true} modal={true} onOpenChange={closeProductModal}>
+                                <DialogTrigger>Open</DialogTrigger>
+                                <DialogContent className={'w-[96vw] min-w-[90vw] md:min-w-300 border-[#444]'}>
+                                    <DialogHeader>
+                                        <DialogTitle>Add Order</DialogTitle>
+                                    </DialogHeader>
+                                    <div className={'overflow-hidden'}>
+                                        <ProductInfoClient
+                                            product={currentProduct}
+                                            scrollViewStyle={{
+                                                maxHeight: '60vh',
+                                                overflowY: 'auto',
+                                                overflowX: 'hidden',
+                                            }}
+                                        />
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        )
+                    }
+                    return null;
+                })()
+            }
         </CartContext.Provider>
     );
 }
@@ -103,4 +169,9 @@ export function useCart() {
         throw new Error('useCart must be used within a CartProvider');
     }
     return context;
+}
+
+export function useProductModal() {
+    const context = useCart();
+    return context.productModal;
 }

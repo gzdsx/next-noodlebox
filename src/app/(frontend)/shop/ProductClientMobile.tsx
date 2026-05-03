@@ -10,12 +10,14 @@ import {
 import AutoHeight from "embla-carousel-auto-height"
 import React, {useRef, useState} from "react";
 import {ShoppingCartIcon} from "lucide-react";
+import {useProductModal} from "@/contexts/CartContext";
 
 interface ProductClientMobileProps {
     categories: Category[];
 }
 
 const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
+    const modal = useProductModal();
     const [currentCategory, setCurrentCategory] = useState(categories[0]);
     const carouselRef = useRef<CarouselApi | null>(null);
     const tabsRef = useRef<Record<string, HTMLDivElement>>({});
@@ -119,6 +121,9 @@ const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
                                                         <span
                                                             className={'text-[16px] font-bold text-[#66beb8]'}>€{product.price}</span>
                                                         <button
+                                                            onClick={() => {
+                                                                modal.open(product);
+                                                            }}
                                                             className={'flex items-center gap-2 bg-[#66beb8] text-white px-2 py-1.25 rounded-[5px] hover:bg-[#41918b] cursor-pointer'}>
                                                             <ShoppingCartIcon size={16}/>
                                                             <span>Add</span>

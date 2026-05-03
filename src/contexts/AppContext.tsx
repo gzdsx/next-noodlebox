@@ -3,6 +3,7 @@
 import React, {useContext} from 'react';
 import {Category} from "@/types";
 
+
 interface AppContextType {
     categories: Category[];
 }
@@ -12,7 +13,9 @@ const AppContext = React.createContext<AppContextType | null>(null);
 export const AppProvider = ({children, categories = []}: { children: React.ReactNode, categories: Category[] }) => {
 
     return (
-        <AppContext.Provider value={{categories}}>
+        <AppContext.Provider value={{
+            categories
+        }}>
             {children}
         </AppContext.Provider>
     );

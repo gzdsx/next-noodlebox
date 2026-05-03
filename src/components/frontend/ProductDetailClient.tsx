@@ -14,51 +14,15 @@ import {Tabs, TabsList, TabsTrigger, TabsContent} from '@/components/ui/tabs';
 import {NumberInput} from '@/components/ui/number-input';
 import {Button} from '@/components/ui/button';
 import {Badge} from '@/components/ui/badge';
-import {ShoppingCart, Zap} from 'lucide-react';
+import {ShoppingCart, ShoppingCartIcon, Zap} from 'lucide-react';
 import {useTranslations} from '@/contexts/LocaleContext';
 import {useCart} from '@/contexts/CartContext';
 import {toast} from 'sonner';
 import ProductImageGallery from '@/components/frontend/ProductImageGallery';
 import VariantSelector from '@/components/frontend/VariantSelector';
+import {Product, SkuItem} from "@/types";
 
-interface SkuItem {
-    id?: number,
-    name: string;
-    price: number;
-    stock: number;
-    properties: string;
-}
-
-interface ImageItem {
-    src: string;
-    alt: string;
-}
-
-export interface Product {
-    id: number;
-    title: string;
-    slug: string;
-    description: string;
-    content: string;
-    thumbnail: string;
-    price: number;
-    original_price: number;
-    status: string;
-    icon?: string;
-    sold?: number;
-    images?: ImageItem[];
-    skus?: SkuItem[];
-    categories?: { id: number; name: string }[];
-    keywords?: string;
-    has_sku_attr?: boolean;
-    variants?: { name: string; options: { title: string; price?: number }[] }[];
-}
-
-interface ProductDetailClientProps {
-    product: Product;
-}
-
-export default function ProductDetailClient({product}: ProductDetailClientProps) {
+export default function ProductDetailClient({product}: { product: Product }) {
     const {t} = useTranslations('ecommerce');
     const {addItem} = useCart();
     const [quantity, setQuantity] = useState(1);
@@ -74,7 +38,7 @@ export default function ProductDetailClient({product}: ProductDetailClientProps)
     const isOutOfStock = currentStock <= 0;
 
     const handleAddToCart = () => {
-        if (product.skus?.length && !selectedSku){
+        if (product.skus?.length && !selectedSku) {
             toast.error('请选择产品规格');
             return false;
         }
@@ -95,13 +59,80 @@ export default function ProductDetailClient({product}: ProductDetailClientProps)
         window.location.href = '/cart';
     };
 
-    const hasDiscount = product.original_price && product.original_price > currentPrice;
-    const discountPercent = hasDiscount
-        ? Math.round((1 - currentPrice / product.original_price) * 100)
-        : 0;
+    const renderBadges = () => {
+        if (!product.meta_data?.badges?.length) {
+            return null;
+        }
+
+        return (
+            <div className={'flex flex-row gap-2'}>
+                {
+                    product.meta_data?.badges?.map((badge: string) => (
+                        <img
+                            key={`badge-${badge}`}
+                            className={'w-7.5 h-7.5 object-contain'}
+                            src={badge}
+                            alt={''}
+                        />
+                    ))
+                }
+            </div>
+        )
+    }
+
+    const renderVariants = () => {
+        if (!product.variation_list?.length) {
+            return null;
+        }
+
+        return (
+            <div className={'flex flex-col gap-2'}>
+                {
+                    product.variation_list?.map((variation: any) => (
+                        <div key={`variation-${variation.name}`}>
+                            <div className={`text-white font-bold mb-2`}>{variation.name}</div>
+                            <div className={`flex flex-row flex-wrap gap-2`}>
+                                {
+                                    variation.options?.map((option: any) => (
+                                        <span
+                                            key={`option-${variation.name}-${option.title}`}
+                                            className={`px-2 py-2 cursor-pointer whitespace-nowrap rounded-md border border-[#66beb8] text-[12px] font-light ${option.selected ? 'bg-[#66beb8] text-white' : 'text-[#66beb8]'}`}
+                                        >{option.title}</span>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        )
+    }
+
+    const renderAdditionalOptions = () => {
+        if (!product.additional_options?.length) {
+            return null;
+        }
+
+        return (
+            <div key={`product-additional-options`}>
+                <div className={`text-white font-bold mb-2`}>{'Additional Options'}</div>
+                <div className={`flex flex-row flex-wrap gap-2`}>
+                    {
+                        product.additional_options?.map((option: any) => (
+                            <span
+                                key={`additional-option-${option.title}`}
+                                className={`px-2 py-2 cursor-pointer whitespace-nowrap rounded-md border border-[#66beb8] text-[12px] font-light ${option.selected ? 'bg-[#66beb8] text-white' : 'text-[#66beb8]'}`}
+                            >{option.title}</span>
+                        ))
+                    }
+                </div>
+            </div>
+        )
+    }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="max-w-350 mx-auto px-4 py-6">
+            <div className={'h-24'}></div>
             <Breadcrumb className="mb-6">
                 <BreadcrumbList>
                     <BreadcrumbItem>
@@ -109,23 +140,17 @@ export default function ProductDetailClient({product}: ProductDetailClientProps)
                             <Link href="/">{t('header.home')}</Link>
                         </BreadcrumbLink>
                     </BreadcrumbItem>
-                    <BreadcrumbSeparator/>
-                    <BreadcrumbItem>
-                        <BreadcrumbLink asChild>
-                            <Link href="/products">{t('header.products')}</Link>
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
                     {product.categories?.length ? (
                         <>
                             <BreadcrumbSeparator/>
                             <BreadcrumbItem>
-                                <BreadcrumbPage>{product.categories[0].name}</BreadcrumbPage>
+                                <BreadcrumbPage className={'text-white'}>{product.categories[0].name}</BreadcrumbPage>
                             </BreadcrumbItem>
                         </>
                     ) : null}
                     <BreadcrumbSeparator/>
                     <BreadcrumbItem>
-                        <BreadcrumbPage>{product.title}</BreadcrumbPage>
+                        <BreadcrumbPage className={'text-white'}>{product.title}</BreadcrumbPage>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
@@ -133,94 +158,47 @@ export default function ProductDetailClient({product}: ProductDetailClientProps)
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <ProductImageGallery images={product.images} title={product.title}/>
 
-                <div className="space-y-6">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 mb-2">{product.title}</h1>
-                        {product.icon && <Badge variant="destructive" className="text-sm">{product.icon}</Badge>}
+                <div className="space-y-4">
+                    <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
+                    <div className={'bg-[#66beb8] px-4 py-2 rounded text-white'}>
+                        Earn Points : {product.points} Points
+                    </div>
+                    <div className={'rounded text-[#71f4fd] font-bold text-2xl'}>
+                        {`€${currentPrice}`}
+                    </div>
+                    <div dangerouslySetInnerHTML={{__html: product.description}} className={'text-[#f19e39]'}></div>
+                    {renderBadges()}
+                    {renderVariants()}
+                    {renderAdditionalOptions()}
+
+                    <div className={'mt-2'}>
+                        <label className={'flex flex-row gap-2 items-center'}>
+                            <input
+                                type={'checkbox'}
+                                className={'transform scale-150'}
+                            />
+                            <span className={'text-[#f19e39]'}>Use 100 Noodle Box Points for purchasing this Product</span>
+                        </label>
                     </div>
 
-                    <div className="bg-red-50 rounded-lg p-4">
-                        <div className="flex items-baseline gap-3">
-                            <span className="text-3xl font-bold text-red-500">¥{currentPrice}</span>
-                            {hasDiscount && (
-                                <>
-                                    <span
-                                        className="text-lg text-gray-400 line-through">¥{product.original_price}</span>
-                                    <Badge variant="destructive">-{discountPercent}%</Badge>
-                                </>
-                            )}
-                        </div>
-                        <span className="text-sm text-gray-500 mt-1 block">{t('product.sold')} {product.sold}</span>
-                    </div>
-
-                    {product.has_sku_attr && (
-                        <VariantSelector
-                            variants={product.variants || []}
-                            skus={product.skus || []}
-                            onSkuChange={handleSkuChange}
+                    <div className="flex items-center gap-3 mt-8">
+                        <NumberInput
+                            min={1}
+                            max={currentStock}
+                            value={quantity}
+                            onChange={val => setQuantity(val)}
                         />
-                    )}
-
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-gray-700">{t('product.quantity')}:</span>
-                        <NumberInput min={1} max={currentStock} value={quantity}
-                                     onChange={val => setQuantity(val)}/>
-                        <span className="text-sm text-gray-400">
-                            {isOutOfStock ? t('product.outOfStock') : t('product.inStock')}
-                        </span>
-                    </div>
-
-                    <div className="flex gap-3">
-                        <Button size="lg" disabled={isOutOfStock}
-                                onClick={handleAddToCart}
-                                className="flex-1 h-12 text-base">
-                            <ShoppingCart size={18} className="mr-2"/>
-                            {t('product.addToCart')}
-                        </Button>
-                        <Button size="lg" variant="outline" disabled={isOutOfStock}
-                                onClick={handleBuyNow}
-                                className="flex-1 h-12 text-base bg-orange-500 text-white hover:bg-orange-600 border-orange-500 hover:border-orange-600">
-                            <Zap size={18} className="mr-2"/>
-                            {t('product.buyNow')}
-                        </Button>
+                        <button
+                            className={'flex cursor-pointer bg-[#be2e2d] text-white px-4 py-2 rounded-md items-center gap-2 hover:bg-red-800'}
+                        >
+                            <ShoppingCartIcon/>
+                            <span>Add to Cart</span>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div className="mt-12">
-                <Tabs defaultValue="description">
-                    <TabsList>
-                        <TabsTrigger value="description">{t('product.description')}</TabsTrigger>
-                        <TabsTrigger value="specs">{t('product.specs')}</TabsTrigger>
-                        <TabsTrigger value="reviews">{t('product.reviews')}</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="description">
-                        <div className="prose prose-sm max-w-none"
-                             dangerouslySetInnerHTML={{__html: product.content || `<p>${t('product.noDescription')}</p>`}}/>
-                    </TabsContent>
-                    <TabsContent value="specs">
-                        <div className="text-sm text-gray-600 space-y-2">
-                            {product.description && <p>{product.description}</p>}
-                            {selectedSku && (
-                                <div className="mt-4">
-                                    <p className="font-medium">SKU: {selectedSku.name}</p>
-                                    <p>{t('product.stock')}: {selectedSku.stock}</p>
-                                </div>
-                            )}
-                            {product.keywords?.length ? (
-                                <div className="flex flex-wrap gap-1 mt-2">
-                                    {product.keywords.split(',').map(kw => (
-                                        <Badge key={kw} variant="secondary">{kw}</Badge>
-                                    ))}
-                                </div>
-                            ) : null}
-                        </div>
-                    </TabsContent>
-                    <TabsContent value="reviews">
-                        <div className="text-center py-12 text-gray-400">{t('product.noReviews')}</div>
-                    </TabsContent>
-                </Tabs>
-            </div>
+
         </div>
     );
 }

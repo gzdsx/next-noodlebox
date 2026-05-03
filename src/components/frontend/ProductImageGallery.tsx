@@ -1,12 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import Image from 'next/image';
-
-interface ImageItem {
-    src: string;
-    alt?: string;
-}
+import {ImageItem} from "@/types";
 
 interface ProductImageGalleryProps {
     images: ImageItem[] | undefined;
@@ -33,13 +28,11 @@ export default function ProductImageGallery({images, title}: ProductImageGallery
         <div className="space-y-3">
             {/* Main Image */}
             <div className="relative aspect-square bg-gray-50 rounded-xl overflow-hidden">
-                <Image
+                <img
                     src={allImages[activeIndex].src}
                     alt={`${title} - ${activeIndex + 1}`}
-                    fill
-                    className="object-cover"
+                    className="object-cover w-full h-full"
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    priority
                 />
             </div>
 
@@ -54,10 +47,9 @@ export default function ProductImageGallery({images, title}: ProductImageGallery
                                 index === activeIndex ? 'border-blue-500' : 'border-gray-200 hover:border-gray-400'
                             }`}
                         >
-                            <Image
+                            <img
                                 src={img.src}
                                 alt={`Thumbnail ${index + 1}`}
-                                fill
                                 className="object-cover"
                                 sizes="64px"
                             />

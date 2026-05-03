@@ -22,21 +22,21 @@ const messages: Record<Locale, any> = {
 };
 
 export function LocaleProvider({children}: { children: ReactNode }) {
-    const [locale, setLocaleState] = useState<Locale>('zh');
+    const [locale, setLocaleState] = useState<Locale>('en');
 
     useEffect(() => {
         // 从 localStorage 读取语言设置
         const savedLocale = localStorage.getItem('locale') as Locale;
         if (savedLocale && (savedLocale === 'zh' || savedLocale === 'en')) {
-            setLocaleState(savedLocale);
+            setLocaleState(savedLocale as Locale);
         } else {
             // 检测浏览器语言
-            const browserLang = navigator.language.toLowerCase();
-            if (browserLang.startsWith('zh')) {
-                setLocaleState('zh');
-            } else {
-                setLocaleState('en');
-            }
+            // const browserLang = navigator.language.toLowerCase();
+            // if (browserLang.startsWith('zh')) {
+            //     setLocaleState('zh');
+            // } else {
+            //     setLocaleState('en');
+            // }
         }
     }, []);
 

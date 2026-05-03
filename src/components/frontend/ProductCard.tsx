@@ -5,22 +5,12 @@ import Link from 'next/link';
 import {Badge} from '@/components/ui/badge';
 import {useTranslations} from '@/contexts/LocaleContext';
 import {ShoppingCartIcon} from "lucide-react";
+import {Product} from "@/types";
+import {useProductModal} from "@/contexts/CartContext";
 
-interface ProductCardProps {
-    product: {
-        id: number;
-        title: string;
-        thumbnail: string;
-        price: number;
-        original_price?: number;
-        icon?: string;
-        sales?: number;
-        slug?: string;
-    };
-}
-
-export default function ProductCard({product}: ProductCardProps) {
+export default function ProductCard({product}: {product: Product}) {
     const {t} = useTranslations('ecommerce');
+    const modal = useProductModal();
 
     const hasDiscount = product.original_price && product.original_price > product.price;
     const discountPercent = hasDiscount
@@ -32,12 +22,14 @@ export default function ProductCard({product}: ProductCardProps) {
             {/* Image */}
             <div className="relative aspect-square overflow-hidden rounded-sm">
                 {product.thumbnail ? (
-                    <img
-                        src={product.thumbnail}
-                        alt={product.title}
-                        className="object-cover group-hover:scale-105 transition-transform duration-300 rounded-sm"
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
-                    />
+                    <Link href={`/product/${product.slug}`}>
+                        <img
+                            src={product.thumbnail}
+                            alt={product.title}
+                            className="object-cover group-hover:scale-105 transition-transform duration-300 rounded-sm"
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                        />
+                    </Link>
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-300">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -71,7 +63,9 @@ export default function ProductCard({product}: ProductCardProps) {
                     <span className="text-lg font-bold text-[#66beb8]">
                         €{product.price}
                     </span>
-                    <button className={'flex items-center gap-2 bg-[#66beb8] text-white px-2 py-1.25 rounded-[5px] hover:bg-[#41918b] cursor-pointer'}>
+                    <button
+                        onClick={() => modal.open(product)}
+                        className={'flex items-center gap-2 bg-[#66beb8] text-white px-2 py-1.25 rounded-[5px] hover:bg-[#41918b] cursor-pointer'}>
                         <ShoppingCartIcon size={16}/>
                         <span>Add</span>
                     </button>

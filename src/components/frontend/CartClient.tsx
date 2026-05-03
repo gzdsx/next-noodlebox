@@ -21,7 +21,7 @@ export default function CartClient() {
                     icon={ShoppingBag}
                     description={t('cart.empty')}
                 >
-                    <Link href="/products">
+                    <Link href="/shop">
                         <Button size="lg">{t('cart.startShopping')}</Button>
                     </Link>
                 </EmptyState>
@@ -30,20 +30,21 @@ export default function CartClient() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="max-w-360 mx-auto px-4 py-6">
+            <div className={'h-24'}></div>
             <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">{t('cart.title')}</h1>
+                <h1 className="text-2xl font-bold">{t('cart.title')}</h1>
                 <Button variant="ghost" className="text-destructive hover:text-destructive" onClick={clearCart}>{t('cart.deleteSelected')}</Button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
-                    <div className="bg-white rounded-xl border border-gray-100 p-4">
-                        <div className="hidden sm:flex items-center gap-4 pb-3 border-b border-gray-200 text-xs text-gray-400 uppercase tracking-wide">
+                    <div className="rounded-xl border border-gray-100 p-4">
+                        <div className="hidden sm:flex items-center gap-4 pb-3 border-b border-gray-200 text-xs uppercase tracking-wide">
                             <span className="w-20">{t('product.productItem')}</span>
                             <span className="flex-1"/>
                             <span className="w-16 text-center">{t('product.price')}</span>
-                            <span className="w-24 text-center">{t('cart.quantity')}</span>
+                            <span className="w-34 text-center">{t('cart.quantity')}</span>
                             <span className="w-20 text-right">{t('cart.subtotal')}</span>
                             <span className="w-8"/>
                         </div>
