@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import {Mail, Phone, Facebook, Instagram, Youtube} from 'lucide-react';
 
 export default function Footer() {
@@ -48,26 +47,26 @@ export default function Footer() {
                 <div className="flex flex-col items-center gap-4">
                     <div className="flex gap-4">
                         <a href="mailto:info@thenoodlebox.ie"
-                           className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                           className="w-10 h-10 rounded-full bg-[#5eb093] hover:bg-gray-600 flex items-center justify-center transition-colors">
                             <Mail size={18}/>
                         </a>
                         <a href="https://www.facebook.com/noodlebox.dao" target="_blank"
                            rel="noopener noreferrer"
-                           className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                           className="w-10 h-10 rounded-full bg-[#5eb093] hover:bg-gray-600 flex items-center justify-center transition-colors">
                             <Facebook size={18}/>
                         </a>
                         <a href="https://www.instagram.com/noodlebox_drogheda/" target="_blank"
                            rel="noopener noreferrer"
-                           className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                           className="w-10 h-10 rounded-full bg-[#5eb093] hover:bg-gray-600 flex items-center justify-center transition-colors">
                             <Instagram size={18}/>
                         </a>
                         <a href="tel:0419845775"
-                           className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                           className="w-10 h-10 rounded-full bg-[#5eb093] hover:bg-gray-600 flex items-center justify-center transition-colors">
                             <Phone size={18}/>
                         </a>
                         <a href="https://www.youtube.com/channel/UC5lWEK3xzjWtK0DPerbI_kw?view_as=subscriber"
                            target="_blank" rel="noopener noreferrer"
-                           className="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
+                           className="w-10 h-10 rounded-full bg-[#5eb093] hover:bg-gray-600 flex items-center justify-center transition-colors">
                             <Youtube size={18}/>
                         </a>
                     </div>

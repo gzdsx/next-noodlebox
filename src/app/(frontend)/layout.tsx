@@ -54,7 +54,7 @@ export default async function FrontendLayout({
                 <AppProvider categories={categories}>
                     <CartProvider>
                         <Header/>
-                        <main className="min-h-screen">{children}</main>
+                        <main className="min-h-125">{children}</main>
                         <Footer/>
                         <MobileTabbar/>
                         <Toaster richColors position="top-center"/>

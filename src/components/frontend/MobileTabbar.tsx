@@ -28,12 +28,12 @@ export default function MobileTabbar() {
                     <span className="text-[10px]">Lottery</span>
                 </button>
 
-                <Link href="/products" className="flex flex-col items-center gap-0.5 text-crimson">
+                <Link href="/shop" className="flex flex-col items-center gap-0.5 text-crimson">
                     <Grid3X3 size={20}/>
                     <span className="text-[10px]">Menus</span>
                 </Link>
 
-                <Link href="/products" className="flex flex-col items-center gap-0.5 text-gray-600 hover:text-crimson">
+                <Link href="/points-mall" className="flex flex-col items-center gap-0.5 text-gray-600 hover:text-crimson">
                     <Gift size={20}/>
                     <span className="text-[10px]">Points Mall</span>
                 </Link>
