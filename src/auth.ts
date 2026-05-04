@@ -46,7 +46,7 @@ export const {handlers, auth} = NextAuth({
                     });
 
                     user = {...user, accessToken: response.data.access_token};
-                    console.log('user:', user);
+                    console.log('google user:', user);
                     return true; // 如果 Laravel 报错，拒绝登录
                 } catch (error) {
                     console.error("同步到 Laravel 失败", error);
