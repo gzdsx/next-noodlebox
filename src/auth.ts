@@ -5,7 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 export const {handlers, auth} = NextAuth({
     trustHost: true,
-    redirectProxyUrl:'https://www.noodlebox.ie/auth',
+    redirectProxyUrl:'https://staging.noodlebox.ie/auth',
     providers: [
         CredentialsProvider({
             id: "sanctum",
