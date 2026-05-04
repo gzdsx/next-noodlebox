@@ -1,16 +1,22 @@
 import CheckoutClient from '@/components/frontend/CheckoutClient';
 import {apiGet} from "@/lib/api";
+import PaypalProvider from "@/providers/PaypalProvider";
 
-const getAddress = async () => {
+const getOptions = async () => {
     try {
-        const response = await apiGet('/user/address');
-        return response.data.items;
+        const response = await apiGet('/checkout/options');
+        return response.data;
     } catch {
-        return [];
+        return {};
     }
-};
+}
 
 export default async function CheckoutPage() {
-    const addresses = await getAddress();
-    return <CheckoutClient/>;
+    //const addresses = await getAddress();
+    const options = await getOptions();
+    return (
+        <PaypalProvider>
+            <CheckoutClient options={options}/>
+        </PaypalProvider>
+    );
 }

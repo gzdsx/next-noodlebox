@@ -47,7 +47,7 @@ const PageClient = ({categories = []}: { categories: Category[] }) => {
             </div>
             <div className={'flex flex-col md:flex-row gap-x-4'}>
                 <div className={'w-[300px] min-w-[300px] max-w-[300px] hidden md:flex flex-col gap-y-2'}>
-                    <h2 className={'text-[24px] font-bold text-[#f19e39] mb-4'}>Points Mall</h2>
+                    <h2 className={'text-[24px] font-bold text-[#f19e39] mb-4 uppercase'}>Points Mall</h2>
                     {
                         categories.map((cat, index) => (
                             <button

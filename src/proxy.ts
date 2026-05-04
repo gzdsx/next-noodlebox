@@ -13,29 +13,22 @@ export default auth((req) => {
     const isLoggedIn = !!req.auth;
     const {nextUrl} = req;
 
-    const isAdminRoute = nextUrl.pathname.startsWith("/admin");
     const isAuthRoute = nextUrl.pathname.startsWith("/user");
+    if (isLoggedIn && nextUrl.pathname.startsWith("/login")) {
+        const redirect = nextUrl.searchParams.get("redirect") || "/user";
+        return NextResponse.redirect(new URL(redirect, nextUrl));
+    }
 
     // 1. 如果没登录且试图访问受限页面
-    if (!isLoggedIn && (isAdminRoute || isAuthRoute)) {
+    if (!isLoggedIn && isAuthRoute && !nextUrl.pathname.startsWith("/login")) {
         const loginUrl = new URL("/login", nextUrl);
-        loginUrl.searchParams.set("callbackUrl", nextUrl.pathname);
+        loginUrl.searchParams.set("redirect", nextUrl.href);
         return NextResponse.redirect(loginUrl);
-    }
-
-    if (isLoggedIn && nextUrl.pathname === "/login") {
-        const callbackUrl = nextUrl.searchParams.get("callbackUrl") || "/user";
-        return NextResponse.redirect(new URL(callbackUrl, nextUrl));
-    }
-
-    // 2. 如果是司机试图进管理后台
-    if (isAdminRoute && (req.auth?.user as unknown as User).role !== 'administrator') {
-        return NextResponse.redirect(new URL("/user", nextUrl));
     }
 
     return NextResponse.next();
 })
 
 export const config = {
-    matcher: ["/admin/:path*", "/user/:path*"],
+    matcher: ["/user/:path*"],
 }

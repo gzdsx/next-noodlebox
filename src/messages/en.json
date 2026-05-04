@@ -870,7 +870,8 @@
 			"cancelled": "Cancelled",
 			"refunded": "Refunded",
 			"noOrders": "No orders yet",
-			"orderHistory": "Order History"
+			"orderHistory": "Order History",
+			"processing": "Processing"
 		},
 		"user": {
 			"myOrders": "My Orders",

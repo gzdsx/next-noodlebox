@@ -42,8 +42,8 @@ export default function ProfileClient({ session }: ProfileClientProps) {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('user.profileSettings')}</h1>
-            <Card className="border-0 shadow-sm">
+            <h1 className="text-2xl font-bold mb-6">{t('user.profileSettings')}</h1>
+            <Card className="border border-gray-100/30 shadow-sm bg-transparent text-white">
                 <CardContent className="pt-6">
                     <div className="flex items-center gap-4 mb-8">
                         <Avatar className="h-16 w-16">
@@ -85,7 +85,7 @@ export default function ProfileClient({ session }: ProfileClientProps) {
                         </Button>
                     </form>
                     <div className="border-t border-gray-100 pt-6 mt-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('user.changePassword')}</h3>
+                        <h3 className="text-lg font-semibold mb-4">{t('user.changePassword')}</h3>
                         <form onSubmit={handlePasswordSubmit} className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="current_password">{t('user.currentPassword')}</Label>

@@ -27,7 +27,7 @@ function ResultPage({
   return (
     <div className={cn("flex flex-col items-center justify-center py-16 text-center", className)}>
       <Icon className={cn("h-16 w-16 mb-4", iconClass)} />
-      <h2 className="text-xl font-semibold text-foreground mb-2">{title}</h2>
+      <h2 className="text-xl font-semibold mb-2">{title}</h2>
       {description && <p className="text-muted-foreground mb-6 max-w-md">{description}</p>}
       {children && <div className="flex gap-3">{children}</div>}
     </div>

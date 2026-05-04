@@ -184,8 +184,10 @@ export default function HeaderClient() {
                                             {t('header.profile')}
                                         </DropdownMenuItem>
                                         <DropdownMenuSeparator/>
-                                        <DropdownMenuItem variant="destructive"
-                                                          onClick={() => signOut({redirectTo: window.location.pathname})}>
+                                        <DropdownMenuItem
+                                            variant="destructive"
+                                            onClick={() => signOut({redirectTo: window.location.href})}
+                                        >
                                             <LogOut size={14}/>
                                             {t('header.logout')}
                                         </DropdownMenuItem>
@@ -193,7 +195,7 @@ export default function HeaderClient() {
                                 ) : (
                                     <>
                                         <DropdownMenuItem
-                                            onClick={() => router.push('/login?callbackUrl=' + encodeURIComponent(window.location.pathname))}>
+                                            onClick={() => router.push('/login?redirect=' + encodeURIComponent(window.location.href))}>
                                             <User size={14}/>
                                             {t('header.login')}
                                         </DropdownMenuItem>

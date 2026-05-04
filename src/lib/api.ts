@@ -8,6 +8,12 @@ interface FetchOptions extends RequestInit {
     params?: Record<string, any>;
 }
 
+export interface ResponseError {
+    status: number|string;
+    message: string;
+    errors: any;
+}
+
 async function getAuthSession() {
     // 判断环境：如果 window 不存在，说明在服务端
     if (typeof window === "undefined") {
@@ -75,21 +81,23 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
         // 4. 统一错误拦截
         if (response.status === 401) {
             // 处理未授权，例如跳转登录
-            if (typeof window !== 'undefined') window.location.href = '/login?callbackUrl=' + encodeURIComponent(window.location.pathname);
+            // if (typeof window !== 'undefined') window.location.href = '/login?callbackUrl=' + encodeURIComponent(window.location.pathname);
+        }
+
+        // 204 No Content 处理
+        if (response.status === 204) {
+            return Promise.reject(new Error('204 No Content'));
         }
 
         if (!response.ok) {
             const errorData = await response.json();
             //console.log('response:',errorData);
             throw {
-                status: errorData.code,
+                status: errorData.status,
                 message: errorData.message || '请求失败',
                 errors: errorData.errors, // Laravel 的表单验证错误通常放在这里
             };
         }
-
-        // 204 No Content 处理
-        if (response.status === 204) return null;
 
         return await response.json();
     } catch (error) {

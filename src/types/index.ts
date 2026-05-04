@@ -64,12 +64,54 @@ export interface CartOptionItem {
 }
 
 export interface CartItem {
-    key: string;
+    id?: number;
     product_id: number;
-    title: string;
-    thumbnail: string;
-    price: number;
+    product_type: string;
     quantity: number;
+    title?: string;
+    price: number;
+    image?: string;
+    sku_id?: number;
+    sku_name?: string;
+    options?: CartOptionItem[];
+    additional_options?: CartOptionItem[];
+    purchase_via?: string;
+}
+
+export interface ShippingAddress {
+    name: string;
+    iddcode: string;
+    phone_number: string;
+    address: string;
+    eircode: string;
+}
+
+export interface ShippingZone {
+    id: number;
+    title: string;
+    fee: number;
+}
+
+export interface Order {
+    id: number;
+    order_no: string;
+    status: string;
+    total: number;
+    items: OrderItem[];
+    created_at: string;
+    updated_at: string;
+    shipping_total:string;
+}
+
+export interface OrderItem {
+    id: number;
+    order_id: number;
+    product_id: number;
+    product_type: string;
+    quantity: number;
+    title?: string;
+    price: number;
+    image?: string;
     sku_id?: number;
     sku_name?: string;
     options?: CartOptionItem[];

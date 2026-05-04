@@ -2,24 +2,24 @@
 
 import React, {createContext, useContext, useState, useEffect, useCallback, ReactNode} from 'react';
 import {CartItem, Product} from "@/types";
-import sha1 from "@/lib/sha1";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import {ProductInfoClient} from "@/components/frontend/ProductInfoClient";
+import {apiDelete, apiGet, apiPost, apiPut} from "@/lib/api";
 
 
 interface CartContextType {
     items: CartItem[];
     addItem: (item: CartItem) => void;
-    removeItem: (key: string) => void;
-    updateQuantity: (key: string, quantity: number) => void;
+    removeItem: (id: number) => void;
+    updateQuantity: (id: number, quantity: number) => void;
     clearCart: () => void;
+    reloadCart: () => void;
     totalItems: number;
     totalPrice: number;
     productModal: {
@@ -47,17 +47,20 @@ export function CartProvider({children}: { children: ReactNode }) {
         setCurrentProduct(null);
     }
 
+    const fetchItems = async () => {
+        try {
+            const response = await apiGet('/carts');
+            setItems([...response.data.items]);
+        } catch {
+
+        }
+    }
+
     // Load from localStorage on mount
     useEffect(() => {
-        try {
-            const stored = localStorage.getItem(CART_STORAGE_KEY);
-            if (stored) {
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setItems(JSON.parse(stored));
-            }
-        } catch {
-            // ignore
-        }
+        (async () => {
+            await fetchItems();
+        })()
     }, []);
 
     // Sync to localStorage on change
@@ -65,57 +68,35 @@ export function CartProvider({children}: { children: ReactNode }) {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     }, [items]);
 
-    const generateKey = (item: CartItem) => {
-        const {product_id, options, additional_options, purchase_via} = item;
-        const key = JSON.stringify({
-            product_id,
-            options,
-            additional_options,
-            purchase_via
+    const addItem = useCallback(async (newItem: CartItem) => {
+        await apiPost(`/carts`, {
+            product_id: newItem.product_id,
+            product_type: newItem.product_type,
+            price: newItem.price,
+            quantity: newItem.quantity,
+            purchase_via: newItem.purchase_via,
+            options: newItem.options,
+            additional_options: newItem.additional_options,
         });
-
-        return sha1(key);
-    }
-
-    const addItem = useCallback((newItem: CartItem) => {
-        setItems(prev => {
-            const newKey = generateKey(newItem);
-            const existing = prev.find(item => item.key === newKey);
-            if (existing) {
-                return prev.map(item =>
-                    item.key === newKey
-                        ? {...item, quantity: item.quantity + newItem.quantity}
-                        : item
-                );
-            }
-            return [...prev, {...newItem, key: newKey}];
-        });
+        await fetchItems();
     }, []);
 
-    const removeItem = useCallback((key: string) => {
-        setItems(prev => prev.filter(item => {
-            return !(item.key === key);
-        }));
+    const removeItem = useCallback(async (id: number) => {
+        await apiDelete(`/carts/${id}`);
+        setItems(prevItems => prevItems.filter(item => item.id !== id));
     }, []);
 
-    const updateQuantity = useCallback((key: string, quantity: number) => {
-        if (quantity <= 0) {
-            removeItem(key);
-            return;
-        }
-        setItems(prev => prev.map(item => {
-            return (item.key === key)
-                ? {...item, quantity}
-                : item;
-        }));
-    }, [removeItem]);
+    const updateQuantity = useCallback(async (id: number, quantity: number) => {
+        await apiPut(`/carts/${id}`, {quantity});
+        setItems(prevItems => prevItems.map(item => item.id === id ? {...item, quantity} : item));
+    }, []);
 
-    const clearCart = useCallback(() => {
+    const clearCart = useCallback(async () => {
         setItems([]);
     }, []);
 
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const totalPrice = items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
 
     return (
         <CartContext.Provider value={{
@@ -124,6 +105,7 @@ export function CartProvider({children}: { children: ReactNode }) {
             removeItem,
             updateQuantity,
             clearCart,
+            reloadCart: fetchItems,
             totalItems,
             totalPrice,
             productModal: {

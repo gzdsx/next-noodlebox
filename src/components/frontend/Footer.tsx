@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {Mail, Phone, Facebook, Instagram, Youtube} from 'lucide-react';
+import sha1 from "@/lib/sha1";
 
 export default function Footer() {
     return (
@@ -37,9 +38,9 @@ export default function Footer() {
                 {/* Providers Image */}
                 <div className="flex justify-center mb-8">
                     <img
-                        src="https://www.noodlebox.ie/storage/image/2024/01/AVHoSqMRhkRboihDgtU9rD6fhA7bu5owhhxBpqSd.png"
+                        src="/gys-111-600x76.avif"
                         alt="Our Providers"
-                        className="max-w-full h-auto"
+                        className="max-w-full h-10"
                     />
                 </div>
 

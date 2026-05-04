@@ -2,7 +2,6 @@ import {apiGet} from "@/lib/api";
 import PageClient from "./PageClient";
 
 const fetchCategory = async (slug: string) => {
-    console.log('slug:', slug);
     try {
         const response = await apiGet(`/categories/${slug}`);
         return response.data;

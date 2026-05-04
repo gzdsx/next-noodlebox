@@ -57,14 +57,12 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
         return Number(product.point_price) * quantity;
     }, [product.point_price, quantity]);
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         addItem({
-            key: '',
             product_id: product.id,
-            title: product.title,
-            thumbnail: product.thumbnail,
-            price: skuData.price,
+            product_type: 'product',
             quantity,
+            price: skuData.price,
             options: skuData.options,
             additional_options: skuData.additional_options,
             purchase_via: usePoints ? 'point' : 'cash',

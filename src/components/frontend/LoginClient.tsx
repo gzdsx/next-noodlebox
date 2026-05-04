@@ -32,12 +32,11 @@ export default function LoginClient() {
                 redirect: false,
             });
 
-            if (result?.error) {
-                console.log(result.error);
-            } else {
-                const callbackUrl = searchParams.get('callbackUrl') || '/';
-                router.push(callbackUrl);
-                router.refresh();
+            if (result?.ok) {
+                const redirect = searchParams.get('redirect') || '/';
+                if (redirect) window.location.href = redirect;
+            }else{
+                alert(result?.error)
             }
         } catch (error) {
             console.log('login error:', error);

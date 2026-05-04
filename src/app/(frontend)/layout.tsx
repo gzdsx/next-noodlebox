@@ -11,6 +11,7 @@ import {AppProvider} from "@/contexts/AppContext";
 import './globals.css';
 import {apiGet} from "@/lib/api";
 import {Category} from "@/types";
+import LotteryCilent from "@/components/frontend/LotteryCilent";
 
 export const metadata: Metadata = {
     title: "Noodle Box - The Best Chinese Takeaway In Drogheda",
@@ -51,13 +52,14 @@ export default async function FrontendLayout({
         <body className="bg-[#444] text-gray-100 min-h-screen w-full overflow-x-hidden pb-14 lg:pb-0">
         <LocaleProvider>
             <SessionProvider session={session}>
-                <AppProvider categories={categories}>
+                <AppProvider categories={categories} session={session}>
                     <CartProvider>
                         <Header/>
                         <main className="min-h-125">{children}</main>
                         <Footer/>
                         <MobileTabbar/>
                         <Toaster richColors position="top-center"/>
+                        <LotteryCilent/>
                     </CartProvider>
                 </AppProvider>
             </SessionProvider>

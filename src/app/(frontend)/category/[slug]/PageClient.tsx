@@ -34,7 +34,7 @@ const PageClient = ({category, products}: PageClientProps) => {
                     </div>
                 </div>
                 <div className={'w-100'}>
-                    <h1 className={'text-2xl font-bold my-4'}>Categories</h1>
+                    <h1 className={'text-2xl font-bold my-4 uppercase'}>Categories</h1>
                     <ul className={'leading-[1.8]'}>
                         {
                             pasrseCategories.map((cat) => (

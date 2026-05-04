@@ -109,6 +109,7 @@
     button, a {
         /* 去除 iOS 点击时的灰色高亮 */
         -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
     }
 
     div {

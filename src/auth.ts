@@ -22,7 +22,7 @@ export const {handlers, auth} = NextAuth({
                     }
                     return null;
                 } catch (e) {
-                    console.log('e:',e);
+                    console.log('e:', e);
                     throw e;
                 }
             }
@@ -31,20 +31,17 @@ export const {handlers, auth} = NextAuth({
     callbacks: {
         // 1. 将 Token 和 User 信息存入 JWT 中
         async jwt({token, user}) {
-            if (user) {
-                token.id = user.id;
-                token.avatar = (user as any).avatar;
-                token.role = (user as any).role;
-                token.accessToken = (user as any).accessToken;
-            }
-            return token;
+            return {...token, ...user}
         },
         // 2. 将 JWT 中的信息暴露给前端 session
         async session({session, token}) {
             (session as any).accessToken = token.accessToken as string;
-            (session as any).user.role = token.role as string[];
-            (session as any).user.avatar = token.avatar as string;
             (session as any).user.id = token.id;
+            (session as any).user.name = token.name;
+            (session as any).user.avatar = token.avatar as string;
+            (session as any).user.role = token.role as string;
+            (session as any).user.points = token.points as string;
+
             return session;
         }
     },

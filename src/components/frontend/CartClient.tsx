@@ -48,8 +48,8 @@ export default function CartClient() {
                             <span className="w-20 text-right">{t('cart.subtotal')}</span>
                             <span className="w-8"/>
                         </div>
-                        {items.map((item, idx) => (
-                            <CartItemRow key={`${item.product_id}-${item.sku_id ?? idx}`} item={item}/>
+                        {items.map((item) => (
+                            <CartItemRow key={`cart-item-${item.id}`} item={item}/>
                         ))}
                     </div>
                 </div>

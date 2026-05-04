@@ -8,7 +8,8 @@ declare module "next-auth" {
      */
     interface User {
         id?: string
-        capabilities?: string[] // 在这里定义你的属性
+        role?: string // 在这里定义你的属性
+        points?: string
     }
 
     /**
@@ -16,7 +17,9 @@ declare module "next-auth" {
      */
     interface Session {
         user: {
-            capabilities?: string[]
+            id?: string
+            role?: string // 在这里定义你的属性
+            points?: string
         } & DefaultSession["user"]
     }
 }
@@ -24,6 +27,8 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
     /** 扩充 JWT 对象，确保在 middleware 中能读取到这些属性 */
     interface JWT {
-        capabilities?: string[]
+        id?: string
+        role?: string // 在这里定义你的属性
+        points?: string
     }
 }

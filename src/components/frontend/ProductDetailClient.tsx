@@ -45,12 +45,10 @@ export default function ProductDetailClient({product}: { product: Product }) {
         addItem({
             product_id: product.id,
             title: product.title,
-            thumbnail: product.thumbnail,
+            image: product.thumbnail,
             price: currentPrice,
             quantity,
-            sku_id: selectedSku?.id,
-            sku_name: selectedSku?.name,
-            key:''
+            product_type: ""
         });
         toast.success(t('product.addToCart') + ' ✓');
     };
