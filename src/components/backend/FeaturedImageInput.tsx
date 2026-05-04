@@ -3,7 +3,7 @@
 import React from 'react';
 import {Image, Button} from 'antd';
 import {PlusOutlined, DeleteOutlined} from '@ant-design/icons';
-import {useBackendApp} from "@/contexts/BackendAppProvider";
+import {useBackendApp} from "@/contexts/BackendAppContext";
 
 interface FeaturedImageInputProps {
     value?: string;

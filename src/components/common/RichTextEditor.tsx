@@ -25,7 +25,7 @@ import {
     AlignRightOutlined,
     MenuOutlined,
 } from '@ant-design/icons';
-import {useBackendApp} from "@/contexts/BackendAppProvider";
+import {useBackendApp} from "@/contexts/BackendAppContext";
 import {useTranslations} from '@/contexts/LocaleContext';
 
 interface RichTextEditorProps {

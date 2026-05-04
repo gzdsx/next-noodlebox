@@ -1,19 +1,8 @@
-import {auth} from "@/auth"; // 服务端获取 session
-import {getSession} from "next-auth/react";
-
 const BASE_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 interface FetchOptions extends RequestInit {
     data?: any;
     params?: Record<string, any>;
-}
-
-async function getAuthSession() {
-    // 判断环境：如果 window 不存在，说明在服务端
-    if (typeof window === "undefined") {
-        return await auth();
-    }
-    return await getSession();
 }
 
 export async function apiFetch(endpoint: string, {data, params, ...options}: FetchOptions = {}) {
@@ -30,33 +19,10 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
 
     // 3. 自动注入 Token (如果是 Token 认证方案)
     // 如果是 Sanctum Cookie 方案，fetch 会自动携带凭证，无需手动加 Authorization
-    const session = await getAuthSession();
-    const token = (session as any)?.accessToken;
+    const token = localStorage.getItem('adminToken');
 
     if (token) {
         headers.set('Authorization', `Bearer ${token}`);
-    }
-
-    const isServer = typeof window === 'undefined';
-    if (isServer) {
-        try {
-            const {headers: getHeaders} = await import('next/headers');
-            const headerStore = await getHeaders();
-
-            // 按照优先级获取真实 IP：Cloudflare -> 现有转发链路 -> 节点 IP
-            const realIp = headerStore.get('cf-connecting-ip') ||
-                headerStore.get('x-forwarded-for')?.split(',')[0] ||
-                '';
-
-            if (realIp) {
-                // 显式设置，让 Laravel 的 TrustProxies 能够识别
-                headers.set('X-Real-IP', realIp);
-                headers.set('X-Forwarded-For', realIp);
-            }
-        } catch (e) {
-            // 在某些非请求上下文（如静态生成）中调用 headers() 会报错
-            console.warn('Unable to access headers in current context.');
-        }
     }
 
     if (data) {
@@ -85,7 +51,7 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
             const errorData = await response.json();
             //console.log('response:',errorData);
             throw {
-                status: errorData.code,
+                status: errorData.status,
                 message: errorData.message || '请求失败',
                 errors: errorData.errors, // Laravel 的表单验证错误通常放在这里
             };

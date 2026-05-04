@@ -20,11 +20,11 @@ import {
     FolderOutlined, PictureOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
-import {usePathname,useRouter} from 'next/navigation';
-import {signOut, useSession} from "next-auth/react";
-import {apiPost} from "@/lib/api";
+import {usePathname, useRouter} from 'next/navigation';
 import {useTranslations} from '@/contexts/LocaleContext';
 import LanguageSwitcher from '@/components/backend/LanguageSwitcher';
+import {useAdministrator} from "@/contexts/BackendAppContext";
+import {apiPost} from "@/lib/backendApi";
 
 const {Header, Sider, Content} = Layout;
 
@@ -33,12 +33,11 @@ export default function AdminLayoutClient({
                                           }: {
     children: React.ReactNode;
 }) {
-    const { t } = useTranslations('admin');
-
+    const user = useAdministrator();
+    const {t} = useTranslations('admin');
     const [collapsed, setCollapsed] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
-    const {data:session} = useSession();
     const {
         token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
@@ -215,10 +214,7 @@ export default function AdminLayoutClient({
         {
             key: 'signout',
             label: t('logout'),
-            onClick: async () => {
-                await apiPost('/auth/logout');
-                await signOut({redirectTo: window.location.pathname});
-            }
+            onClick: () => logout()
         },
         {
             type: 'divider' as const,
@@ -229,6 +225,13 @@ export default function AdminLayoutClient({
             label: <Link href="/">{t('backToFrontend')}</Link>,
         },
     ];
+
+    const logout = async () => {
+        await apiPost('/auth/logout');
+        await localStorage.removeItem('adminToken');
+        await localStorage.removeItem('adminUser');
+        window.location.reload();
+    }
 
     return (
         <Layout style={{minHeight: '100vh'}}>
@@ -248,16 +251,14 @@ export default function AdminLayoutClient({
                     justifyContent: 'center',
                     borderBottom: '1px solid #f0f0f0',
                 }}>
-                    <ShoppingOutlined style={{fontSize: 28, color: '#ff4d4f'}} />
+                    <ShoppingOutlined style={{fontSize: 28, color: '#ff4d4f'}}/>
                     {!collapsed && (
                         <span style={{
                             fontSize: 18,
                             fontWeight: 'bold',
                             marginLeft: 8,
                             color: '#262626',
-                        }}>
-              XXShop
-            </span>
+                        }}>Noodlebox</span>
                     )}
                 </div>
                 <Menu
@@ -291,14 +292,14 @@ export default function AdminLayoutClient({
                     />
 
                     <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
-                        <LanguageSwitcher />
+                        <LanguageSwitcher/>
                         <Badge count={5} size="small">
                             <Button type="text" icon={<BellOutlined/>}/>
                         </Badge>
                         <Dropdown menu={{items: userMenuItems}} placement="bottomRight">
                             <div style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8}}>
-                                <Avatar icon={<UserOutlined/>} src={session?.user?.image}/>
-                                <span style={{color: '#262626'}}>{session?.user?.name}</span>
+                                <Avatar icon={<UserOutlined/>} src={user?.avatar}/>
+                                <span style={{color: '#262626'}}>{user?.name}</span>
                             </div>
                         </Dropdown>
                     </div>

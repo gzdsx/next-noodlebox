@@ -1,9 +1,8 @@
 import {ConfigProvider, App} from "antd";
 import {Metadata} from "next";
-import {SessionProvider} from "next-auth/react";
 import {AntdRegistry} from "@ant-design/nextjs-registry";
 import {LocaleProvider} from "@/contexts/LocaleContext";
-import {auth} from "@/auth";
+import AdminRootLayout from "./admin/AdminRootLayout";
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -24,8 +23,6 @@ export default async function RootLayout({
                                          }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const session = await auth();
-
     return (
         <html lang="en" className="w-full overflow-x-hidden relative">
         <body className={`min-h-screen w-full overflow-x-hidden relative overscroll-x-none`}>
@@ -38,11 +35,9 @@ export default async function RootLayout({
                 }
             }}>
                 <AntdRegistry>
-                    <SessionProvider session={session}>
-                        <App>
-                            {children}
-                        </App>
-                    </SessionProvider>
+                    <App>
+                        <AdminRootLayout>{children}</AdminRootLayout>
+                    </App>
                 </AntdRegistry>
             </ConfigProvider>
         </LocaleProvider>

@@ -4,7 +4,7 @@ import React from 'react';
 import {Image, Button} from 'antd';
 import {PlusOutlined, DeleteOutlined} from '@ant-design/icons';
 import SortableContainer from '@/components/common/SortableContainer';
-import {useBackendApp} from "@/contexts/BackendAppProvider";
+import {useBackendApp} from "@/contexts/BackendAppContext";
 import {useTranslations} from "@/contexts/LocaleContext";
 import {arrayMove} from "@dnd-kit/sortable";
 
