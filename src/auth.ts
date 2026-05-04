@@ -5,7 +5,6 @@ import GoogleProvider from "next-auth/providers/google";
 
 export const {handlers, auth} = NextAuth({
     trustHost: true,
-    redirectProxyUrl:'https://staging.noodlebox.ie/auth',
     providers: [
         CredentialsProvider({
             id: "sanctum",
@@ -31,8 +30,7 @@ export const {handlers, auth} = NextAuth({
         }),
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            redirectProxyUrl: process.env.GOOGLE_REDIRECT_URI,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET
         }),
     ],
     callbacks: {
@@ -41,10 +39,10 @@ export const {handlers, auth} = NextAuth({
                 try {
                     // 关键：将 Google 用户信息同步到你的 Laravel 数据库
                     const response = await apiPost(`/auth/google`, {
-                        email: user.email,
+                        id: user.id,
                         name: user.name,
-                        google_id: user.id,
-                        image: user.image,
+                        email: user.email,
+                        avatar: user.image,
                     });
 
                     user = {...user, accessToken: response.data.access_token};
