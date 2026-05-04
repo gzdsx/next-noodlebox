@@ -10,6 +10,7 @@ declare module "next-auth" {
         id?: string
         role?: string // 在这里定义你的属性
         points?: string
+        accessToken?: string
     }
 
     /**
