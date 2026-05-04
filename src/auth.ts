@@ -5,6 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 export const {handlers, auth} = NextAuth({
     trustHost: true,
+    redirectProxyUrl:'https://www.noodlebox.ie/auth',
     providers: [
         CredentialsProvider({
             id: "sanctum",
@@ -31,6 +32,7 @@ export const {handlers, auth} = NextAuth({
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            redirectProxyUrl: process.env.GOOGLE_REDIRECT_URI,
         }),
     ],
     callbacks: {
