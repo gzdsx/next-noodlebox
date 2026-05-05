@@ -58,16 +58,20 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
     }, [product.point_price, quantity]);
 
     const handleAddToCart = async () => {
-        addItem({
-            product_id: product.id,
-            product_type: 'product',
-            quantity,
-            price: skuData.price,
-            options: skuData.options,
-            additional_options: skuData.additional_options,
-            purchase_via: usePoints ? 'point' : 'cash',
-        });
-        toast.success(t('product.addToCart') + ' ✓');
+        try {
+            addItem({
+                product_id: product.id,
+                product_type: 'product',
+                quantity,
+                price: skuData.price,
+                options: skuData.options,
+                additional_options: skuData.additional_options,
+                purchase_via: usePoints ? 'point' : 'cash',
+            });
+            toast.success(t('product.addToCart') + ' ✓');
+        }catch (e) {
+
+        }
     };
 
     const renderBadges = () => {

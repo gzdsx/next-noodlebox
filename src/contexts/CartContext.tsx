@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import {ProductInfoClient} from "@/components/frontend/ProductInfoClient";
 import {loadCarts, addCartItem, removeCartItem, updateCartQuantity} from "@/actions/cart";
+import {useSession} from "next-auth/react";
 
 
 interface CartContextType {
@@ -33,6 +34,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const CART_STORAGE_KEY = 'cart_items';
 
 export function CartProvider({children}: { children: ReactNode }) {
+    const sesstion = useSession();
     const [items, setItems] = useState<CartItem[]>([]);
     const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
     const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -48,28 +50,32 @@ export function CartProvider({children}: { children: ReactNode }) {
     }
 
     const fetchItems = async () => {
-        try {
-            const items = await loadCarts();
-            setItems([...items]);
-        } catch {
+        if (sesstion.status !== 'authenticated') {
+            try {
+                const items = await loadCarts();
+                setItems([...items]);
+            } catch {
 
+            }
         }
     }
 
     // Load from localStorage on mount
     useEffect(() => {
-        (async () => {
-            await fetchItems();
-        })()
-    }, []);
+        if (sesstion.status === 'authenticated') {
+            (async () => {
+                await fetchItems();
+            })()
+        }
+    }, [sesstion.status]);
 
     // Sync to localStorage on change
     useEffect(() => {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     }, [items]);
 
-    const addItem = useCallback(async (newItem: CartItem) => {
-        try {
+    const addItem = async (newItem: CartItem) => {
+        if (sesstion.status === 'authenticated') {
             await addCartItem({
                 product_id: newItem.product_id,
                 product_type: newItem.product_type,
@@ -80,12 +86,12 @@ export function CartProvider({children}: { children: ReactNode }) {
                 additional_options: newItem.additional_options,
             });
             await fetchItems();
-        } catch (e: any) {
-            if (e.status === 401) {
-                window.location.href = '/auth/login';
-            }
+            return Promise.resolve();
+        } else {
+            window.location.href = '/auth/login?redirect=' + window.location.origin + window.location.pathname;
+            return Promise.reject();
         }
-    }, []);
+    }
 
     const removeItem = useCallback(async (id: number) => {
         await removeCartItem(id);
