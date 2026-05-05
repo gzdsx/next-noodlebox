@@ -10,7 +10,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import {ProductInfoClient} from "@/components/frontend/ProductInfoClient";
-import {apiDelete, apiGet, apiPost, apiPut} from "@/lib/api";
+import {loadCarts, addCartItem, removeCartItem, updateCartQuantity} from "@/actions/cart";
 
 
 interface CartContextType {
@@ -49,8 +49,8 @@ export function CartProvider({children}: { children: ReactNode }) {
 
     const fetchItems = async () => {
         try {
-            const response = await apiGet('/carts');
-            setItems([...response.data.items]);
+            const items = await loadCarts();
+            setItems([...items]);
         } catch {
 
         }
@@ -69,25 +69,31 @@ export function CartProvider({children}: { children: ReactNode }) {
     }, [items]);
 
     const addItem = useCallback(async (newItem: CartItem) => {
-        await apiPost(`/carts`, {
-            product_id: newItem.product_id,
-            product_type: newItem.product_type,
-            price: newItem.price,
-            quantity: newItem.quantity,
-            purchase_via: newItem.purchase_via,
-            options: newItem.options,
-            additional_options: newItem.additional_options,
-        });
-        await fetchItems();
+        try {
+            await addCartItem({
+                product_id: newItem.product_id,
+                product_type: newItem.product_type,
+                price: newItem.price,
+                quantity: newItem.quantity,
+                purchase_via: newItem.purchase_via,
+                options: newItem.options,
+                additional_options: newItem.additional_options,
+            });
+            await fetchItems();
+        } catch (e: any) {
+            if (e.status === 401) {
+                window.location.href = '/auth/login';
+            }
+        }
     }, []);
 
     const removeItem = useCallback(async (id: number) => {
-        await apiDelete(`/carts/${id}`);
+        await removeCartItem(id);
         setItems(prevItems => prevItems.filter(item => item.id !== id));
     }, []);
 
     const updateQuantity = useCallback(async (id: number, quantity: number) => {
-        await apiPut(`/carts/${id}`, {quantity});
+        await updateCartQuantity(id, quantity);
         setItems(prevItems => prevItems.map(item => item.id === id ? {...item, quantity} : item));
     }, []);
 

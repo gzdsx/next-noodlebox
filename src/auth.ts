@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
 import {apiPost} from "@/lib/api";
 import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from "next-auth/providers/github";
 
 export const {handlers, auth} = NextAuth({
     trustHost: true,
@@ -21,10 +22,39 @@ export const {handlers, auth} = NextAuth({
                     if (res.data.access_token && res.data.user) {
                         return {...res.data.user, accessToken: res.data.access_token};
                     }
-                    return null;
+                    return res.data;
                 } catch (e) {
                     console.log('e:', e);
-                    throw e;
+                    return {
+                        status: e.status,
+                        message: e.message
+                    }
+                }
+            }
+        }),
+        CredentialsProvider({
+            id: "sms",
+            name: "Laravel SMS",
+            credentials: {
+                iddcode: {label: "IDDCode", type: "text", required: true},
+                phone_number: {label: "Phone Number", type: "text", required: true},
+                code: {label: "Verification Code", type: "text", required: true}
+            },
+            async authorize(credentials) {
+                // 调用你的 Laravel 接口
+                try {
+                    const res = await apiPost("/auth/sms-login", credentials);
+                    // 验证成功后，返回的对象会被存入 JWT
+                    if (res.data.access_token && res.data.user) {
+                        return {...res.data.user, accessToken: res.data.access_token};
+                    }
+
+                    return res.data;
+                } catch (e) {
+                    return {
+                        status: e.status,
+                        message: e.message
+                    }
                 }
             }
         }),
@@ -34,7 +64,14 @@ export const {handlers, auth} = NextAuth({
         }),
     ],
     callbacks: {
-        async signIn({user, account, profile, email, credentials}) {
+        async signIn({user, account}) {
+            //console.log('user:', user);
+            //console.log('account:', account);
+            if (account?.provider === "sms" || account?.provider === "sanctum") {
+                if (!user.accessToken) {
+                    return false;
+                }
+            }
             if (account?.provider === "google") {
                 try {
                     // 关键：将 Google 用户信息同步到你的 Laravel 数据库
@@ -44,9 +81,8 @@ export const {handlers, auth} = NextAuth({
                         email: user.email,
                         avatar: user.image,
                     });
-
                     user = {...user, accessToken: response.data.access_token};
-                    console.log('google user:', user);
+                    //console.log('google user:', user);
                     return true; // 如果 Laravel 报错，拒绝登录
                 } catch (error) {
                     console.error("同步到 Laravel 失败", error);
@@ -75,8 +111,8 @@ export const {handlers, auth} = NextAuth({
         strategy: "jwt", // 使用 JWT 策略
     },
     pages: {
-        signIn: '/login',
-        error: '/auth/error',
+        signIn: '/auth/login',
+        error: '/auth/login',
     },
     debug: true,
     secret: process.env.NEXTAUTH_SECRET,

@@ -82,21 +82,28 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
         if (response.status === 401) {
             // 处理未授权，例如跳转登录
             // if (typeof window !== 'undefined') window.location.href = '/login?callbackUrl=' + encodeURIComponent(window.location.pathname);
+            throw {
+                status: 401,
+                message: 'Unauthorized',
+            }
         }
 
         // 204 No Content 处理
         if (response.status === 204) {
-            return Promise.reject(new Error('204 No Content'));
+            throw {
+                status: 204,
+                message: 'No Content',
+            }
         }
 
         if (!response.ok) {
             const errorData = await response.json();
-            //console.log('response:',errorData);
+            //console.log('errorData:', errorData);
             throw {
                 status: errorData.status,
                 message: errorData.message || '请求失败',
                 errors: errorData.errors, // Laravel 的表单验证错误通常放在这里
-            };
+            }
         }
 
         return await response.json();

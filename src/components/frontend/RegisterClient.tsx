@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { signIn } from 'next-auth/react';
-import { apiPost } from '@/lib/api';
-import { useTranslations } from '@/contexts/LocaleContext';
-import { toast } from 'sonner';
+import {useRouter} from 'next/navigation';
+import {Card, CardContent} from '@/components/ui/card';
+import {Input} from '@/components/ui/input';
+import {Label} from '@/components/ui/label';
+import {Button} from '@/components/ui/button';
+import {Checkbox} from '@/components/ui/checkbox';
+import {signIn} from 'next-auth/react';
+import {apiPost} from '@/lib/api';
+import {useTranslations} from '@/contexts/LocaleContext';
+import {toast} from 'sonner';
 
 export default function RegisterClient() {
     const {t} = useTranslations('ecommerce');
@@ -26,10 +26,10 @@ export default function RegisterClient() {
     const [agree, setAgree] = useState(false);
 
     const updateField = (field: string, value: string) => {
-        setForm(prev => ({ ...prev, [field]: value }));
+        setForm(prev => ({...prev, [field]: value}));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();
 
         if (form.password !== form.confirmPassword) {
@@ -54,7 +54,8 @@ export default function RegisterClient() {
                 account: form.email,
                 password: form.password,
             });
-            router.push('/');
+
+            router.push('/user/profile');
             router.refresh();
         } catch (error: any) {
             toast.error(error?.message || t('auth.registerFailed'));
@@ -64,14 +65,14 @@ export default function RegisterClient() {
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-            <Card className="w-full max-w-md shadow-lg border-0">
+        <div className="flex items-center justify-center px-4 pt-20 md:pt-40 pb-12">
+            <Card className="w-full max-w-120 border border-gray-200/20 bg-transparent">
                 <CardContent className="pt-6">
                     <div className="text-center mb-8">
-                        <h1 className="text-2xl font-bold text-gray-900">{t('auth.register')}</h1>
-                        <p className="text-sm text-gray-500 mt-2">{t('auth.registerSubtitle')}</p>
+                        <h1 className="text-2xl text-white font-bold">{t('auth.register')}</h1>
+                        <p className="text-sm text-gray-200 mt-2">{t('auth.registerSubtitle')}</p>
                     </div>
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-4 text-white">
                         <div className="space-y-2">
                             <Label htmlFor="username">{t('user.nickname')}</Label>
                             <Input
@@ -126,7 +127,7 @@ export default function RegisterClient() {
                                 checked={agree}
                                 onCheckedChange={(checked) => setAgree(checked === true)}
                             />
-                            <label htmlFor="agree" className="text-sm text-gray-700 cursor-pointer">
+                            <label htmlFor="agree" className="text-sm text-gray-300 cursor-pointer">
                                 {t('auth.agreeTerms')}
                             </label>
                         </div>
@@ -134,9 +135,10 @@ export default function RegisterClient() {
                             {loading ? '...' : t('auth.register')}
                         </Button>
                     </form>
-                    <div className="text-center text-sm text-gray-500 mt-4">
+                    <div className="text-center text-sm text-gray-300 mt-4">
                         {t('auth.hasAccount')}{' '}
-                        <Link href="/login" className="text-gray-700 hover:text-gray-900 font-medium">{t('auth.loginNow')}</Link>
+                        <Link href="/auth/login"
+                              className="text-gray-300 hover:text-gray-100 font-medium">{t('auth.loginNow')}</Link>
                     </div>
                 </CardContent>
             </Card>

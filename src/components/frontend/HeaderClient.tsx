@@ -2,7 +2,6 @@
 
 import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 import {useSession, signOut} from 'next-auth/react';
 import {
@@ -48,6 +47,10 @@ export default function HeaderClient() {
 
     const normalStyle = `hover:bg-gray-100 hover:text-gray-900`;
     const scrolledStyle = `hover:bg-white/10 hover:text-white`;
+
+    const routeLogin = () => {
+        router.push('/auth/login?redirect=' + encodeURIComponent(window.location.origin + window.location.pathname));
+    }
 
     useEffect(() => {
         const handleScroll = () => {
@@ -165,8 +168,7 @@ export default function HeaderClient() {
                                     tabIndex={-1}
                                     className={`p-2 transition-colors ${scrolled ? 'text-white hover:text-gray-200' : 'text-gray-100 hover:text-gray-200'}`}>
                                     {session?.user?.image ? (
-                                        <Image src={session.user.image} alt="avatar" width={28} height={28}
-                                               className="rounded-full"/>
+                                        <img src={session.user.image} alt="avatar" className="rounded-full w-[28px] h-[28px]"/>
                                     ) : (
                                         <User size={22}/>
                                     )}
@@ -195,11 +197,11 @@ export default function HeaderClient() {
                                 ) : (
                                     <>
                                         <DropdownMenuItem
-                                            onClick={() => router.push('/login?redirect=' + encodeURIComponent(window.location.href))}>
+                                            onClick={() => routeLogin()}>
                                             <User size={14}/>
                                             {t('header.login')}
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => router.push('/register')}>
+                                        <DropdownMenuItem onClick={() => router.push('/auth/register')}>
                                             <User size={14}/>
                                             {t('header.register')}
                                         </DropdownMenuItem>

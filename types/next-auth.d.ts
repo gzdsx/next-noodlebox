@@ -17,6 +17,7 @@ declare module "next-auth" {
      * 扩充 Session 对象，确保在组件中调用 useSession 时能看到这些属性
      */
     interface Session {
+        accessToken?: string
         user: {
             id?: string
             role?: string // 在这里定义你的属性

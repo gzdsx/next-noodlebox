@@ -106,7 +106,7 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
 
-    button, a {
+    a {
         /* 去除 iOS 点击时的灰色高亮 */
         -webkit-tap-highlight-color: transparent;
         cursor: pointer;
@@ -121,6 +121,11 @@
     div::-webkit-scrollbar {
         display: none;
         scrollbar-width: none;
+    }
+
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+        cursor: pointer;
     }
 }
 
