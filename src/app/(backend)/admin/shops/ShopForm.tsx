@@ -2,7 +2,7 @@
 
 import {useRouter} from "next/navigation";
 import {Button, Col, Form, Input, InputNumber, Row, Select} from "antd";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 import FeaturedImageInput from "@/components/backend/FeaturedImageInput";
 
 const {TextArea} = Input;

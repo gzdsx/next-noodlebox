@@ -10,7 +10,7 @@ import {
   ClockCircleOutlined,
   LineChartOutlined,
 } from '@ant-design/icons';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 export default function AnalyticsPage() {
     const {t} = useTranslations('analytics');

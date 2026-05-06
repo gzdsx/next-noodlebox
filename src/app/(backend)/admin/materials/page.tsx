@@ -23,7 +23,7 @@ import {
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import {apiGet, apiPut, apiDelete} from "@/lib/backendApi";
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import BatchUploader from '@/components/backend/BatchUploader';
 
 const {Search} = Input;

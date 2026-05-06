@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import {App, Card} from 'antd';
 import {useRouter} from 'next/navigation';
 import {apiPost} from '@/lib/backendApi';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import UserForm, {UserType} from "../UserForm";
 
 export default function Page() {

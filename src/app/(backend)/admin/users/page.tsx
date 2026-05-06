@@ -23,7 +23,7 @@ import {
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import {apiGet, apiDelete} from '@/lib/backendApi';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import Link from "next/link";
 import UserRoleSelect from "./UserRoleSelect";
 import UserStatusSelect from "./UserStatusSelect";

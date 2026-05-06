@@ -1,7 +1,7 @@
 import {ConfigProvider, App} from "antd";
 import {Metadata} from "next";
 import {AntdRegistry} from "@ant-design/nextjs-registry";
-import {LocaleProvider} from "@/contexts/LocaleContext";
+import {BackendLocaleProvider} from "@/contexts/BackendLocaleContext";
 import AdminRootLayout from "./admin/AdminRootLayout";
 import './globals.css';
 
@@ -26,7 +26,7 @@ export default async function RootLayout({
     return (
         <html lang="en" className="w-full overflow-x-hidden relative">
         <body className={`min-h-screen w-full overflow-x-hidden relative overscroll-x-none`}>
-        <LocaleProvider>
+        <BackendLocaleProvider>
             <ConfigProvider theme={{
                 components: {
                     Button: {
@@ -40,7 +40,7 @@ export default async function RootLayout({
                     </App>
                 </AntdRegistry>
             </ConfigProvider>
-        </LocaleProvider>
+        </BackendLocaleProvider>
         </body>
         </html>
     );

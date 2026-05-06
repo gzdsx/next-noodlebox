@@ -1,7 +1,7 @@
 'use client';
 
-import { useLocale } from '@/contexts/LocaleContext';
 import { Select } from 'antd';
+import { useLocale } from '@/contexts/BackendLocaleContext';
 import { GlobalOutlined } from '@ant-design/icons';
 
 export default function LanguageSwitcher() {

@@ -12,7 +12,7 @@ import {
     TeamOutlined,
     TrophyOutlined,
 } from '@ant-design/icons';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 const {Column} = Table;
 

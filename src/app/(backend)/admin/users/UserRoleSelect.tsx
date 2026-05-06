@@ -3,7 +3,7 @@
 import {useEffect, useState} from 'react';
 import {Select} from 'antd';
 import {apiGet} from '@/lib/backendApi';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 interface RoleSelectProps {
     value?: string;

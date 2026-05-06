@@ -15,17 +15,26 @@ export default function CartItemRow({item}: { item: CartItem }) {
     const optionNames: string[] = useMemo(() => {
         const names: string[] = [];
         const regex = /^(?!.*(none|original)).*$/i;
-        item.options?.forEach(option => {
-            if (regex.test(option.value || '')) {
-                names.push(option.value as string);
+        try {
+            console.log('item.options', item.options);
+            if (Array.isArray(item.options)) {
+                item.options.forEach(option => {
+                    if (regex.test(option.value || '')) {
+                        names.push(option.value as string);
+                    }
+                });
             }
-        });
 
-        item.additional_options?.forEach(option => {
-            if (regex.test(option.name)) {
-                names.push(option.name);
+            if (Array.isArray(item.additional_options)) {
+                item.additional_options?.forEach?.(option => {
+                    if (regex.test(option.name)) {
+                        names.push(option.name);
+                    }
+                })
             }
-        })
+        } catch (e) {
+            console.error((e as Error).message);
+        }
         return names;
     }, [item.additional_options, item.options]);
 

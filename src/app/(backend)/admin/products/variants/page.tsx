@@ -22,7 +22,7 @@ import {
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import {apiGet, apiPost, apiPut, apiDelete} from "@/lib/backendApi";
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 interface VariantOptionType {
     title: string;

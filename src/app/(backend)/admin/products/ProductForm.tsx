@@ -13,7 +13,7 @@ import {
     Select
 } from "antd";
 import RichTextEditor from "@/components/common/RichTextEditor";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {CategoryCheckboxGroup} from "@/components/backend/CategoryCheckboxGroup";
 import ImagesInput, {ImageItem} from "@/components/backend/ImagesInput";
 import ProductSkuInput, {SkuItem, VariantItem} from "@/components/backend/ProductSkuInput";

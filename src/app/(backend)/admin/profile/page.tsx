@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import {App, Card} from "antd";
 import UserForm, {UserType} from "../users/UserForm";
 import {apiGet, apiPost} from "@/lib/backendApi";
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 export default function Page() {
     const [user, setUser] = useState<UserType>({});

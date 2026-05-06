@@ -3,7 +3,7 @@
 import {useRouter} from "next/navigation";
 import {Button, Col, Form, Input, Row, Select} from "antd";
 import RichTextEditor from "@/components/common/RichTextEditor";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {CategoryCheckboxGroup} from "@/components/backend/CategoryCheckboxGroup";
 import FeaturedImageInput from "@/components/backend/FeaturedImageInput";
 

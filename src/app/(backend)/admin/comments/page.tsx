@@ -24,7 +24,7 @@ import {
     UserOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 
 const { Search } = Input;
 const { Option } = Select;

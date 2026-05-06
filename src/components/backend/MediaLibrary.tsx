@@ -30,7 +30,7 @@ import {
     ReloadOutlined
 } from '@ant-design/icons';
 import type {UploadProps} from 'antd';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import {apiGet, apiDelete, apiPost} from "@/lib/backendApi";
 
 const {Text, Paragraph} = Typography;

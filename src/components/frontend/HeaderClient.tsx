@@ -32,7 +32,6 @@ import {useCart} from '@/contexts/CartContext';
 import {useTranslations, useLocale} from '@/contexts/LocaleContext';
 import SearchBar from './SearchBar';
 import {useCategories, useCurrentUser} from "@/contexts/AppContext";
-import {apiPost} from "@/lib/api";
 
 export default function HeaderClient() {
     const currentUser = useCurrentUser();
@@ -55,12 +54,7 @@ export default function HeaderClient() {
     }
 
     const logout = async () => {
-        try {
-            await apiPost('/auth/logout');
-            signOut({redirectTo: encodeURIComponent(window.location.origin + window.location.pathname)});
-        } catch {
-
-        }
+        await signOut({redirectTo: window.location.href});
     }
 
     useEffect(() => {

@@ -37,20 +37,24 @@ export default function OrderHistoryList() {
     const [loading, setLoading] = useState(true);
 
     const renderOptions = (item: OrderItem) => {
-        const names: string[] = [];
-        const regex = /^(?!.*(none|original)).*$/i;
-        item.options?.forEach(option => {
-            if (regex.test(option.value || '')) {
-                names.push(option.value as string);
-            }
-        });
+        try {
+            const names: string[] = [];
+            const regex = /^(?!.*(none|original)).*$/i;
+            item.options?.forEach(option => {
+                if (regex.test(option.value || '')) {
+                    names.push(option.value as string);
+                }
+            });
 
-        item.additional_options?.forEach(option => {
-            if (regex.test(option.name)) {
-                names.push(option.name);
-            }
-        })
-        return names.join(', ');
+            item.additional_options?.forEach(option => {
+                if (regex.test(option.name)) {
+                    names.push(option.name);
+                }
+            })
+            return names.join(', ');
+        } catch {
+            return '';
+        }
     }
 
     const handleRepurchase = async (orderId: number) => {
@@ -58,7 +62,7 @@ export default function OrderHistoryList() {
             await apiPost(`/orders/${orderId}/repurchase`);
             await reloadCart();
             await toast.success('Add to cart successfully');
-        }catch (e) {
+        } catch (e) {
             console.log(e);
         }
     }
@@ -136,12 +140,14 @@ export default function OrderHistoryList() {
                         )}
 
                         {/* Order Total */}
-                        <div className="flex justify-end items-center py-4 mt-4 text-gray-200 text-sm border-t border-gray-100/20">
+                        <div
+                            className="flex justify-end items-center py-4 mt-4 text-gray-200 text-sm border-t border-gray-100/20">
                             <span>{t('order.total')}: {`€${order.total}`}</span>
                             <span>{`(Shipping Total: €${order.shipping_total})`}</span>
                         </div>
 
-                        <div className="flex justify-end items-center pt-4 text-gray-200 text-sm border-t border-gray-100/20">
+                        <div
+                            className="flex justify-end items-center pt-4 text-gray-200 text-sm border-t border-gray-100/20">
                             <Button onClick={() => handleRepurchase(order.id)}>Order Again</Button>
                         </div>
                     </div>

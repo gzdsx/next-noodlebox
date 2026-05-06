@@ -21,7 +21,7 @@ import {
     SaveOutlined,
 } from '@ant-design/icons';
 import {apiGet, apiPost} from "@/lib/backendApi";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 
 export default function SettingsPage() {
     const [form] = Form.useForm();

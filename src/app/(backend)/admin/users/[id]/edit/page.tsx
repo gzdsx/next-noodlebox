@@ -2,7 +2,7 @@
 
 import React, {useState} from "react";
 import {App, Card} from "antd";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {useParams, useRouter} from "next/navigation";
 import UserForm, {UserType} from "@/app/(backend)/admin/users/UserForm";
 import {apiGet, apiPut} from "@/lib/backendApi";

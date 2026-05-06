@@ -19,7 +19,7 @@ import {
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import {apiDelete, apiGet, apiPut} from "@/lib/backendApi";
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 const {Search} = Input;
 

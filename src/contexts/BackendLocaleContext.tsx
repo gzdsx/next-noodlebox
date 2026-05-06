@@ -10,18 +10,18 @@ interface LocaleContextType {
     t: (key: string, params?: Record<string, string | number>) => string;
 }
 
-const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
+const BackendLocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
 // 导入翻译文件
-import zhMessages from '@/messages/frontend/zh.json';
-import enMessages from '@/messages/frontend/en.json';
+import zhMessages from '@/messages/backend/zh.json';
+import enMessages from '@/messages/backend/en.json';
 
 const messages: Record<Locale, any> = {
     zh: zhMessages,
     en: enMessages,
 };
 
-export function LocaleProvider({children}: { children: ReactNode }) {
+export function BackendLocaleProvider({children}: { children: ReactNode }) {
     const [locale, setLocaleState] = useState<Locale>('en');
 
     useEffect(() => {
@@ -31,15 +31,15 @@ export function LocaleProvider({children}: { children: ReactNode }) {
             if (savedLocale && (savedLocale === 'zh' || savedLocale === 'en')) {
                 setLocaleState(savedLocale as Locale);
             } else {
-                // 检测浏览器语言
-                // const browserLang = navigator.language.toLowerCase();
-                // if (browserLang.startsWith('zh')) {
-                //     setLocaleState('zh');
-                // } else {
-                //     setLocaleState('en');
-                // }
+                //检测浏览器语言
+                const browserLang = navigator.language.toLowerCase();
+                if (browserLang.startsWith('zh')) {
+                    setLocaleState('zh');
+                } else {
+                    setLocaleState('en');
+                }
             }
-        })()
+        })();
     }, []);
 
     const setLocale = (newLocale: Locale) => {
@@ -70,14 +70,14 @@ export function LocaleProvider({children}: { children: ReactNode }) {
     };
 
     return (
-        <LocaleContext.Provider value={{locale, setLocale, t}}>
+        <BackendLocaleContext.Provider value={{locale, setLocale, t}}>
             {children}
-        </LocaleContext.Provider>
+        </BackendLocaleContext.Provider>
     );
 }
 
 export function useLocale() {
-    const context = useContext(LocaleContext);
+    const context = useContext(BackendLocaleContext);
     if (!context) {
         throw new Error('useLocale must be used within a LocaleProvider');
     }

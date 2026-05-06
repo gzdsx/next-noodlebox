@@ -4,7 +4,7 @@ import {useState, useEffect} from 'react';
 import {Card, App} from 'antd';
 import {useParams} from 'next/navigation';
 import {apiGet, apiPut} from '@/lib/backendApi';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import {ShopForm} from "@/app/(backend)/admin/shops/ShopForm";
 
 interface ShopType {

@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 import {App, Card} from "antd";
 import {ShopForm} from "../ShopForm";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {apiPost} from "@/lib/backendApi";
 import {useRouter} from "next/navigation";
 

@@ -3,7 +3,7 @@
 import React from 'react';
 import {Form, Input, Row, Col, Button} from 'antd';
 import {useRouter} from 'next/navigation';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import FeaturedImageInput from '@/components/backend/FeaturedImageInput';
 import UserRoleSelect from './UserRoleSelect';
 import UserStatusSelect from './UserStatusSelect';

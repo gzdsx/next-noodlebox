@@ -7,7 +7,6 @@ declare module "next-auth" {
      * 扩充 User 对象，增加你从 Laravel API 或数据库获取的属性
      */
     interface User {
-        id?: string
         role?: string // 在这里定义你的属性
         points?: string
         accessToken?: string
@@ -19,7 +18,6 @@ declare module "next-auth" {
     interface Session {
         accessToken?: string
         user: {
-            id?: string
             role?: string // 在这里定义你的属性
             points?: string
         } & DefaultSession["user"]

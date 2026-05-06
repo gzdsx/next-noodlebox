@@ -51,7 +51,7 @@ export default async function FrontendLayout({
         <html lang="en" className="w-full overflow-x-hidden">
         <body className="bg-[#444] text-gray-100 min-h-screen w-full overflow-x-hidden pb-14 lg:pb-0">
         <LocaleProvider>
-            <SessionProvider session={session} refetchOnWindowFocus={true}>
+            <SessionProvider session={session}>
                 <AppProvider categories={categories}>
                     <CartProvider>
                         <LotteryProvider>

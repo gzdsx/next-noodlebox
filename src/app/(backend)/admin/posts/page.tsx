@@ -20,7 +20,7 @@ import {
 import type {ColumnsType} from 'antd/es/table';
 import {apiGet, apiDelete, apiPut} from "@/lib/backendApi";
 import {useRouter} from "next/navigation";
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import Link from "next/link";
 import {CategoryCascader} from "@/components/backend/CategoryCascader";
 

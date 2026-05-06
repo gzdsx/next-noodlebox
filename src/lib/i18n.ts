@@ -1,5 +1,5 @@
-import zhMessages from '@/messages/zh.json';
-import enMessages from '@/messages/en.json';
+import zhMessages from '@/messages/frontend/zh.json';
+import enMessages from '@/messages/frontend/en.json';
 
 type Locale = 'zh' | 'en';
 

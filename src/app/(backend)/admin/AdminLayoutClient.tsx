@@ -21,7 +21,7 @@ import {
 } from '@ant-design/icons';
 import Link from 'next/link';
 import {usePathname, useRouter} from 'next/navigation';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import LanguageSwitcher from '@/components/backend/LanguageSwitcher';
 import {useAdministrator} from "@/contexts/BackendAppContext";
 import {apiPost} from "@/lib/backendApi";

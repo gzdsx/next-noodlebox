@@ -21,7 +21,7 @@ import {
 } from '@ant-design/icons';
 import {useParams, useRouter} from 'next/navigation';
 import {apiGet, apiPost, apiPut, apiDelete} from '@/lib/backendApi';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import {useSortable} from '@dnd-kit/react/sortable';
 import SortableProvider from '@/components/common/SortableProvider';
 import {arrayMove} from '@dnd-kit/sortable';

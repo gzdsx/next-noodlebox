@@ -9,18 +9,27 @@ export const {handlers, auth} = NextAuth({
     providers: [
         CredentialsProvider({
             id: "sanctum",
-            name: "Laravel Backend",
+            name: "Laravel Sanctum",
             credentials: {
                 account: {label: "Account", type: "text"},
                 password: {label: "Password", type: "password"}
             },
             async authorize(credentials) {
-                // 调用你的 Laravel 接口
+                //调用 Laravel 接口
                 try {
                     const res = await apiPost("/auth/login", credentials);
                     // 验证成功后，返回的对象会被存入 JWT
                     if (res.data.access_token && res.data.user) {
-                        return {...res.data.user, accessToken: res.data.access_token};
+                        const {access_token, user} = res.data;
+                        return {
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            image: user.avatar,
+                            role: user.role,
+                            points: user.points,
+                            accessToken: access_token
+                        };
                     }
                     return res.data;
                 } catch (e) {
@@ -45,7 +54,16 @@ export const {handlers, auth} = NextAuth({
                     const res = await apiPost("/auth/sms-login", credentials);
                     // 验证成功后，返回的对象会被存入 JWT
                     if (res.data.access_token && res.data.user) {
-                        return {...res.data.user, accessToken: res.data.access_token};
+                        const {access_token, user} = res.data;
+                        return {
+                            id: user.id,
+                            name: user.name,
+                            email: user.email,
+                            image: user.avatar,
+                            role: user.role,
+                            points: user.points,
+                            accessToken: access_token
+                        };
                     }
 
                     return res.data;
@@ -82,12 +100,12 @@ export const {handlers, auth} = NextAuth({
                     });
 
                     // 在 signIn 回调中修改 user 属性，只有部分属性会被保留传给 jwt 回调
-                    (user as any).accessToken = response.data.access_token;
                     (user as any).id = response.data.user.id; // 使用 Laravel 的 ID 覆盖 Google ID
+                    (user as any).name = response.data.user.name;
                     (user as any).role = response.data.user.role;
                     (user as any).points = response.data.user.points;
-                    (user as any).name = response.data.user.name;
-                    (user as any).avatar = response.data.user.avatar;
+                    (user as any).image = response.data.user.avatar;
+                    (user as any).accessToken = response.data.access_token;
                     //console.log('google user:', user);
                     return true; // 如果 Laravel 报错，拒绝登录
                 } catch (error) {
@@ -99,12 +117,13 @@ export const {handlers, auth} = NextAuth({
         },
         // 1. 将 Token 和 User 信息存入 JWT 中
         async jwt({token, user, trigger}) {
-            //console.log('jwt:', token, user, trigger);
+            //console.log('jwt token:', token);
+            //console.log('jwt user:', user);
             if (trigger === 'update') {
                 try {
                     const response = await apiGet(`/auth/user`);
                     token.name = response.data.name;
-                    token.avatar = response.data.avatar;
+                    token.image = response.data.avatar;
                     token.role = response.data.role;
                     token.points = response.data.points;
                 } catch {
@@ -116,13 +135,28 @@ export const {handlers, auth} = NextAuth({
         // 2. 将 JWT 中的信息暴露给前端 session
         async session({session, token}) {
             (session as any).accessToken = token.accessToken as string;
-            (session as any).user.id = token.id;
-            (session as any).user.name = token.name;
-            (session as any).user.avatar = token.avatar as string;
+            (session as any).user.id = token.id as string;
+            (session as any).user.name = token.name as string;
+            (session as any).user.image = token.image as string;
             (session as any).user.role = token.role as string;
             (session as any).user.points = token.points as string;
 
             return session;
+        }
+    },
+    events: {
+        async signOut(message) {
+            // 这里的 token 包含了你在 jwt 回调里存储的 access_token
+            const token = "token" in message ? message.token : null;
+            if (token?.accessToken) {
+                try {
+                    // 调用 Laravel 后端的注销接口
+                    await apiPost(`/auth/logout`);
+                    console.log("Laravel Token 已成功清除");
+                } catch (error) {
+                    console.error("清除后端 Token 失败:", error);
+                }
+            }
         }
     },
     session: {

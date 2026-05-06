@@ -3,7 +3,7 @@
 import {PageForm, PageType} from "../PageForm";
 import {App, Card} from "antd";
 import {useState} from "react";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {apiPost} from "@/lib/backendApi";
 import {useRouter} from "next/navigation";
 

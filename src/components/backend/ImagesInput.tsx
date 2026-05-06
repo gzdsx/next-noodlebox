@@ -5,7 +5,7 @@ import {Image, Button} from 'antd';
 import {PlusOutlined, DeleteOutlined} from '@ant-design/icons';
 import SortableContainer from '@/components/common/SortableContainer';
 import {useBackendApp} from "@/contexts/BackendAppContext";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {arrayMove} from "@dnd-kit/sortable";
 
 

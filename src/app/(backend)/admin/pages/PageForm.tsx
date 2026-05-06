@@ -3,7 +3,7 @@
 import {useState} from "react";
 import {useRouter} from 'next/navigation';
 import {Form, Input, Select, Button, Row, Col} from 'antd';
-import {useTranslations} from '@/contexts/LocaleContext';
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 import RichTextEditor from '@/components/common/RichTextEditor';
 
 const {TextArea} = Input;

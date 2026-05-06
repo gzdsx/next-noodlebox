@@ -1,5 +1,5 @@
 import {Select} from "antd";
-import {useTranslations} from "@/contexts/LocaleContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 
 interface UserStatusSelectProps {
     value?: string;

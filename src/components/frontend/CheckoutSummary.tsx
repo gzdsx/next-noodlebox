@@ -19,18 +19,22 @@ export default function CheckoutSummary({orderData}: { orderData: CheckoutOrderI
 
     const renderOptions = (item: CartItem) => {
         const names: string[] = [];
-        const regex = /^(?!.*(none|original)).*$/i;
-        item.options?.forEach(option => {
-            if (regex.test(option.value || '')) {
-                names.push(option.value as string);
-            }
-        });
+        try {
+            const regex = /^(?!.*(none|original)).*$/i;
+            item.options?.forEach(option => {
+                if (regex.test(option.value || '')) {
+                    names.push(option.value as string);
+                }
+            });
 
-        item.additional_options?.forEach(option => {
-            if (regex.test(option.name)) {
-                names.push(option.name);
-            }
-        })
+            item.additional_options?.forEach(option => {
+                if (regex.test(option.name)) {
+                    names.push(option.name);
+                }
+            })
+        } catch {
+
+        }
         return names.join(', ');
     }
 
