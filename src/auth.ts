@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
-import {apiPost} from "@/lib/api";
+import {apiGet, apiPost} from "@/lib/api";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 
@@ -24,10 +24,9 @@ export const {handlers, auth} = NextAuth({
                     }
                     return res.data;
                 } catch (e) {
-                    console.log('e:', e);
                     return {
-                        status: e.status,
-                        message: e.message
+                        status: 422,
+                        message: 'Login failed'
                     }
                 }
             }
@@ -52,8 +51,8 @@ export const {handlers, auth} = NextAuth({
                     return res.data;
                 } catch (e) {
                     return {
-                        status: e.status,
-                        message: e.message
+                        status: 422,
+                        message: 'Login failed'
                     }
                 }
             }
@@ -81,7 +80,14 @@ export const {handlers, auth} = NextAuth({
                         email: user.email,
                         avatar: user.image,
                     });
-                    user = {...user, accessToken: response.data.access_token};
+
+                    // 在 signIn 回调中修改 user 属性，只有部分属性会被保留传给 jwt 回调
+                    (user as any).accessToken = response.data.access_token;
+                    (user as any).id = response.data.user.id; // 使用 Laravel 的 ID 覆盖 Google ID
+                    (user as any).role = response.data.user.role;
+                    (user as any).points = response.data.user.points;
+                    (user as any).name = response.data.user.name;
+                    (user as any).avatar = response.data.user.avatar;
                     //console.log('google user:', user);
                     return true; // 如果 Laravel 报错，拒绝登录
                 } catch (error) {
@@ -92,7 +98,20 @@ export const {handlers, auth} = NextAuth({
             return true;
         },
         // 1. 将 Token 和 User 信息存入 JWT 中
-        async jwt({token, user}) {
+        async jwt({token, user, trigger}) {
+            //console.log('jwt:', token, user, trigger);
+            if (trigger === 'update') {
+                try {
+                    const response = await apiGet(`/auth/user`);
+                    token.name = response.data.name;
+                    token.avatar = response.data.avatar;
+                    token.role = response.data.role;
+                    token.points = response.data.points;
+                    console.log('jwt Refresh:', token);
+                } catch {
+
+                }
+            }
             return {...token, ...user}
         },
         // 2. 将 JWT 中的信息暴露给前端 session

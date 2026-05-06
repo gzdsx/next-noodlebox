@@ -3,6 +3,7 @@
 import React, {useContext} from 'react';
 import {Category} from "@/types";
 import {Session} from "next-auth";
+import {useSession} from "next-auth/react";
 
 
 interface AppContextType {
@@ -41,7 +42,7 @@ export function useCategories() {
     return context.categories;
 }
 
-export function useUser() {
-    const context = useAppContext();
-    return context.session?.user;
+export function useCurrentUser() {
+    const {data: session} = useSession();
+    return session?.user;
 }

@@ -12,6 +12,8 @@ import {
 import {ProductInfoClient} from "@/components/frontend/ProductInfoClient";
 import {loadCarts, addCartItem, removeCartItem, updateCartQuantity} from "@/actions/cart";
 import {useSession} from "next-auth/react";
+import {toast} from "sonner";
+import {useTranslations} from "@/contexts/LocaleContext";
 
 
 interface CartContextType {
@@ -35,6 +37,7 @@ const CART_STORAGE_KEY = 'cart_items';
 
 export function CartProvider({children}: { children: ReactNode }) {
     const sesstion = useSession();
+    const {t} = useTranslations('ecommerce');
     const [items, setItems] = useState<CartItem[]>([]);
     const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
     const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -50,7 +53,7 @@ export function CartProvider({children}: { children: ReactNode }) {
     }
 
     const fetchItems = async () => {
-        if (sesstion.status !== 'authenticated') {
+        if (sesstion.status === 'authenticated') {
             try {
                 const items = await loadCarts();
                 setItems([...items]);
@@ -62,11 +65,9 @@ export function CartProvider({children}: { children: ReactNode }) {
 
     // Load from localStorage on mount
     useEffect(() => {
-        if (sesstion.status === 'authenticated') {
-            (async () => {
-                await fetchItems();
-            })()
-        }
+        (async () => {
+            await fetchItems();
+        })()
     }, [sesstion.status]);
 
     // Sync to localStorage on change
@@ -86,10 +87,9 @@ export function CartProvider({children}: { children: ReactNode }) {
                 additional_options: newItem.additional_options,
             });
             await fetchItems();
-            return Promise.resolve();
+            toast.success(t('product.addToCart') + ' ✓');
         } else {
             window.location.href = '/auth/login?redirect=' + window.location.origin + window.location.pathname;
-            return Promise.reject();
         }
     }
 

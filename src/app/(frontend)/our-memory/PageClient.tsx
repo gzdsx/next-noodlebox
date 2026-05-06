@@ -15,7 +15,7 @@ const PageClient = ({images = []}: PageClientProps) => {
             <div className={'w-full p-4'}>
                 <div className={'min-h-20'}></div>
                 <h1 className={'text-center text-4xl font-bold mb-6'}>Our Memory</h1>
-                <div className={'grid gid-cols-2 md:grid-cols-6 gap-4'}>
+                <div className={'grid grid-cols-2 md:grid-cols-6 gap-4'}>
                     {
                         images?.map((image, index) => (
                             <div key={image.thumbnail} className={'relative after:block after:pt-[100%]'}

@@ -39,7 +39,7 @@ export default function LoginClient() {
                 <span className={'mx-2 text-white'}>or</span>
                 <a href={'/auth/register'} className={'text-[#4ba181] hover:underline'}>Registration</a>
             </div>
-            <div className={'mt-20'}>
+            <div className={'mt-10'}>
                 <SocialLoginClient/>
             </div>
         </div>

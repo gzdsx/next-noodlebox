@@ -68,7 +68,6 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
                 additional_options: skuData.additional_options,
                 purchase_via: usePoints ? 'point' : 'cash',
             });
-            toast.success(t('product.addToCart') + ' ✓');
         }catch (e) {
 
         }

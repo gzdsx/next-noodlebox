@@ -1,4 +1,4 @@
-'use server'
+//'use server'
 
 import {apiDelete, apiGet, apiPost, apiPut} from "@/lib/api";
 import {CartItem} from "@/types";

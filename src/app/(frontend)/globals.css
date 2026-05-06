@@ -98,8 +98,96 @@
         --bg-position-x-100: 100%;
     }
 
-    * {
-        @apply border-border;
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+
+    }
+
+    @keyframes move {
+        0% {
+            transform: translate(0px, 0px);
+        }
+        100% {
+            transform: translate(0px, -5px);
+        }
+
+    }
+
+    @keyframes move2 {
+        0% {
+            transform: translate(0px, 30px);
+            opacity: 0;
+        }
+        70% {
+            transform: translate(0px, -20px);
+            opacity: 1;
+        }
+        100% {
+            transform: translate(0px, 0px);
+            opacity: 1;
+        }
+    }
+
+    @keyframes shake {
+        0% {
+            transform: scale3d(1, 1, 1);
+        }
+
+        6% {
+            transform: scale3d(1, 1, 1) rotate3d(0, 0, 1, -8deg);
+        }
+
+        12%, 24%, 36%, 48% {
+            transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -8deg);
+        }
+
+        18%, 30%, 42% {
+            transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 8deg);
+
+        }
+        54% {
+            transform: scale3d(1, 1, 1);
+        }
+
+        60% {
+            transform: scale3d(1, 1, 1);
+        }
+
+        80% {
+            transform: scale3d(1, 1, 1) translate3d(0px, 150px, 0);
+        }
+        90% {
+            transform: scale3d(1, 1, 1) translate3d(0px, 100px, 0);
+        }
+        100% {
+            transform: scale3d(1, 1, 1) translate3d(0px, 0, 0);
+        }
+    }
+
+    @keyframes add-points {
+        0% {
+            transform: scale(1) translate(0, 100px);
+            opacity: 0;
+        }
+
+        15% {
+            transform: scale(5) translate(0, -20px);
+            opacity: 1;
+        }
+
+        85% {
+            transform: scale(5) translate(0, -20px);
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
     }
 
     body {
@@ -126,6 +214,35 @@
     button:not(:disabled),
     [role="button"]:not(:disabled) {
         cursor: pointer;
+    }
+
+    .lottery-chest-box-bg {
+        @apply w-full md:max-w-[540px] relative flex flex-col items-center justify-center gap-y-2 py-16 before:pt-[100%];
+        @apply after:absolute after:top-0 after:left-0 after:w-full after:h-full after:z-0 after:bg-[url(/lottery/chest/light.png)];
+        @apply after:bg-center after:bg-no-repeat after:bg-contain after:animate-[rotate_10s_linear_infinite];
+    }
+
+    .lottery-chest-box {
+        @apply block w-[320px] h-[135px] relative z-10;
+        @apply bg-[0_0] bg-no-repeat bg-[length:100%_auto] cursor-pointer;
+    }
+
+    .lottery-chest-box-shaking {
+        @apply animate-[shake_1.2s_linear_forwards];
+    }
+
+    .lotter-points-animate {
+        @apply fixed;
+        position: fixed;
+        font-weight: 900;
+        color: #FDD729;
+        font-size: 20px;
+        animation: add-points 3s linear forwards;
+        z-index: 99999;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        text-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
     }
 }
 

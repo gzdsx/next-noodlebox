@@ -35,11 +35,11 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     const currentUser = useUser();
     const {t} = useTranslations('ecommerce');
     const [shipping, setShipping] = useState<ShippingAddress>({
-        name: 'Wen Bin',
-        iddcode: '353',
-        phone_number: '08793590549',
-        address: '11 Park Lawn, Grangerath, Drogheda, Co. Meath, A92 YDW7',
-        eircode: 'A92 YDW7',
+        name: '',
+        iddcode: '',
+        phone_number: '',
+        address: '',
+        eircode: '',
         ...options.shipping_address
     });
     const [shippingMethod, setShippingMethod] = useState('flat_rate');
@@ -90,7 +90,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                 await onPlaced?.(order_id);
             }
         } catch (e: any) {
-            if (e.status === 'shipping.phone_number.verified') {
+            if (e.status === 'shipping.phone_number.unverified') {
                 setIsVerifyOpen(true);
             } else {
                 toast.error(e.message);

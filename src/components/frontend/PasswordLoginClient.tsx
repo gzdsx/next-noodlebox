@@ -4,7 +4,6 @@ import React, {useState} from "react";
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {Button} from '@/components/ui/button';
-import {Checkbox} from '@/components/ui/checkbox';
 import {useTranslations} from "@/contexts/LocaleContext";
 import {signIn} from "next-auth/react";
 import {useSearchParams} from "next/navigation";
@@ -15,7 +14,6 @@ const PasswordLoginClient = () => {
     const [loading, setLoading] = useState(false);
     const [account, setAccount] = useState('');
     const [password, setPassword] = useState('');
-    const [remember, setRemember] = useState(true);
     const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.SubmitEvent) => {
