@@ -107,7 +107,6 @@ export const {handlers, auth} = NextAuth({
                     token.avatar = response.data.avatar;
                     token.role = response.data.role;
                     token.points = response.data.points;
-                    console.log('jwt Refresh:', token);
                 } catch {
 
                 }

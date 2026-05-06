@@ -31,11 +31,13 @@ import {
 import {useCart} from '@/contexts/CartContext';
 import {useTranslations, useLocale} from '@/contexts/LocaleContext';
 import SearchBar from './SearchBar';
-import {useCategories} from "@/contexts/AppContext";
+import {useCategories, useCurrentUser} from "@/contexts/AppContext";
+import {apiPost} from "@/lib/api";
 
 export default function HeaderClient() {
-    const foodCategories = useCategories();
+    const currentUser = useCurrentUser();
     const {data: session} = useSession();
+    const foodCategories = useCategories();
     const {totalItems} = useCart();
     const {t} = useTranslations('ecommerce');
     const {locale, setLocale} = useLocale();
@@ -50,6 +52,15 @@ export default function HeaderClient() {
 
     const routeLogin = () => {
         router.push('/auth/login?redirect=' + encodeURIComponent(window.location.origin + window.location.pathname));
+    }
+
+    const logout = async () => {
+        try {
+            await apiPost('/auth/logout');
+            signOut({redirectTo: encodeURIComponent(window.location.origin + window.location.pathname)});
+        } catch {
+
+        }
     }
 
     useEffect(() => {
@@ -167,8 +178,12 @@ export default function HeaderClient() {
                                 <button
                                     tabIndex={-1}
                                     className={`p-2 transition-colors ${scrolled ? 'text-white hover:text-gray-200' : 'text-gray-100 hover:text-gray-200'}`}>
-                                    {session?.user?.image ? (
-                                        <img src={session.user.image} alt="avatar" className="rounded-full w-[28px] h-[28px]"/>
+                                    {currentUser?.image ? (
+                                        <img
+                                            src={currentUser.image}
+                                            alt="avatar"
+                                            className="rounded-full w-[28px] h-[28px]"
+                                        />
                                     ) : (
                                         <User size={22}/>
                                     )}
@@ -188,7 +203,7 @@ export default function HeaderClient() {
                                         <DropdownMenuSeparator/>
                                         <DropdownMenuItem
                                             variant="destructive"
-                                            onClick={() => signOut({redirectTo: window.location.href})}
+                                            onClick={logout}
                                         >
                                             <LogOut size={14}/>
                                             {t('header.logout')}
@@ -196,8 +211,7 @@ export default function HeaderClient() {
                                     </>
                                 ) : (
                                     <>
-                                        <DropdownMenuItem
-                                            onClick={() => routeLogin()}>
+                                        <DropdownMenuItem onClick={routeLogin}>
                                             <User size={14}/>
                                             {t('header.login')}
                                         </DropdownMenuItem>

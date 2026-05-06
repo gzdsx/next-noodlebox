@@ -21,8 +21,8 @@ import {apiPost} from "@/lib/api";
 import {PayPalButtons} from "@paypal/react-paypal-js";
 import {toast} from "sonner";
 import DialogVerifyPhoneNumber from "@/components/frontend/DialogVerifyPhoneNumber";
-import {useUser} from "@/contexts/AppContext";
 import {ShippingAddress, ShippingZone} from "@/types";
+import {useCurrentUser} from "@/contexts/AppContext";
 
 interface CheckoutFormProps {
     options?: any;
@@ -32,7 +32,7 @@ interface CheckoutFormProps {
 
 export default function CheckoutForm({options, onChange, onPlaced}: CheckoutFormProps) {
     const {totalPrice} = useCart();
-    const currentUser = useUser();
+    const currentUser = useCurrentUser();
     const {t} = useTranslations('ecommerce');
     const [shipping, setShipping] = useState<ShippingAddress>({
         name: '',
