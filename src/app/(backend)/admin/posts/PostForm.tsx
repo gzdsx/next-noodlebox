@@ -43,13 +43,6 @@ export const PostForm = ({
                     >
                         <Input placeholder={t('titlePlaceholder')}/>
                     </Form.Item>
-
-                    <Form.Item
-                        label={t('slug')}
-                        name="slug"
-                    >
-                        <Input placeholder={t('slugPlaceholder')}/>
-                    </Form.Item>
                     <Form.Item
                         label={t('seoKeywords')}
                         name="keywords"
@@ -86,6 +79,13 @@ export const PostForm = ({
                         name="categories"
                     >
                         <CategoryCheckboxGroup/>
+                    </Form.Item>
+
+                    <Form.Item
+                        label={t('slug')}
+                        name="slug"
+                    >
+                        <Input placeholder={t('slugPlaceholder')}/>
                     </Form.Item>
 
                     <Form.Item

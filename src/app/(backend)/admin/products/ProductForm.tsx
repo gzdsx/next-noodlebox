@@ -1,30 +1,49 @@
 'use client';
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {
     Button,
-    Col,
+    Col, ColorPicker,
     Form,
     Input,
     InputNumber,
     Radio,
     Row,
-    Select
+    Select,
+    Switch
 } from "antd";
 import RichTextEditor from "@/components/common/RichTextEditor";
 import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {CategoryCheckboxGroup} from "@/components/backend/CategoryCheckboxGroup";
 import ImagesInput, {ImageItem} from "@/components/backend/ImagesInput";
-import ProductSkuInput, {SkuItem, VariantItem} from "@/components/backend/ProductSkuInput";
+import {SkuItem} from "@/components/backend/ProductSkuInput";
+import ProductVariantInput from "@/components/backend/ProductVariantInput";
+import ProductAdditionalInput from "@/components/backend/ProductAdditionalInput";
+import {ProductVariant, ProductVariantOption} from "@/components/backend/ProductVariantModal";
+import ProductBageInput from "@/components/backend/ProductBageInput";
 
 const {TextArea} = Input;
 
-export interface ProductType {
+interface MetaItem {
+    meta_key: string;
+    meta_value: string;
+}
+
+interface MetasType {
+    spicy: string;
+    chinese_name: string;
+    purchase_via_points_enable: string;
+    purchase_via_points: string;
+    badges: string[];
+    variations: ProductVariant[];
+    additional_options: ProductVariantOption[];
+}
+
+interface ProductType {
     id?: number;
     title?: string;
     skus: SkuItem[];
-    variants: VariantItem[];
     has_sku_attr?: boolean;
     keywords?: string;
     description?: string;
@@ -40,20 +59,47 @@ export interface ProductType {
     sold?: number;
     stock?: number;
     points?: number;
+    metas: MetaItem[];
+    variation_list: ProductVariant[];
+    additional_options: ProductVariantOption[];
 }
 
-export interface ProductFormProps {
-    onSubmit?: (values: ProductType) => Promise<void>;
+interface ProductFormProps {
+    onSubmit?: (values: {
+        id?: number;
+        title?: string;
+        skus: SkuItem[];
+        has_sku_attr?: boolean;
+        keywords?: string;
+        description?: string;
+        content?: string;
+        thumbnail?: string;
+        price?: number;
+        regular_price?: number;
+        status?: string;
+        sort_num?: number;
+        categories: number[];
+        images: ImageItem[];
+        icon?: string;
+        sold?: number;
+        stock?: number;
+        points?: number;
+        metas: MetasType
+    }) => Promise<void>;
     initialValues?: ProductType;
     submitting?: boolean;
 }
 
+export type {ProductType, MetasType, ProductFormProps};
+
 export const ProductForm = ({
                                 initialValues = {
                                     skus: [],
-                                    variants: [],
                                     categories: [],
-                                    images: []
+                                    images: [],
+                                    metas: [],
+                                    variation_list: [],
+                                    additional_options: []
                                 },
                                 submitting = false,
                                 onSubmit,
@@ -62,22 +108,34 @@ export const ProductForm = ({
     const {t: tc} = useTranslations('common');
     const {t} = useTranslations('products');
     const router = useRouter();
-    const [modelType, setModelType] = useState<'single' | 'multi'>(initialValues?.has_sku_attr ? 'multi' : 'single');
-    const [skus, setSkus] = useState<SkuItem[]>(initialValues.skus || []);
-    const [variants, setVariants] = useState<VariantItem[]>(initialValues.variants || []);
-
+    const [metas, setMetas] = useState<MetasType>({
+        spicy: '',
+        chinese_name: '',
+        purchase_via_points_enable: 'no',
+        purchase_via_points: '0',
+        badges: [],
+        variations: [],
+        additional_options: []
+    });
 
     // Intercept form submit to include skus & model_type
     const handleFinish = (values: ProductType) => {
-        console.log('values', values);
+        //console.log('values', values);
         const submitData = {
             ...values,
-            has_sku_attr: modelType === 'multi',
-            skus: skus,
-            variants: variants
+            metas: metas
         };
         onSubmit?.(submitData);
     };
+
+    useEffect(() => {
+        (function () {
+            setMetas(p => ((initialValues.metas || []).reduce((acc, cur) => ({
+                ...acc,
+                [cur.meta_key]: cur.meta_value
+            }), p)));
+        })()
+    }, [initialValues]);
 
     return (
         <Form
@@ -105,73 +163,12 @@ export const ProductForm = ({
                         <Input placeholder={t('titlePlaceholder')}/>
                     </Form.Item>
 
-                    {/* 型号选择 */}
-                    <Form.Item label={t('modelType')}>
-                        <Radio.Group value={modelType} onChange={(e) => setModelType(e.target.value)}>
-                            <Radio value="single">{t('singleModel')}</Radio>
-                            <Radio value="multi">{t('multiModel')}</Radio>
-                        </Radio.Group>
-                    </Form.Item>
-
-                    {/* 单一型号：显示价格、原价、库存 */}
-                    {modelType === 'single' && (
-                        <Row gutter={16} style={{marginBottom: 24}}>
-                            <Col span={8}>
-                                <Form.Item
-                                    label={t('price')}
-                                    name="price"
-                                    rules={[{required: true, message: t('priceRequired')}]}
-                                >
-                                    <InputNumber
-                                        min={0}
-                                        precision={2}
-                                        style={{width: '100%'}}
-                                        placeholder={t('pricePlaceholder')}
-                                    />
-                                </Form.Item>
-                            </Col>
-                            <Col span={8}>
-                                <Form.Item
-                                    label={t('originalPrice')}
-                                    name="regular_price"
-                                >
-                                    <InputNumber
-                                        min={0}
-                                        precision={2}
-                                        style={{width: '100%'}}
-                                        placeholder={t('originalPricePlaceholder')}
-                                    />
-                                </Form.Item>
-                            </Col>
-                            <Col span={8}>
-                                <Form.Item
-                                    label={t('stock')}
-                                    name="stock"
-                                >
-                                    <InputNumber
-                                        min={0}
-                                        style={{width: '100%'}}
-                                        placeholder={t('stockPlaceholder')}
-                                    />
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    )}
-
-                    {/* 多级型号：规格变量选择 + SKU 列表 */}
-                    {modelType === 'multi' && (
-                        <ProductSkuInput
-                            value={{
-                                variants: initialValues.variants,
-                                skus: initialValues.skus
-                            }}
-                            onChange={values => {
-                                //console.log('values', values);
-                                setVariants(values.variants);
-                                setSkus(values.skus);
-                            }}
+                    <Form.Item label={'中文名称'}>
+                        <Input
+                            value={metas.chinese_name}
+                            onChange={(e) => setMetas({...metas, chinese_name: e.target.value})}
                         />
-                    )}
+                    </Form.Item>
 
                     <Form.Item
                         label={t('keywords')}
@@ -185,6 +182,78 @@ export const ProductForm = ({
                         name="description"
                     >
                         <TextArea rows={3} placeholder={t('descriptionPlaceholder')}/>
+                    </Form.Item>
+
+                    <Row gutter={16}>
+                        <Col>
+                            <Form.Item label={'Color'} name={'title_color'}>
+                                <ColorPicker/>
+                            </Form.Item>
+                        </Col>
+                        <Col>
+                            <Form.Item label={'积分购买'}>
+                                <Switch
+                                    checked={metas.purchase_via_points_enable === 'yes'}
+                                    onChange={(value) => {
+                                        setMetas({...metas, purchase_via_points_enable: value ? 'yes' : 'no'})
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col>
+                            <Form.Item label={'积分价格'}>
+                                <Input
+                                    style={{width: 200}}
+                                    onChange={(e) => {
+                                        setMetas({...metas, purchase_via_points: e.target.value})
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col>
+                            <Form.Item label={'徽章'}>
+                                <ProductBageInput initialValues={metas.badges || []} onChange={(value) => {
+                                    setMetas({...metas, badges: value})
+                                }}/>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <Form.Item label={'一口价'} name={'price'}>
+                                <Input style={{width: '100%'}}/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item label={'原价'} name={'regular_price'}>
+                                <Input style={{width: '100%'}}/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                            <Form.Item label={'库存'} name={'stock'}>
+                                <Input style={{width: '100%'}}/>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    {/* 型号选择 */}
+                    <Form.Item label={'变量和价格'}>
+                        <ProductVariantInput
+                            initalValues={initialValues.variation_list}
+                            onChange={variants => {
+                                //console.log('variants', variants);
+                                setMetas({...metas, variations: variants})
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label={'附加选项(多选)'}>
+                        <ProductAdditionalInput
+                            initialValues={initialValues.additional_options}
+                            onChange={options => {
+                                setMetas({...metas, additional_options: options})
+                            }}
+                        />
                     </Form.Item>
 
                     <Form.Item
@@ -203,7 +272,12 @@ export const ProductForm = ({
                     >
                         <CategoryCheckboxGroup taxonomy="product"/>
                     </Form.Item>
-
+                    <Form.Item
+                        label={t('slug')}
+                        name="slug"
+                    >
+                        <Input style={{width: '100%'}} placeholder=""/>
+                    </Form.Item>
                     <Form.Item
                         label={t('sales')}
                         name="sold"
@@ -237,8 +311,8 @@ export const ProductForm = ({
                     >
                         <Select
                             options={[
-                                {value: 'active', label: t('active')},
-                                {value: 'inactive', label: t('inactive')},
+                                {value: 'onsale', label: t('active')},
+                                {value: 'offsale', label: t('inactive')},
                                 {value: 'soldout', label: t('soldout')},
                             ]}
                         />
@@ -249,6 +323,20 @@ export const ProductForm = ({
                         name="sort_num"
                     >
                         <Input type="number" placeholder="0"/>
+                    </Form.Item>
+                    <Form.Item label={'辣度'}>
+                        <Select
+                            value={metas.spicy}
+                            options={[
+                                {value: 'none', label: 'None'},
+                                {value: 'slightly', label: '微辣'},
+                                {value: 'medium', label: '中辣'},
+                                {value: 'super', label: '超辣'},
+                            ]}
+                            onChange={(value) => {
+                                setMetas({...metas, spicy: value})
+                            }}
+                        />
                     </Form.Item>
                 </Col>
             </Row>

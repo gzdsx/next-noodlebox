@@ -45,6 +45,9 @@ interface UserType {
     status: string;
     avatar: string;
     created_at: string;
+    phone_number: string;
+    iddcode: string;
+    points: number;
 }
 
 export default function UsersManagement() {
@@ -136,15 +139,29 @@ export default function UsersManagement() {
             ),
         },
         {
+            title: t('phone'),
+            dataIndex: 'phone',
+            key: 'phone',
+            width: 200,
+            render: (phone: string, record) => <span>{record.iddcode + record.phone_number}</span>,
+        },
+        {
             title: t('email'),
             dataIndex: 'email',
             key: 'email',
+            width: 200,
         },
         {
             title: t('role'),
             key: 'role',
             width: 120,
             render: (_, record) => <span>{record.role?.name}</span>,
+        },
+        {
+            title: t('points'),
+            key: 'points',
+            dataIndex:'points',
+            width: 100
         },
         {
             title: t('status'),
@@ -245,7 +262,7 @@ export default function UsersManagement() {
                                 {label: t('batchDelete'), value: 'delete'},
                             ]}
                         />
-                        <Button type="primary" disabled={selectedItems.length === 0}>{t('apply')}</Button>
+                        <Button type="primary" disabled={selectedItems.length === 0} onClick={handleBatchAction}>{t('apply')}</Button>
                     </div>
                     <Pagination
                         total={total}

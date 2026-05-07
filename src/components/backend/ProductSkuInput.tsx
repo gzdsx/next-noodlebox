@@ -1,11 +1,9 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Input, Button, Space, Card, Modal, Tag} from 'antd';
 import {HolderOutlined, PlusOutlined} from '@ant-design/icons';
 import {arrayMove} from "@dnd-kit/sortable";
-import ProductVariantModal from './ProductVariantModal';
-import SortableContainer from "@/components/common/SortableContainer";
+import ProductVariantModal, {ProductVariantOption} from './ProductVariantModal';
 import {useSortable} from '@dnd-kit/react/sortable';
-import {DragDropProvider, DragOverlay} from '@dnd-kit/react';
 import SortableProvider from "@/components/common/SortableProvider";
 
 export interface SkuItem {
@@ -171,7 +169,7 @@ const ProductSkuInput: React.FC<ProductSkuInputProps> = ({value = {skus: [], var
         setVariantModalOpen(true);
     }
 
-    const handleSelectVariants = (variant: { name: string, options: { id: string, title: string; }[] }) => {
+    const handleSelectVariants = (variant: { name: string, options: ProductVariantOption[] }) => {
         const vIndex = currentVariantIndexRef.current;
         setVariants(prev => prev.map((item, i) => {
             if (i === vIndex) {
@@ -220,8 +218,8 @@ const ProductSkuInput: React.FC<ProductSkuInputProps> = ({value = {skus: [], var
     };
 
     const handleOptionSortEnd = (vIndex: number, oldIndex: number, newIndex: number) => {
-        variants[vIndex].options = arrayMove(variants[vIndex].options, oldIndex, newIndex);
-        setVariants([...variants]);
+        const newOptions = arrayMove(variants[vIndex].options, oldIndex, newIndex);
+        setVariants(prevState => prevState.map((item, i) => i === vIndex ? {...item, options: newOptions} : item));
     }
 
     const initalSkuObject = useMemo(() => {
@@ -231,7 +229,7 @@ const ProductSkuInput: React.FC<ProductSkuInputProps> = ({value = {skus: [], var
         }, {} as Record<string, SkuItem>);
     }, [value.skus]);
 
-    const skuData = useMemo(() => {
+    const generateSkuData = useCallback(() => {
         const rowCount: number[] = [];
         const attrNames: string[] = [];
         const groups: SkuOptionItem[][] = [];
@@ -321,6 +319,8 @@ const ProductSkuInput: React.FC<ProductSkuInputProps> = ({value = {skus: [], var
             showCount
         }
     }, [variants, initalSkuObject, skuOverrides]);
+
+    const skuData = generateSkuData();
 
     useEffect(() => {
         onChange?.({

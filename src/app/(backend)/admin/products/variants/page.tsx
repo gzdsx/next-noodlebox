@@ -11,7 +11,7 @@ import {
     Input,
     Tag,
     App,
-    Popconfirm,
+    Popconfirm, ColorPicker,
 } from 'antd';
 import {
     PlusOutlined,
@@ -27,6 +27,8 @@ import {useTranslations} from '@/contexts/BackendLocaleContext';
 interface VariantOptionType {
     title: string;
     price?: number;
+    color?: string;
+    memo?: string;
 }
 
 interface VariantType {
@@ -34,9 +36,6 @@ interface VariantType {
     name: string;
     options: VariantOptionType[];
 }
-
-let optionKeyCounter = 0;
-const generateKey = () => `opt_${++optionKeyCounter}`;
 
 export default function ProductVariantsManagement() {
     const [variants, setVariants] = useState<VariantType[]>([]);
@@ -70,7 +69,7 @@ export default function ProductVariantsManagement() {
     const handleAdd = () => {
         setEditingItem(null);
         form.resetFields();
-        setOptionInputs([{title: ''}]);
+        setOptionInputs([{title: '', price: 0, color: '', memo: ''}]);
         setModalVisible(true);
     };
 
@@ -99,7 +98,7 @@ export default function ProductVariantsManagement() {
 
     // Option input operations
     const addOption = () => {
-        setOptionInputs(prev => [...prev, {title: ''}]);
+        setOptionInputs(prev => [...prev, {title: '', price: 0, color: '', memo: ''}]);
     };
 
     const removeOption = (index: number) => {
@@ -107,8 +106,8 @@ export default function ProductVariantsManagement() {
         setOptionInputs(prev => prev.filter((o, i) => i !== index));
     };
 
-    const updateOption = (index: number, title: string) => {
-        setOptionInputs(prev => prev.map((o, i) => index === i ? {...o, title} : o));
+    const updateOption = (index: number, key: string, value: string) => {
+        setOptionInputs(prev => prev.map((o, i) => i === index ? {...o, [key]: value} : o));
     };
 
     // Drag & Drop
@@ -140,6 +139,7 @@ export default function ProductVariantsManagement() {
                 name: values.name,
                 options: optionInputs
             };
+
             if (editingItem) {
                 await apiPut(`/product-variants/${editingItem.id}`, postData);
                 message.success(t('updateSuccess'));
@@ -255,6 +255,13 @@ export default function ProductVariantsManagement() {
                             {t('options')} <span style={{color: '#ff4d4f'}}>*</span>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+                            <div className={'flex items-center gap-x-8'}>
+                                <div style={{width: 1}}></div>
+                                <div style={{flexGrow: 1}}>Name</div>
+                                <div style={{flexGrow: 1}}>Chinese Name</div>
+                                <div style={{flexGrow: 1}}>Price</div>
+                                <div style={{flexGrow: 1}}>Color</div>
+                            </div>
                             {optionInputs.map((opt, index) => (
                                 <div
                                     key={'option_input_' + index}
@@ -280,9 +287,27 @@ export default function ProductVariantsManagement() {
                                     />
                                     <Input
                                         value={opt.title}
-                                        onChange={(e) => updateOption(index, e.target.value)}
+                                        onChange={(e) => updateOption(index, 'title', e.target.value)}
                                         placeholder={t('optionValuePlaceholder')}
                                         style={{flex: 1}}
+                                    />
+                                    <Input
+                                        value={opt.memo}
+                                        onChange={(e) => updateOption(index, 'memo', e.target.value)}
+                                        placeholder={t('optionValuePlaceholder')}
+                                        style={{flex: 1}}
+                                    />
+                                    <Input
+                                        value={opt.price}
+                                        onChange={(e) => updateOption(index, 'price', e.target.value)}
+                                        placeholder={t('optionValuePlaceholder')}
+                                        style={{flex: 1}}
+                                    />
+                                    <ColorPicker
+                                        value={opt.color}
+                                        onChange={(e) => {
+                                            updateOption(index, 'color', e.toHexString());
+                                        }}
                                     />
                                     {optionInputs.length > 1 && (
                                         <Button

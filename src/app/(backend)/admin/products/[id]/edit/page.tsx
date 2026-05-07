@@ -30,12 +30,14 @@ export default function ProductEditPage() {
         regular_price: 0,
         sold: 0,
         stock: 0,
-        variants: [],
         status: 'publish',
         sort_num: 0,
         categories: [],
         images: [],
-        skus: []
+        skus: [],
+        metas: [],
+        additional_options: [],
+        variation_list: []
     });
 
     const {message} = App.useApp();
@@ -49,15 +51,6 @@ export default function ProductEditPage() {
                 setInitialValues((prevState) => ({
                     ...prevState,
                     ...data,
-                    title: data.title,
-                    slug: data.slug,
-                    description: data.description,
-                    content: data.content,
-                    thumbnail: data.thumbnail,
-                    price: data.price,
-                    original_price: data.original_price,
-                    status: data.status,
-                    sort_num: data.sort_num,
                     categories: data.categories?.map((item: CategoryType) => item.id.toString()) ?? [],
                     images: data.images ?? [],
                     skus: data.skus ?? [],
@@ -70,7 +63,8 @@ export default function ProductEditPage() {
         })();
     }, [params.id]);
 
-    const handleSubmit = async (values: ProductType) => {
+    const handleSubmit = async (values: any) => {
+        //console.log('values', values);return;
         try {
             setSubmitting(true);
             await apiPut(`/products/${params.id}`, values);

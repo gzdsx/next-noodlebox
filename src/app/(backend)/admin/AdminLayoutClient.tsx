@@ -17,7 +17,11 @@ import {
     FileTextOutlined,
     ToolOutlined, MailOutlined, ReadOutlined, FormOutlined, UnorderedListOutlined,
     ShoppingCartOutlined, ShoppingOutlined, AppstoreOutlined, EnvironmentOutlined, SwapOutlined,
-    FolderOutlined, PictureOutlined,
+    FolderOutlined, PictureOutlined, ShopOutlined, FormatPainterOutlined, SendOutlined,
+    GiftOutlined, TrophyOutlined, FileSearchOutlined, ControlOutlined,
+    SolutionOutlined, CalendarOutlined, DollarOutlined, FileProtectOutlined,
+    CheckCircleOutlined, AccountBookOutlined, BarChartOutlined, ReconciliationOutlined,
+    CarOutlined, DesktopOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
 import {usePathname, useRouter} from 'next/navigation';
@@ -56,12 +60,7 @@ export default function AdminLayoutClient({
                 {
                     key: '/admin/products',
                     icon: <ShoppingOutlined/>,
-                    label: <Link href="/admin/products">{t('allProducts')}</Link>,
-                },
-                {
-                    key: '/admin/products/create',
-                    icon: <FormOutlined/>,
-                    label: <Link href="/admin/products/create">{t('addProduct')}</Link>,
+                    label: <Link href="/admin/products">商品管理</Link>,
                 },
                 {
                     key: '/admin/orders',
@@ -69,9 +68,9 @@ export default function AdminLayoutClient({
                     label: <Link href="/admin/orders">{t('orderManagement')}</Link>,
                 },
                 {
-                    key: '/admin/categories',
+                    key: '/admin/products/categories',
                     icon: <AppstoreOutlined/>,
-                    label: <Link href="/admin/categories?taxonomy=product">{t('productCategoryManagement')}</Link>,
+                    label: <Link href="/admin/products/categories">{t('productCategoryManagement')}</Link>,
                 },
                 {
                     key: '/admin/products/variants',
@@ -82,6 +81,41 @@ export default function AdminLayoutClient({
                     key: '/admin/shops',
                     icon: <EnvironmentOutlined/>,
                     label: <Link href="/admin/shops">{t('storeManagement')}</Link>,
+                },
+                {
+                    key: '/admin/settings/shipping-zones',
+                    icon: <SendOutlined/>,
+                    label: <Link href="/admin/settings/shipping-zones">{t('shippingZoneManagement')}</Link>,
+                },
+                {
+                    key: '/admin/pos-machines',
+                    icon: <DesktopOutlined/>,
+                    label: <Link href="/admin/pos-machines">{t('posMachineManagement')}</Link>,
+                },
+                {
+                    key: '/admin/cashier/report',
+                    icon: <BarChartOutlined/>,
+                    label: <Link href="/admin/cashier/report">{t('cashierReport')}</Link>,
+                },
+                {
+                    key: '/admin/drivers/report',
+                    icon: <AccountBookOutlined/>,
+                    label: <Link href="/admin/drivers/report">{t('driverReport')}</Link>,
+                },
+                {
+                    key: '/admin/points-records',
+                    icon: <DollarOutlined/>,
+                    label: <Link href="/admin/points-records">{t('pointsRecords')}</Link>,
+                },
+                {
+                    key: '/admin/order-assignments',
+                    icon: <SwapOutlined/>,
+                    label: <Link href="/admin/order-assignments">{t('orderAssignments')}</Link>,
+                },
+                {
+                    key: '/admin/comment-colors',
+                    icon: <FormatPainterOutlined/>,
+                    label: <Link href="/admin/comment-colors">{t('commentColors')}</Link>,
                 },
             ],
         },
@@ -101,9 +135,9 @@ export default function AdminLayoutClient({
                     label: <Link href="/admin/posts/create">{t('addPost')}</Link>,
                 },
                 {
-                    key: '/admin/categories?taxonomy=category',
+                    key: '/admin/posts/categories',
                     icon: <AppstoreOutlined/>,
-                    label: <Link href="/admin/categories?taxonomy=category">{t('postCategoryManagement')}</Link>,
+                    label: <Link href="/admin/posts/categories">{t('postCategoryManagement')}</Link>,
                 },
             ],
         },
@@ -146,23 +180,6 @@ export default function AdminLayoutClient({
                 },
             ],
         },
-        // {
-        //     key: 'analytics',
-        //     icon: <LineChartOutlined/>,
-        //     label: t('dataAnalysis'),
-        //     children: [
-        //         {
-        //             key: '/admin/analytics',
-        //             icon: <BarChartOutlined/>,
-        //             label: <Link href="/admin/analytics">{t('statistics')}</Link>,
-        //         },
-        //         {
-        //             key: '/admin/reports',
-        //             icon: <PieChartOutlined/>,
-        //             label: <Link href="/admin/reports">{t('reports')}</Link>,
-        //         },
-        //     ],
-        // },
         {
             key: 'system',
             icon: <SettingOutlined/>,
@@ -177,7 +194,103 @@ export default function AdminLayoutClient({
                     key: '/admin/settings/mail',
                     icon: <MailOutlined/>,
                     label: <Link href="/admin/settings/mail">{t('mailSettings')}</Link>,
+                },
+                {
+                    key: '/admin/settings/shop',
+                    icon: <ShopOutlined/>,
+                    label: <Link href="/admin/settings/shop">{t('shopSettings')}</Link>,
+                },
+                {
+                    key: '/admin/settings/theme',
+                    icon: <FormatPainterOutlined/>,
+                    label: <Link href="/admin/settings/theme">{t('themeSettings')}</Link>,
                 }
+            ],
+        },
+        {
+            key: 'lottery',
+            icon: <GiftOutlined/>,
+            label: t('lotteryManagement'),
+            children: [
+                {
+                    key: '/admin/lottery/settings',
+                    icon: <ControlOutlined/>,
+                    label: <Link href="/admin/lottery/settings">{t('lotterySettings')}</Link>,
+                },
+                {
+                    key: '/admin/lottery/prizes',
+                    icon: <TrophyOutlined/>,
+                    label: <Link href="/admin/lottery/prizes">{t('lotteryPrizes')}</Link>,
+                },
+                {
+                    key: '/admin/lottery/records',
+                    icon: <FileSearchOutlined/>,
+                    label: <Link href="/admin/lottery/records">{t('lotteryRecords')}</Link>,
+                },
+            ],
+        },
+        {
+            key: 'staff',
+            icon: <SolutionOutlined/>,
+            label: t('staffManagement'),
+            children: [
+                {
+                    key: '/admin/staff/drivers',
+                    icon: <CarOutlined/>,
+                    label: <Link href="/admin/staff/drivers">{t('staffDrivers')}</Link>,
+                },
+                {
+                    key: '/admin/staff/staffs',
+                    icon: <TeamOutlined/>,
+                    label: <Link href="/admin/staff/staffs">{t('staffList')}</Link>,
+                },
+                {
+                    key: '/admin/staff/groups',
+                    icon: <AppstoreOutlined/>,
+                    label: <Link href="/admin/staff/groups">{t('staffGroups')}</Link>,
+                },
+                {
+                    key: '/admin/staff/schedules',
+                    icon: <CalendarOutlined/>,
+                    label: <Link href="/admin/staff/schedules">{t('staffSchedules')}</Link>,
+                },
+                {
+                    key: '/admin/staff/payrolls',
+                    icon: <DollarOutlined/>,
+                    label: <Link href="/admin/staff/payrolls">{t('staffPayrolls')}</Link>,
+                },
+                {
+                    key: '/admin/staff/leaves',
+                    icon: <CheckCircleOutlined/>,
+                    label: <Link href="/admin/staff/leaves">{t('staffLeaves')}</Link>,
+                },
+                {
+                    key: '/admin/staff/haccp',
+                    icon: <FileProtectOutlined/>,
+                    label: <Link href="/admin/staff/haccp">{t('staffHaccp')}</Link>,
+                },
+            ],
+        },
+        {
+            key: 'finance',
+            icon: <AccountBookOutlined/>,
+            label: t('financeManagement'),
+            children: [
+                {
+                    key: '/admin/finance/statistics',
+                    icon: <BarChartOutlined/>,
+                    label: <Link href="/admin/finance/statistics">{t('financeStatistics')}</Link>,
+                },
+                {
+                    key: '/admin/finance/orders',
+                    icon: <UnorderedListOutlined/>,
+                    label: <Link href="/admin/finance/orders">{t('financeOrders')}</Link>,
+                },
+                {
+                    key: '/admin/finance/bills',
+                    icon: <ReconciliationOutlined/>,
+                    label: <Link href="/admin/finance/bills">{t('financeBills')}</Link>,
+                },
             ],
         },
         {
@@ -194,6 +307,11 @@ export default function AdminLayoutClient({
                     key: '/admin/swipers',
                     icon: <PictureOutlined/>,
                     label: <Link href="/admin/swipers">{t('swiperManagement')}</Link>,
+                },
+                {
+                    key: '/admin/addressbook',
+                    icon: <EnvironmentOutlined/>,
+                    label: <Link href="/admin/addressbook">Address Book</Link>,
                 },
             ],
         },

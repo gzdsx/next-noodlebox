@@ -5,21 +5,25 @@ import {Modal, Checkbox, Input, Spin, App} from 'antd';
 import {SearchOutlined} from '@ant-design/icons';
 import {apiGet} from '@/lib/backendApi';
 
-interface VariantOption {
-    id: string;
+interface ProductVariantOption {
+    id?: string;
     title: string;
+    price: string;
+    memo?: string;
+    color?: string;
+    selected?: boolean;
 }
 
 interface ProductVariant {
-    id: number;
+    id?: number;
     name: string;
-    options: VariantOption[];
+    options: ProductVariantOption[];
 }
 
 interface ProductVariantModalProps {
     open: boolean;
     onClose?: () => void;
-    onSelect?: (variant: { name: string; options: VariantOption[] }) => void;
+    onSelect?: (variant: { name: string; options: ProductVariantOption[] }) => void;
 }
 
 const ProductVariantModal: React.FC<ProductVariantModalProps> = ({open, onClose, onSelect}) => {
@@ -28,7 +32,7 @@ const ProductVariantModal: React.FC<ProductVariantModalProps> = ({open, onClose,
     const [variants, setVariants] = useState<ProductVariant[]>([]);
     const [searchKeyword, setSearchKeyword] = useState('');
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
-    const [selectedOptions, setSelectedOptions] = useState<VariantOption[]>([]);
+    const [selectedOptions, setSelectedOptions] = useState<ProductVariantOption[]>([]);
 
     const fetchVariants = useCallback(async () => {
         setLoading(true);
@@ -54,7 +58,7 @@ const ProductVariantModal: React.FC<ProductVariantModalProps> = ({open, onClose,
     }, [open, fetchVariants]);
 
     // 点击左侧型号（单选）
-    const handleOptionCheck = (option: VariantOption) => {
+    const handleOptionCheck = (option: ProductVariantOption) => {
         if (selectedOptions.includes(option)) {
             setSelectedOptions(prev => prev.filter(item => item.title !== option.title));
         } else {
@@ -157,5 +161,5 @@ const ProductVariantModal: React.FC<ProductVariantModalProps> = ({open, onClose,
     );
 };
 
-export type {ProductVariant, VariantOption};
+export type {ProductVariant, ProductVariantOption};
 export default ProductVariantModal;
