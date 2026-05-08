@@ -3,7 +3,7 @@
 import React from 'react';
 import {Image, Button} from 'antd';
 import {PlusOutlined, DeleteOutlined} from '@ant-design/icons';
-import {useBackendApp} from "@/contexts/BackendAppContext";
+import {useMediaLibrary} from "@/contexts/BackendAppContext";
 
 interface FeaturedImageInputProps {
     value?: string;
@@ -16,7 +16,7 @@ const FeaturedImageInput: React.FC<FeaturedImageInputProps> = ({
                                                                    onChange,
                                                                    placeholder = '选择图片'
                                                                }) => {
-    const {mediaLibrary} = useBackendApp();
+    const mediaLibrary = useMediaLibrary();
 
     const handleOpenMediaLibrary = () => {
         mediaLibrary.open({

@@ -92,15 +92,44 @@ export interface ShippingZone {
     fee: number;
 }
 
+export interface ShippingAddress {
+    name: string;
+    iddcode: string;
+    phone_number: string;
+    address: string;
+    eircode: string;
+}
+
 export interface Order {
     id: number;
     order_no: string;
     status: string;
-    total: number;
+    total: string;
     items: OrderItem[];
     created_at: string;
     updated_at: string;
-    shipping_total:string;
+    shipping_total: string;
+    is_modified?: boolean;
+    shipping: ShippingAddress;
+    payment_method_title?: string;
+    is_paid?: boolean;
+    deliveryer?: {
+        name: string;
+        color: string;
+    },
+    short_code?: string;
+    buyer_name?: string;
+    shipping_method_title?: string;
+    links?: Record<string, { href: string, rel: string }>;
+    payment_at?: string;
+    shipping_method?: string;
+    deliveryer_id?: number;
+    shipping_zone?: string;
+    payment_type?: string;
+    payment_method?: string;
+    cost_total?: string;
+    payment_fee?: string;
+    metas?: Record<string, any>[];
 }
 
 export interface OrderItem {

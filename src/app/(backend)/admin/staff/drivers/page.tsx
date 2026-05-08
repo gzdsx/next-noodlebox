@@ -46,13 +46,6 @@ interface DriverType {
     created_at: string;
 }
 
-const POS_MACHINE_OPTIONS = [
-    {label: 'POS-1', value: 'pos1'},
-    {label: 'POS-2', value: 'pos2'},
-    {label: 'POS-3', value: 'pos3'},
-    {label: 'POS-4', value: 'pos4'},
-];
-
 export default function DriversPage() {
     const [form] = Form.useForm();
     const {message} = App.useApp();
@@ -73,6 +66,7 @@ export default function DriversPage() {
     const [editingRecord, setEditingRecord] = useState<DriverType | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState<string>('');
+    const [posmachineOptions, setPosmachineOptions] = useState<any[]>([]);
 
     const handleAdd = () => {
         setEditingRecord(null);
@@ -196,7 +190,13 @@ export default function DriversPage() {
             key: 'color',
             width: 60,
             render: (color: string) => (
-                color ? <div style={{width: 24, height: 24, borderRadius: 4, backgroundColor: color, border: '1px solid #d9d9d9'}}/> : null
+                color ? <div style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 4,
+                    backgroundColor: color,
+                    border: '1px solid #d9d9d9'
+                }}/> : null
             ),
         },
         {
@@ -243,6 +243,17 @@ export default function DriversPage() {
             setLoading(false);
         });
     };
+
+    const fetchMechines = () => {
+        apiGet(`/pos-machines?status=idle&is_cashier=0`).then(response => {
+            setPosmachineOptions(
+                response.data.items.map((m: any) => ({
+                    label: m.name,
+                    value: m.id
+                }))
+            );
+        })
+    }
 
     const handleBatchAction = () => {
         if (!batchAction || selectedItems.length === 0) return;
@@ -297,6 +308,10 @@ export default function DriversPage() {
         fetchDrivers();
     }, [offset, filterStatus]);
 
+    React.useEffect(() => {
+        fetchMechines();
+    }, []);
+
     return (
         <div>
             <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('driverManagement')}</h2>
@@ -318,8 +333,8 @@ export default function DriversPage() {
                         onChange={setFilterStatus}
                         options={[
                             {value: 'all', label: t('allStatus')},
-                            {value: 'active', label: t('statusActive')},
-                            {value: 'inactive', label: t('statusInactive')},
+                            {value: 'online', label: t('statusOnline')},
+                            {value: 'offline', label: t('statusOffline')},
                         ]}
                     />
                     <Button type="primary" icon={<PlusOutlined/>} onClick={handleAdd}>
@@ -349,8 +364,8 @@ export default function DriversPage() {
                                 options={[
                                     {value: '', label: tc('batchAction')},
                                     {value: 'delete', label: tc('batchDelete')},
-                                    {value: 'enable', label: t('batchEnable')},
-                                    {value: 'disable', label: t('batchDisable')},
+                                    {value: 'enable', label: '上线'},
+                                    {value: 'disable', label: '下线'},
                                 ]}
                         />
                         <Button type="primary" disabled={selectedItems.length === 0}
@@ -449,7 +464,7 @@ export default function DriversPage() {
                     </Row>
 
                     <Form.Item label={t('posMachines')} name="pos_machines">
-                        <Checkbox.Group options={POS_MACHINE_OPTIONS}/>
+                        <Checkbox.Group options={posmachineOptions}/>
                     </Form.Item>
 
                     <Form.Item label={t('color')} name="color">

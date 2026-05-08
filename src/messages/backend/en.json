@@ -600,8 +600,8 @@
 		"createdAt": "Created At",
 		"allStatus": "All Status",
 		"pending": "Pending",
-		"paid": "Paid",
-		"shipped": "Shipped",
+		"processing": "Processing",
+		"delivering": "Delivering",
 		"completed": "Completed",
 		"cancelled": "Cancelled",
 		"refunded": "Refunded",
@@ -1269,13 +1269,13 @@
 			"items": "Items",
 			"pending": "Pending",
 			"paid": "Paid",
-			"shipped": "Shipped",
 			"completed": "Completed",
 			"cancelled": "Cancelled",
 			"refunded": "Refunded",
 			"noOrders": "No orders yet",
 			"orderHistory": "Order History",
-			"processing": "Processing"
+			"processing": "Processing",
+			"delivering": "Delivering"
 		},
 		"user": {
 			"myOrders": "My Orders",

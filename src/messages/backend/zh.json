@@ -601,8 +601,8 @@
         "createdAt": "创建时间",
         "allStatus": "全部状态",
         "pending": "待付款",
-        "paid": "已付款",
-        "shipped": "已发货",
+        "processing": "处理中",
+        "delivering": "配送中",
         "completed": "已完成",
         "cancelled": "已取消",
         "refunded": "已退款",
@@ -1269,12 +1269,13 @@
             "items": "商品",
             "pending": "待付款",
             "paid": "已付款",
-            "shipped": "已发货",
             "completed": "已完成",
             "cancelled": "已取消",
             "refunded": "已退款",
             "noOrders": "暂无订单",
-            "orderHistory": "订单记录"
+            "orderHistory": "订单记录",
+            "delivering": "配送中",
+            "processing": "处理中"
         },
         "user": {
             "myOrders": "我的订单",
