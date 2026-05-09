@@ -5,7 +5,7 @@ import {Button} from "antd";
 
 export default function Page() {
     return (
-        <div className={'w-full h-full flex items-center justify-center gap-8'}>
+        <div className={'w-full pt-50 flex items-center justify-center gap-8'}>
             <Link href={'/admin/orders/allocation'}>
                 <Button
                     variant={'solid'}
