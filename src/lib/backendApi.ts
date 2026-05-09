@@ -5,10 +5,29 @@ interface FetchOptions extends RequestInit {
     params?: Record<string, any>;
 }
 
+function serializeParams(params: Record<string, any>) {
+    const parts = [];
+    for (const key in params) {
+        const value = params[key];
+        if (value == null) continue;
+
+        if (Array.isArray(value)) {
+            value.forEach(item => {
+                parts.push(`${key}[]=${item}`);
+            });
+        } else {
+            parts.push(`${key}=${value}`);
+        }
+    }
+    return parts.join('&');
+}
+
 export async function apiFetch(endpoint: string, {data, params, ...options}: FetchOptions = {}) {
     // 1. 处理 URL 参数
-    const queryString = params ? `?${new URLSearchParams(params).toString()}` : '';
-    const url = `${BASE_API_URL}${endpoint}${queryString}`;
+    let url = `${BASE_API_URL}${endpoint}`;
+    if (params) {
+        url += '?' + serializeParams(params);
+    }
 
     // 2. 默认 Headers 配置
     const headers = new Headers({
@@ -41,12 +60,6 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
             credentials: 'include',
         });
 
-        // 4. 统一错误拦截
-        if (response.status === 401) {
-            // 处理未授权，例如跳转登录
-            if (typeof window !== 'undefined') window.location.href = '/login?callbackUrl=' + encodeURIComponent(window.location.pathname);
-        }
-
         if (!response.ok) {
             const errorData = await response.json();
             //console.log('response:',errorData);
@@ -56,9 +69,6 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
                 errors: errorData.errors, // Laravel 的表单验证错误通常放在这里
             };
         }
-
-        // 204 No Content 处理
-        if (response.status === 204) return null;
 
         return await response.json();
     } catch (error) {

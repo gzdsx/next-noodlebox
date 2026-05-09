@@ -31,9 +31,10 @@ interface RichTextEditorProps {
     value?: string;
     onChange?: (html: string) => void;
     placeholder?: string;
+    height?: number | string;
 }
 
-export default function RichTextEditor({value = '', onChange, placeholder}: RichTextEditorProps) {
+export default function RichTextEditor({value = '', onChange, placeholder, height}: RichTextEditorProps) {
     const mediaLibrary = useMediaLibrary();
     const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -241,7 +242,7 @@ export default function RichTextEditor({value = '', onChange, placeholder}: Rich
             {/* Editor Content */}
             <EditorContent
                 editor={editor}
-                style={{minHeight: isFullscreen ? 'calc(100vh - 60px)' : 450}}
+                style={{minHeight: isFullscreen ? 'calc(100vh - 60px)' : height}}
             />
         </div>
     );

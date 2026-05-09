@@ -23,13 +23,14 @@ import {
 import {
     PlusOutlined,
     SearchOutlined,
-    EditOutlined,
+    EditOutlined, CalendarOutlined,
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import {apiGet, apiPost, apiPut, apiDelete} from "@/lib/backendApi";
 import {useTranslations} from '@/contexts/BackendLocaleContext';
 import {useMediaLibrary} from "@/contexts/BackendAppContext";
 import type {Color} from 'antd/es/color-picker';
+import ModalDriverSchedule from "@/components/backend/ModalDriverSchedule";
 
 const {Search} = Input;
 
@@ -67,6 +68,7 @@ export default function DriversPage() {
     const [submitting, setSubmitting] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState<string>('');
     const [posmachineOptions, setPosmachineOptions] = useState<any[]>([]);
+    const [showSchedules, setShowSchedules] = useState(false);
 
     const handleAdd = () => {
         setEditingRecord(null);
@@ -370,6 +372,13 @@ export default function DriversPage() {
                         />
                         <Button type="primary" disabled={selectedItems.length === 0}
                                 onClick={handleBatchAction}>{tc('apply')}</Button>
+                        <Button
+                            type={'primary'}
+                            disabled={selectedItems.length === 0}
+                            onClick={() => {
+                                setShowSchedules(true);
+                            }}
+                        >排班</Button>
                     </div>
                     <Pagination
                         total={total}
@@ -472,6 +481,11 @@ export default function DriversPage() {
                     </Form.Item>
                 </Form>
             </Modal>
+            {
+                showSchedules && (
+                    <ModalDriverSchedule ids={selectedItems} onClose={() => setShowSchedules(false)}/>
+                )
+            }
         </div>
     );
 }

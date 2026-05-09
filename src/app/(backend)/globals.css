@@ -24,6 +24,15 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+a {
+    cursor: pointer;
+}
+
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+    cursor: pointer;
+}
+
 /* Tiptap Editor */
 .tiptap {
     outline: none;
@@ -112,7 +121,7 @@ body {
     border-spacing: 0;
 }
 
-.sku-table thead th{
+.sku-table thead th {
     background-color: #F5F6F8;
     border: 1px solid #eee;
     text-align: left;
@@ -120,7 +129,7 @@ body {
     font-size: 16px;
 }
 
-.sku-table tbody td{
+.sku-table tbody td {
     border: 1px solid #eee;
     text-align: left;
     padding: 10px;

@@ -22,8 +22,8 @@ import {useTranslations} from '@/contexts/BackendLocaleContext';
 import {type Order as OrderType} from "@/types"
 import {useMessage, useOrderProcessor} from "@/contexts/BackendAppContext";
 import PaymentSelect from "@/components/backend/PaymentSelect";
-import dayjs from "dayjs";
 import DriverSelect from "@/components/backend/DriverSelect";
+import dayjs from "dayjs";
 
 const {RangePicker} = DatePicker;
 
@@ -44,7 +44,7 @@ const createViaMap: Record<string, string> = {
     '': 'Unknown',
 }
 
-export default function OrdersManagement() {
+export default function Page() {
     const [total, setTotal] = useState<number>(0);
     const [orders, setOrders] = useState<OrderType[]>([]);
     const [offset, setOffset] = useState<number>(0);

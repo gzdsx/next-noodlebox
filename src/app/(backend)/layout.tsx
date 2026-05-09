@@ -32,6 +32,10 @@ export default async function RootLayout({
                     Button: {
                         iconGap: 4
                     }
+                },
+                token: {
+                    colorPrimary: '#55b5a5',
+                    colorLink: '#55b5a5',
                 }
             }}>
                 <AntdRegistry>

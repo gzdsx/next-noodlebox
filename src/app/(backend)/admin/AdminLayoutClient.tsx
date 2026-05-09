@@ -108,9 +108,9 @@ export default function AdminLayoutClient({
                     label: <Link href="/admin/points-records">{t('pointsRecords')}</Link>,
                 },
                 {
-                    key: '/admin/order-assignments',
+                    key: '/admin/orders/pilot',
                     icon: <SwapOutlined/>,
-                    label: <Link href="/admin/order-assignments">{t('orderAssignments')}</Link>,
+                    label: <Link href="/admin/orders/pilot">{t('orderAssignments')}</Link>,
                 },
                 {
                     key: '/admin/comment-colors',
@@ -255,9 +255,9 @@ export default function AdminLayoutClient({
                     label: <Link href="/admin/staff/schedules">{t('staffSchedules')}</Link>,
                 },
                 {
-                    key: '/admin/staff/payrolls',
+                    key: '/admin/staff/payslips',
                     icon: <DollarOutlined/>,
-                    label: <Link href="/admin/staff/payrolls">{t('staffPayrolls')}</Link>,
+                    label: <Link href="/admin/staff/payslips">{t('staffPayrolls')}</Link>,
                 },
                 {
                     key: '/admin/staff/leaves',
@@ -311,7 +311,7 @@ export default function AdminLayoutClient({
                 {
                     key: '/admin/addressbook',
                     icon: <EnvironmentOutlined/>,
-                    label: <Link href="/admin/addressbook">Address Book</Link>,
+                    label: <Link href="/admin/addressbook">地址簿</Link>,
                 },
             ],
         },
@@ -411,9 +411,6 @@ export default function AdminLayoutClient({
 
                     <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
                         <LanguageSwitcher/>
-                        <Badge count={5} size="small">
-                            <Button type="text" icon={<BellOutlined/>}/>
-                        </Badge>
                         <Dropdown menu={{items: userMenuItems}} placement="bottomRight">
                             <div style={{cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8}}>
                                 <Avatar icon={<UserOutlined/>} src={user?.avatar}/>

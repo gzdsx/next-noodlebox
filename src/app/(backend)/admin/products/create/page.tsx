@@ -2,7 +2,7 @@
 
 import React, {useState} from 'react';
 import {App, Card} from "antd";
-import {ProductForm, ProductType} from "../ProductForm";
+import {ProductForm} from "../ProductForm";
 import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {apiPost} from "@/lib/backendApi";
 import {useRouter} from "next/navigation";
@@ -13,7 +13,7 @@ export default function Page() {
     const {message} = App.useApp();
     const [submitting, setSubmitting] = useState(false);
 
-    const handleSubmit = async (values: ProductType) => {
+    const handleSubmit = async (values: any) => {
         try {
             setSubmitting(true);
             const response = await apiPost('/products', values);
@@ -42,11 +42,14 @@ export default function Page() {
                     categories: [],
                     images: [],
                     skus: [],
-                    variants: [],
                     has_sku_attr: false,
                     sold:100,
                     stock:100,
                     points:0,
+                    variation_list:[],
+                    additional_options:[],
+                    icon:'',
+                    metas:[]
                 }}
                 submitting={submitting}
                 onSubmit={handleSubmit}

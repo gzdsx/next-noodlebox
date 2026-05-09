@@ -130,6 +130,7 @@ export interface Order {
     cost_total?: string;
     payment_fee?: string;
     metas?: Record<string, any>[];
+    deleted_at?: string;
 }
 
 export interface OrderItem {

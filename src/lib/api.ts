@@ -9,7 +9,7 @@ interface FetchOptions extends RequestInit {
 }
 
 export interface ResponseError {
-    status: number|string;
+    status: number | string;
     message: string;
     errors: any;
 }
@@ -22,10 +22,29 @@ async function getAuthSession() {
     return await getSession();
 }
 
+function serializeParams(params: Record<string, any>) {
+    const parts = [];
+    for (const key in params) {
+        const value = params[key];
+        if (value == null) continue;
+
+        if (Array.isArray(value)) {
+            value.forEach(item => {
+                parts.push(`${key}[]=${encodeURIComponent(item)}`);
+            });
+        } else {
+            parts.push(`${key}=${encodeURIComponent(value)}`);
+        }
+    }
+    return parts.join('&');
+}
+
 export async function apiFetch(endpoint: string, {data, params, ...options}: FetchOptions = {}) {
     // 1. 处理 URL 参数
-    const queryString = params ? `?${new URLSearchParams(params).toString()}` : '';
-    const url = `${BASE_URL}${endpoint}${queryString}`;
+    let url = `${BASE_URL}${endpoint}`;
+    if (params) {
+        url += '?' + serializeParams(params);
+    }
 
     // 2. 默认 Headers 配置
     const headers = new Headers({

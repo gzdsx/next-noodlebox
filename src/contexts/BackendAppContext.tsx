@@ -137,6 +137,16 @@ export function useMessage() {
     return message;
 }
 
+export function useModal() {
+    const {modal} = App.useApp();
+    return modal;
+}
+
+export function useNotification() {
+    const {notification} = App.useApp();
+    return notification;
+}
+
 export function useOrderProcessor() {
     const {orderProcessor} = useBackendApp();
     return orderProcessor;
