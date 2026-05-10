@@ -30,7 +30,7 @@ export default async function ProductDetailPage({params}: { params: Promise<{ sl
     if (!product) {
         return (
             <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-                <p className="text-gray-500">{t('page.productNotFound')}</p>
+                <p className="text-gray-200">{t('page.productNotFound')}</p>
                 <Link href="/products">
                     <Button className="mt-4">{t('page.backToProducts')}</Button>
                 </Link>
@@ -45,7 +45,7 @@ export default async function ProductDetailPage({params}: { params: Promise<{ sl
                 <BreadcrumbList>
                     <BreadcrumbItem>
                         <BreadcrumbLink asChild>
-                            <Link href="/">{t('header.home')}</Link>
+                            <Link href="/" className={'text-white'}>{'Home'}</Link>
                         </BreadcrumbLink>
                     </BreadcrumbItem>
                     {product.categories?.length ? (
