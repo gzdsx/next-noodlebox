@@ -164,6 +164,7 @@ export default function CategoryClient({taxonomy = 'category', title = '分类�
             title: tc('actions'),
             key: 'action',
             width: 200,
+            align: 'end',
             render: (_, record) => (
                 <Space size="small">
                     <Button

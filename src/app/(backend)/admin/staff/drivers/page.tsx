@@ -366,8 +366,8 @@ export default function DriversPage() {
                                 options={[
                                     {value: '', label: tc('batchAction')},
                                     {value: 'delete', label: tc('batchDelete')},
-                                    {value: 'enable', label: '上线'},
-                                    {value: 'disable', label: '下线'},
+                                    {value: 'enable', label: t('batchEnable')},
+                                    {value: 'disable', label: t('batchDisable')},
                                 ]}
                         />
                         <Button type="primary" disabled={selectedItems.length === 0}
@@ -378,7 +378,7 @@ export default function DriversPage() {
                             onClick={() => {
                                 setShowSchedules(true);
                             }}
-                        >排班</Button>
+                        >{t('schedule')}</Button>
                     </div>
                     <Pagination
                         total={total}

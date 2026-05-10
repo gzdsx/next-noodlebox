@@ -101,7 +101,7 @@ export default function PagesManagement() {
                         size="small"
                         icon={<EditOutlined/>}
                         onClick={() => handleEdit(record)}
-                        className={'px-0'}
+                        className={'px-0!'}
                     >
                         {tc('edit')}
                     </Button>

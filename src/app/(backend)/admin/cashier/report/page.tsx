@@ -32,6 +32,7 @@ interface CashierReportType {
 export default function CashierReportPage() {
     const {message} = App.useApp();
     const {t} = useTranslations('cashierReport');
+    const {t: tc} = useTranslations('common');
 
     const [report, setReport] = useState<CashierReportType | null>(null);
     const [loading, setLoading] = useState(false);
@@ -82,7 +83,7 @@ export default function CashierReportPage() {
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16}}>
                 <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('cashierReport')}</h2>
                 <Link href={'/admin/cashier/transactions'}>
-                    <Button type="primary">历史账单</Button>
+                    <Button type="primary">{t('historyBills')}</Button>
                 </Link>
             </div>
             <Card>
@@ -133,19 +134,19 @@ export default function CashierReportPage() {
 
                     <div style={{marginTop: 16, display: 'flex', gap: 16, flexWrap: 'wrap'}}>
                         <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
-                            <label>状态</label>
+                            <label>{t('status')}</label>
                             <Select
                                 style={{width: 140}}
                                 value={status}
                                 onChange={setStatus}
                                 options={[
-                                    {value: 'settled', label: '已结算'},
-                                    {value: 'pending', label: '未结算'},
+                                    {value: 'settled', label: t('statusSettled')},
+                                    {value: 'pending', label: t('statusPending')},
                                 ]}
                             />
                         </div>
                         <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
-                            <label>POS余额</label>
+                            <label>{t('posBalance')}</label>
                             <Input
                                 style={{width: 140}}
                                 value={posBalance}
@@ -153,7 +154,7 @@ export default function CashierReportPage() {
                             />
                         </div>
                         <div style={{display: 'flex', alignItems: 'center', gap: 10}}>
-                            <label>Notes</label>
+                            <label>{t('notes')}</label>
                             <Input
                                 style={{width: 280}}
                                 value={notes}
@@ -161,7 +162,7 @@ export default function CashierReportPage() {
                             />
                         </div>
                         <Button type="primary" onClick={handleSubmit}>
-                            提交
+                            {tc('submit')}
                         </Button>
                     </div>
                 </Spin>

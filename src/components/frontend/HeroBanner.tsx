@@ -3,13 +3,15 @@
 import React from 'react';
 import Link from 'next/link';
 import {ShoppingBag, Gift} from 'lucide-react';
+import {useWebConfig} from "@/contexts/AppContext";
 
 export default function HeroBanner() {
+    const webconfig = useWebConfig();
     return (
         <section className="relative w-full h-screen min-h-150 overflow-hidden">
             {/* Video Background */}
             <video
-                src="https://www.noodlebox.ie/storage/video/2024/04/kwiLVFCL6im9jE3SOoC7df0EVX3cZWy91tru8y96.mp4"
+                src={webconfig.home_page_banner_src}
                 autoPlay
                 muted
                 loop

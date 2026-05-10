@@ -178,7 +178,7 @@ export default function ProductsClient() {
                     {total > limit && (
                         <CustomPagination
                             total={total}
-                            current={pageParam}
+                            currentPage={pageParam}
                             pageSize={limit}
                         />
                     )}

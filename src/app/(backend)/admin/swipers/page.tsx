@@ -143,7 +143,7 @@ export default function SwipersManagement() {
             render: (desc: string) => <span style={{color: '#666'}}>{desc || '-'}</span>,
         },
         {
-            title: '操作',
+            title: tc('actions'),
             dataIndex: 'actions',
             key: 'actions',
             width: 260,

@@ -1,4 +1,3 @@
-import {Metadata} from "next";
 import {SessionProvider} from "next-auth/react";
 import {LocaleProvider} from "@/contexts/LocaleContext";
 import {CartProvider} from "@/contexts/CartContext";
@@ -13,11 +12,24 @@ import {apiGet} from "@/lib/api";
 import {Category} from "@/types";
 import {LotteryProvider} from "@/contexts/LotteryContext";
 
-export const metadata: Metadata = {
-    title: "Noodle Box - The Best Chinese Takeaway In Drogheda",
-    keywords: "Noodle Box, Chinese takeaway, Drogheda, Asian food, online order",
-    description: "Order the best Asian food online from Noodle Box - Chinese takeaway in Drogheda, Ireland. Enjoy the best prices, Fast delivery, High quality ingredients.",
-};
+const getConfig = async () => {
+    try {
+        const response = await apiGet('/webconfig');
+        return response.data;
+    } catch (e) {
+        console.log('获取配置失败:', e);
+        return {};
+    }
+}
+
+export const generateMetadata = async () => {
+    const config = await getConfig();
+    return {
+        title: config.sitename,
+        keywords: config.keywords,
+        description: config.description,
+    }
+}
 
 export const viewport = {
     width: 'device-width',
@@ -46,13 +58,14 @@ export default async function FrontendLayout({
 }>) {
     const session = await auth();
     const categories = await getCategories();
+    const webconfig = await getConfig();
 
     return (
         <html lang="en" className="w-full overflow-x-hidden">
         <body className="bg-[#444] text-gray-100 min-h-screen w-full overflow-x-hidden pb-14 lg:pb-0">
         <LocaleProvider>
             <SessionProvider session={session}>
-                <AppProvider categories={categories}>
+                <AppProvider categories={categories} webconfig={webconfig}>
                     <CartProvider>
                         <LotteryProvider>
                             <Header/>

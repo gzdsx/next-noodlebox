@@ -135,9 +135,16 @@ const ModalOrderProcessor = ({
     const renderItemOptions = (item: any) => {
         const options: string[] = [];
         try {
-            item.options.forEach((option: any) => {
-                options.push(option.value);
-            });
+
+            if (Array.isArray(item.variations)){
+                item.variations.forEach((option: any) => {
+                    options.push(option.value);
+                });
+            }else {
+                Object.values(item.variations).forEach((option: any) => {
+                    options.push(option.toString());
+                });
+            }
 
             item.additional_options.forEach((addon: any) => {
                 options.push(addon.name);

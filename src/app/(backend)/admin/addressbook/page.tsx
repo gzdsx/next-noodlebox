@@ -44,6 +44,7 @@ export default function AddressBookManagement() {
 
     const {message} = App.useApp();
     const {t: tc} = useTranslations('common');
+    const {t} = useTranslations('addressbook');
 
     const fetchItems = () => {
         setLoading(true);
@@ -55,7 +56,7 @@ export default function AddressBookManagement() {
             setItems(data || []);
             setTotal(t);
         }).catch(reason => {
-            message.error(reason.message || 'Failed to fetch address books');
+            message.error(reason.message || t('fetchError'));
         }).finally(() => {
             setLoading(false);
         });
@@ -83,7 +84,7 @@ export default function AddressBookManagement() {
     const handleDelete = async (id: number) => {
         try {
             await apiDelete(`/addressbooks/${id}`);
-            message.success('Delete successful');
+            message.success(tc('deleteSuccess'));
             fetchItems();
         } catch (reason: unknown) {
             if (reason instanceof Error) {
@@ -96,7 +97,7 @@ export default function AddressBookManagement() {
         if (selectedItems.length === 0) return;
         setLoading(true);
         apiDelete(`/addressbooks/batch`, {ids: selectedItems as number[]}).then(() => {
-            message.success('Batch delete successful');
+            message.success(tc('deleteSuccess'));
             setSelectedItems([]);
             setBatchAction('');
             fetchItems();
@@ -113,10 +114,10 @@ export default function AddressBookManagement() {
             setSubmitting(true);
             if (editingItem) {
                 await apiPut(`/addressbooks/${editingItem.id}`, values);
-                message.success('Update successful');
+                message.success(tc('saveSuccess'));
             } else {
                 await apiPost('/addressbooks', values);
-                message.success('Create successful');
+                message.success(tc('saveSuccess'));
             }
             setModalVisible(false);
             fetchItems();
@@ -131,13 +132,13 @@ export default function AddressBookManagement() {
 
     const columns: ColumnsType<AddressBookType> = [
         {
-            title: 'Eircode',
+            title: t('eircode'),
             dataIndex: 'eircode',
             key: 'eircode',
             width: 120,
         },
         {
-            title: 'Address',
+            title: t('address'),
             dataIndex: 'address',
             key: 'address',
             width: 'auto',
@@ -146,7 +147,7 @@ export default function AddressBookManagement() {
             title: tc('actions'),
             key: 'action',
             width: 120,
-            align: 'center',
+            align: 'end',
             render: (_, record) => (
                 <Space size="small">
                     <Button
@@ -159,7 +160,7 @@ export default function AddressBookManagement() {
                         {tc('edit')}
                     </Button>
                     <Popconfirm
-                        title="Are you sure you want to delete this address?"
+                        title={tc('deleteConfirm')}
                         onConfirm={() => handleDelete(record.id)}
                         okText={tc('confirm')}
                         cancelText={tc('cancel')}
@@ -176,9 +177,9 @@ export default function AddressBookManagement() {
     return (
         <div>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24}}>
-                <h2 style={{fontSize: 24, fontWeight: 'bold', margin: 0}}>Address Book</h2>
+                <h2 style={{fontSize: 24, fontWeight: 'bold', margin: 0}}>{t('addressBookManagement')}</h2>
                 <Button type="primary" icon={<PlusOutlined/>} onClick={handleAdd}>
-                    添加地址
+                    {t('addAddress')}
                 </Button>
             </div>
 
@@ -232,7 +233,7 @@ export default function AddressBookManagement() {
             </Card>
 
             <Modal
-                title={editingItem ? 'Edit Address' : 'Add Address'}
+                title={editingItem ? t('editAddress') : t('addAddress')}
                 open={modalVisible}
                 onOk={handleSave}
                 onCancel={() => setModalVisible(false)}
@@ -244,21 +245,21 @@ export default function AddressBookManagement() {
                 <Form form={form} layout="vertical" style={{marginTop: 16}}>
                     <Form.Item
                         name="eircode"
-                        label="Eircode"
+                        label={t('eircode')}
                         rules={[
-                            {required: true, message: 'Please enter Eircode'},
-                            {pattern: /^[A-Z0-9]{3}\s?[A-Z0-9]{4}$/i, message: 'Invalid Eircode format (e.g., D01 AB12)'},
+                            {required: true, message: t('eircodeRequired')},
+                            {pattern: /^[A-Z0-9]{3}\s?[A-Z0-9]{4}$/i, message: t('eircodeInvalid')},
                         ]}
                     >
-                        <Input placeholder="D01 AB12" style={{textTransform: 'uppercase'}}/>
+                        <Input placeholder={t('eircodePlaceholder')} style={{textTransform: 'uppercase'}}/>
                     </Form.Item>
 
                     <Form.Item
                         name="address"
-                        label="Address"
-                        rules={[{required: true, message: 'Please enter address'}]}
+                        label={t('address')}
+                        rules={[{required: true, message: t('addressRequired')}]}
                     >
-                        <Input.TextArea rows={4} placeholder="Enter full address"/>
+                        <Input.TextArea rows={4} placeholder={t('addressPlaceholder')}/>
                     </Form.Item>
                 </Form>
             </Modal>

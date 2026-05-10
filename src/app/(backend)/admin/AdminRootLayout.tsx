@@ -5,6 +5,7 @@ import AdminLoginClient from "@/components/backend/AdminLoginClient";
 import AdminLayoutClient from "@/app/(backend)/admin/AdminLayoutClient";
 import {useEffect, useState} from "react";
 import {Spinner} from "@/components/ui/spinner";
+import OrderNotification from "@/components/backend/OrderNotification";
 
 const AdminRootLayout = ({children}: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
@@ -28,6 +29,7 @@ const AdminRootLayout = ({children}: { children: React.ReactNode }) => {
     return (
         <BackendAppProvider>
             <AdminLayoutClient>{children}</AdminLayoutClient>
+            <OrderNotification/>
         </BackendAppProvider>
     );
 };

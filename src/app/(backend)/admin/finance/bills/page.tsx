@@ -6,10 +6,13 @@ import {useMessage, useModal} from "@/contexts/BackendAppContext";
 import {Button, Card, Checkbox, DatePicker, Form, Modal, Spin} from "antd";
 import dayjs from "dayjs";
 import OrderDeletedHistory from "@/components/backend/OrderDeletedHistory";
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 export default function Page() {
     const message = useMessage();
     const modal = useModal();
+    const {t} = useTranslations('financeBills');
+    const {t: tc} = useTranslations('common');
     const [bills, setBills] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [filterParams, setFilterParams] = useState<any>({
@@ -21,7 +24,7 @@ export default function Page() {
 
     const fetchBills = (values: any) => {
         if (!values.date_range) {
-            message.error('请选择一个日期区间');
+            message.error(t('selectDateRange'));
             return false;
         }
 
@@ -73,15 +76,15 @@ export default function Page() {
 
     const handleSubmit = () => {
         modal.confirm({
-            title: '删除确认',
-            content: '确定要删除所选订单吗',
+            title: tc('deleteConfirm'),
+            content: t('deleteSelectedConfirm'),
             onOk: () => {
                 setSubmitting(true);
                 apiPost('/finance/bills', {
                     ...filterParams,
                     bills: bills
                 }).then(() => {
-                    message.success('Deleted Success');
+                    message.success(tc('deleteSuccess'));
                 }).catch(reason => {
                     message.error(reason.message);
                 }).finally(() => {
@@ -96,15 +99,15 @@ export default function Page() {
 
     return (
         <>
-            <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>账单管理</h2>
+            <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('billManagement')}</h2>
             <Card>
                 <Form layout={'vertical'} onFinish={fetchBills} onChange={event => {
                     console.log(event);
                 }}>
-                    <Form.Item label={'选择日期'} name={'date_range'}>
+                    <Form.Item label={t('selectDate')} name={'date_range'}>
                         <DatePicker.RangePicker/>
                     </Form.Item>
-                    <Form.Item label={'下单方式'} name={'created_vias'}>
+                    <Form.Item label={t('orderMethod')} name={'created_vias'}>
                         <Checkbox.Group
                             options={[
                                 {
@@ -126,20 +129,20 @@ export default function Page() {
                             ]}
                         />
                     </Form.Item>
-                    <Button type={'default'} htmlType={'submit'} loading={loading}>查询</Button>
+                    <Button type={'default'} htmlType={'submit'} loading={loading}>{t('query')}</Button>
                 </Form>
 
                 <table className={'w-full'}>
                     <thead>
                     <tr>
-                        <th className={'text-left'}>付款方式</th>
-                        <th className={'text-left'}>销售额</th>
+                        <th className={'text-left'}>{t('paymentMethod')}</th>
+                        <th className={'text-left'}>{t('salesAmount')}</th>
                         <th className={'py-2 text-left leading-4'}>
-                            <div>首选删除时间范围</div>
-                            <small className={'text-gray-400'}>(留空为全部时间范围)</small>
+                            <div>{t('deleteTimeRange')}</div>
+                            <small className={'text-gray-400'}>{t('leaveEmptyForAll')}</small>
                         </th>
-                        <th className={'text-left'}>修改金额</th>
-                        <th className={'text-left'}>最终金额</th>
+                        <th className={'text-left'}>{t('modifiedAmount')}</th>
+                        <th className={'text-left'}>{t('finalAmount')}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -213,7 +216,7 @@ export default function Page() {
                                             type="button"
                                             className={'border border-gray-600 rounded-sm px-2 py-1'}
                                             onClick={() => preView(bill)}
-                                        >预删
+                                        >{t('preDelete')}
                                         </button>
                                     </div>
                                 </td>
@@ -224,23 +227,23 @@ export default function Page() {
                     </tbody>
                     <tfoot>
                     <tr className={'border-t border-gray-600 font-bold'}>
-                        <td className={'py-2'}>总销售额</td>
+                        <td className={'py-2'}>{t('totalSalesAmount')}</td>
                         <td>{'€' + saleTotal.toFixed(2)}</td>
                         <td></td>
-                        <td>总最终金额</td>
+                        <td>{t('totalFinalAmount')}</td>
                         <td>{'€' + finalTotal.toFixed(2)}</td>
                     </tr>
                     </tfoot>
                 </table>
                 <div className={'mt-4'}>
-                    <Button type={'primary'} onClick={handleSubmit}>确认删除</Button>
-                    <Button type={'link'} onClick={() => setShowHistory(true)}>查看历史记录</Button>
+                    <Button type={'primary'} onClick={handleSubmit}>{tc('confirm')}</Button>
+                    <Button type={'link'} onClick={() => setShowHistory(true)}>{t('viewHistory')}</Button>
                 </div>
             </Card>
             {
                 showHistory && (
                     <Modal
-                        title={'订单操作历史'}
+                        title={t('orderHistory')}
                         open={true}
                         footer={null}
                         width={800}
@@ -254,7 +257,7 @@ export default function Page() {
             }
             {
                 submitting && (
-                    <Spin size={'large'} fullscreen={true} description={'处理中...'}/>
+                    <Spin size={'large'} fullscreen={true} description={t('processing')}/>
                 )
             }
         </>

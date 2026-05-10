@@ -142,9 +142,9 @@ export default function DriverBillsPage() {
     return (
         <div>
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16}}>
-                <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>司机实时报告</h2>
+                <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('driverRealtimeReport')}</h2>
                 <Link href={'/admin/drivers/transactions'}>
-                    <Button type="primary">历史账单</Button>
+                    <Button type="primary">{t('historyBills')}</Button>
                 </Link>
             </div>
             <Card>

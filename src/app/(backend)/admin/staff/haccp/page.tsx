@@ -1,16 +1,17 @@
 'use client';
 
 import React, {useEffect, useMemo, useState} from "react";
-import {Button, Card, Checkbox, Col, DatePicker, Form, Input, Modal, Pagination, Row, Select, Table, Tag} from "antd";
+import {App, Button, Card, Checkbox, Col, DatePicker, Form, Input, Modal, Pagination, Row, Select, Table, Tag} from "antd";
 import {apiDelete, apiGet, apiPost} from "@/lib/backendApi";
 import type {ColumnsType} from "antd/es/table";
 import StaffSelect from "@/components/backend/StaffSelect";
-import {useMediaLibrary, useMessage} from "@/contexts/BackendAppContext";
+import {useMediaLibrary} from "@/contexts/BackendAppContext";
 import ModalHaccpReport from "@/components/backend/ModalHaccpReport";
 import SignatureCanvas from "@/components/common/SignatureCanvas";
 import dayjs from "dayjs";
 import isoWeek from 'dayjs/plugin/isoWeek';
 import RichTextEditor from "@/components/common/RichTextEditor";
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 dayjs.extend(isoWeek);
 
@@ -42,7 +43,10 @@ const reportTypes = [
 ];
 
 export default function Page() {
-    const message = useMessage();
+    const {message} = App.useApp();
+    const {t: tc} = useTranslations('common');
+    const {t} = useTranslations('staffHaccp');
+
     const [total, setTotal] = useState<number>(0);
     const [reports, setReports] = useState<any[]>([]);
     const [offset, setOffset] = useState(0);
@@ -70,7 +74,7 @@ export default function Page() {
             setReports(response.data.items);
             setTotal(response.data.total);
         }).catch(reason => {
-
+            message.error(reason.message || t('fetchError'));
         }).finally(() => {
             setLoading(false);
         });
@@ -86,14 +90,13 @@ export default function Page() {
 
     const getReportIntroduction = () => {
         apiGet(`/staff/haccp/reports/options`).then(response => {
-            //console.log(response.data.introduction);
             setPdfOptions({...response.data});
         });
     }
 
     const columns: ColumnsType<any> = [
         {
-            title: 'Type',
+            title: t('type'),
             dataIndex: 'type_text',
             key: 'type_text',
             render: (text, record) => (
@@ -104,12 +107,12 @@ export default function Page() {
             )
         },
         {
-            title: 'Summary',
+            title: t('summary'),
             dataIndex: 'summary',
             key: 'summary'
         },
         {
-            title: 'Staff',
+            title: t('staff'),
             dataIndex: 'staff',
             key: 'staff',
             render: (text, record) => {
@@ -117,7 +120,7 @@ export default function Page() {
             }
         },
         {
-            title: 'CreatedAt',
+            title: tc('createdAt'),
             dataIndex: 'created_at',
             key: 'created_at',
             width: 180
@@ -137,7 +140,6 @@ export default function Page() {
         console.log(values);
         setLoading(true);
         apiPost(`/staff/haccp/reports/export`, values).then((response) => {
-            //console.log("handleExport", response);
             window.open(response.data.url);
         }).catch((reason) => {
             message.error(reason.message);
@@ -153,11 +155,11 @@ export default function Page() {
             signatureData: signatureData,
         }).then(() => {
             getSignStatus();
-            message.success('签名保存成功');
+            message.success(t('signatureSuccess'));
             setIsSigned(true);
             setShowSign(false);
         }).catch(reason => {
-            message.error(reason.message || '签名保存失败');
+            message.error(reason.message || t('signatureError'));
         }).finally(() => {
             setLoading(false);
         });
@@ -176,7 +178,7 @@ export default function Page() {
         if (batchAction === 'delete') {
             setLoading(true);
             apiDelete('/staff/haccp/reports/batch', {ids: selectedItems as number[]}).then(() => {
-                message.success('删除成功');
+                message.success(tc('deleteSuccess'));
                 setSelectedItems([]);
                 fetchReports();
             }).catch(reason => {
@@ -201,16 +203,16 @@ export default function Page() {
     return (
         <>
             <div className={'flex flex-row justify-between items-center mb-4'}>
-                <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>HACCP报告</h2>
+                <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('haccpManagement')}</h2>
                 <div className={'flex flex-row gap-x-4'}>
-                    <span>Sign Off Status</span>
-                    <Tag color={isSigned ? 'green' : 'red'}>{isSigned ? 'Signed' : 'Unsigned'}</Tag>
-                    <Button size={'small'} type={'primary'} onClick={() => setShowSign(true)}>Sign Off</Button>
+                    <span>{t('signOffStatus')}</span>
+                    <Tag color={isSigned ? 'green' : 'red'}>{isSigned ? t('signed') : t('unsigned')}</Tag>
+                    <Button size={'small'} type={'primary'} onClick={() => setShowSign(true)}>{t('signOff')}</Button>
                 </div>
             </div>
             <Card>
                 <div className={'flex flex-row gap-x-4 mb-4'}>
-                    <Form.Item label={'Week'} layout={'horizontal'}>
+                    <Form.Item label={t('week')} layout={'horizontal'}>
                         <Input
                             allowClear={true}
                             type={'week'}
@@ -221,7 +223,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'Staff'} layout={'horizontal'}>
+                    <Form.Item label={t('staff')} layout={'horizontal'}>
                         <StaffSelect
                             allowClear={true}
                             className={'w-50!'}
@@ -230,7 +232,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'Type'} layout={'horizontal'}>
+                    <Form.Item label={t('type')} layout={'horizontal'}>
                         <Select
                             className={'w-50!'}
                             allowClear={true}
@@ -240,7 +242,7 @@ export default function Page() {
                             options={reportTypes}
                         />
                     </Form.Item>
-                    <Button type={'primary'} onClick={handleSearch}>Search</Button>
+                    <Button type={'primary'} onClick={handleSearch}>{tc('search')}</Button>
                 </div>
                 <Table
                     rowSelection={{
@@ -264,13 +266,13 @@ export default function Page() {
                         defaultValue=""
                         onChange={(value) => setBatchAction(value)}
                         options={[
-                            {label: '批量操作', value: ''},
-                            {label: '批量删除', value: 'delete'},
+                            {label: tc('batchAction'), value: ''},
+                            {label: tc('batchDelete'), value: 'delete'},
                         ]}
                     />
                     <Button type="primary" disabled={selectedItems.length === 0}
-                            onClick={handleBatchAction}>应用</Button>
-                    <Button type="primary" onClick={() => setIsPdfModalOpen(true)}>Generate PDF Report</Button>
+                            onClick={handleBatchAction}>{tc('apply')}</Button>
+                    <Button type="primary" onClick={() => setIsPdfModalOpen(true)}>{t('generatePdf')}</Button>
                 </div>
                 <Pagination
                     total={total}
@@ -287,10 +289,10 @@ export default function Page() {
             {
                 showSign && (
                     <Modal
-                        title={'Signature'}
+                        title={t('signature')}
                         open={true}
                         width={560}
-                        okText={'Submit'}
+                        okText={tc('confirm')}
                         onCancel={() => setShowSign(false)}
                         okButtonProps={{
                             disabled: signatureData === '',
@@ -298,14 +300,13 @@ export default function Page() {
                         onOk={handleSaveSign}
                     >
                         <div className={'flex flex-col gap-y-4 mb-4'}>
-                            <p>Please sign below to approve the records for the selected period:</p>
-                            <div className={'font-bold'}>Week: {filterParams.date}</div>
-                            <div className={'font-bold'}>Record Type: {recordTypeName}</div>
+                            <p>{t('signInstruction')}</p>
+                            <div className={'font-bold'}>{t('week')}: {filterParams.date}</div>
+                            <div className={'font-bold'}>{t('recordType')}: {recordTypeName}</div>
                         </div>
                         <SignatureCanvas
                             style={{height: 300}}
                             onSignatureChange={(dataURL) => {
-                                console.log('dataURL:', dataURL);
                                 setSignatureData(dataURL);
                             }}
                         />
@@ -315,7 +316,7 @@ export default function Page() {
             {
                 isPdfModalOpen && (
                     <Modal
-                        title={'Generate PDF Report'}
+                        title={t('generatePdf')}
                         open={true} footer={null} width={1200}
                         onCancel={() => setIsPdfModalOpen(false)}
                     >
@@ -333,44 +334,44 @@ export default function Page() {
                         >
                             <Row gutter={10}>
                                 <Col>
-                                    <Form.Item label={'Date Start'} name={'start_week'}>
+                                    <Form.Item label={t('dateStart')} name={'start_week'}>
                                         <Input type={'week'}/>
                                     </Form.Item>
                                 </Col>
                                 <Col>
-                                    <Form.Item label={'Date End'} name={'end_week'}>
+                                    <Form.Item label={t('dateEnd')} name={'end_week'}>
                                         <Input type={'week'}/>
                                     </Form.Item>
                                 </Col>
                             </Row>
-                            <Form.Item label={'Record Types'} name={'record_types'}>
+                            <Form.Item label={t('recordTypes')} name={'record_types'}>
                                 <Checkbox.Group
                                     className={'flex-col gap-y-2'}
                                     options={reportTypes}
                                 />
                             </Form.Item>
-                            <Form.Item label={'Image Options'} name={'image_options'}>
+                            <Form.Item label={t('imageOptions')} name={'image_options'}>
                                 <Checkbox.Group
                                     className={'flex-col gap-y-2'}
                                     options={[
                                         {
-                                            label: 'Include Images',
+                                            label: t('includeImages'),
                                             value: 'include',
                                         },
                                         {
-                                            label: 'Rotate Vertical Images',
+                                            label: t('rotateVerticalImages'),
                                             value: 'rotate',
                                         },
                                     ]}
                                 />
                             </Form.Item>
-                            <Form.Item label={'Report Introduction'} name={'introduction'}>
+                            <Form.Item label={t('reportIntroduction')} name={'introduction'}>
                                 <RichTextEditor height={200}/>
                             </Form.Item>
                             <Form.Item>
                                 <div className={'flex justify-end gap-x-4'}>
-                                    <Button onClick={() => setIsPdfModalOpen(false)}>Cancel</Button>
-                                    <Button type={'primary'} htmlType="submit" loading={loading}>Generate</Button>
+                                    <Button onClick={() => setIsPdfModalOpen(false)}>{tc('cancel')}</Button>
+                                    <Button type={'primary'} htmlType="submit" loading={loading}>{t('generate')}</Button>
                                 </div>
                             </Form.Item>
                         </Form>

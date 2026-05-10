@@ -186,7 +186,7 @@ export default function ProductsManagement() {
             setLoading(true);
             apiPut(`/products/batch`, {
                 ids: selectedItems,
-                data: {status: 'publish'},
+                data: {status: 'onsale'},
             }).then(() => {
                 message.success(t('publishSuccess'));
                 setSelectedItems([]);
@@ -202,7 +202,7 @@ export default function ProductsManagement() {
             setLoading(true);
             apiPut(`/products/batch`, {
                 ids: selectedItems,
-                data: {status: 'draft'},
+                data: {status: 'offsale'},
             }).then(() => {
                 message.success(t('unpublishSuccess'));
                 setSelectedItems([]);

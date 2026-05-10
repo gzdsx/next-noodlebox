@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {Mail, Phone, Facebook, Instagram, Youtube} from 'lucide-react';
-import sha1 from "@/lib/sha1";
 
 export default function Footer() {
     return (
@@ -72,7 +71,7 @@ export default function Footer() {
                         </a>
                     </div>
                     <div className="text-sm text-gray-300">
-                        &copy;2024 noodlebox.ie. All right reserved.
+                        &copy;{new Date().getFullYear()} noodlebox.ie. All right reserved.
                     </div>
                 </div>
             </div>

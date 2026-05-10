@@ -1,16 +1,19 @@
 'use client';
 
 import React, {useEffect, useMemo, useState} from "react";
-import {Button, Card, Descriptions, DatePicker, Modal, Pagination, Select, Table, Form} from "antd";
+import {Button, Card, Descriptions, DatePicker, Modal, Pagination, Select, Table, Form, App} from "antd";
 import {apiDelete, apiGet, apiPut} from "@/lib/backendApi";
 import type {ColumnsType} from "antd/es/table";
-import {useMessage} from "@/contexts/BackendAppContext";
 import dayjs from "dayjs";
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 const {RangePicker} = DatePicker;
 
 export default function Page() {
-    const message = useMessage();
+    const {message} = App.useApp();
+    const {t: tc} = useTranslations('common');
+    const {t} = useTranslations('staffLeaves');
+
     const [total, setTotal] = useState<number>(0);
     const [leaves, setLeaves] = useState<any[]>([]);
     const [offset, setOffset] = useState(0);
@@ -29,7 +32,7 @@ export default function Page() {
             setLeaves(response.data.items);
             setTotal(response.data.total);
         }).catch(reason => {
-
+            message.error(reason.message || t('fetchError'));
         }).finally(() => {
             setLoading(false);
         });
@@ -37,7 +40,7 @@ export default function Page() {
 
     const columns: ColumnsType<any> = [
         {
-            title: 'Staff',
+            title: t('staff'),
             dataIndex: 'staff',
             key: 'staff',
             render: (text, record) => {
@@ -45,37 +48,37 @@ export default function Page() {
             }
         },
         {
-            title: 'Start',
+            title: t('start'),
             dataIndex: 'start_date',
             key: 'start_date'
         },
         {
-            title: 'End',
+            title: t('end'),
             dataIndex: 'end_date',
             key: 'end_date'
         },
         {
-            title: 'Type',
+            title: t('type'),
             dataIndex: 'type',
             key: 'type'
         },
         {
-            title: 'Reason',
+            title: t('reason'),
             dataIndex: 'reason',
             key: 'reason'
         },
         {
-            title: 'Status',
+            title: t('status'),
             dataIndex: 'status',
             key: 'status'
         },
         {
-            title: 'CreatedAt',
+            title: tc('createdAt'),
             dataIndex: 'created_at',
             key: 'created_at'
         },
         {
-            title: 'Options',
+            title: tc('actions'),
             dataIndex: 'options',
             key: 'options',
             align: 'end',
@@ -87,7 +90,7 @@ export default function Page() {
                     onClick={() => {
                         setLeave(record);
                         setIsModalOpen(true);
-                    }}>审批</Button>
+                    }}>{t('approve')}</Button>
             )
         }
     ];
@@ -105,11 +108,11 @@ export default function Page() {
     const handleSaveLeave = () => {
         setLoading(true);
         apiPut(`/staff/leaves/${leave.id}`, leave).then(() => {
-            message.success('审批成功');
+            message.success(t('approveSuccess'));
             setIsModalOpen(false);
             fetchLeaves();
         }).catch(reason => {
-            message.error(reason.message || '保存失败');
+            message.error(reason.message || tc('saveError'));
         }).finally(() => {
             setLoading(false);
         });
@@ -119,7 +122,7 @@ export default function Page() {
         if (batchAction === 'delete') {
             setLoading(true);
             apiDelete('/staff/leaves/batch', {ids: selectedItems as number[]}).then(() => {
-                message.success('删除成功');
+                message.success(tc('deleteSuccess'));
                 setSelectedItems([]);
                 fetchLeaves();
             }).catch(reason => {
@@ -136,7 +139,7 @@ export default function Page() {
 
     return (
         <>
-            <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>请假审批</h2>
+            <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('leaveManagement')}</h2>
             <Card>
                 <Table
                     rowSelection={{
@@ -160,12 +163,12 @@ export default function Page() {
                         defaultValue=""
                         onChange={(value) => setBatchAction(value)}
                         options={[
-                            {label: '批量操作', value: ''},
-                            {label: '批量删除', value: 'delete'},
+                            {label: tc('batchAction'), value: ''},
+                            {label: tc('batchDelete'), value: 'delete'},
                         ]}
                     />
                     <Button type="primary" disabled={selectedItems.length === 0}
-                            onClick={handleBatchAction}>应用</Button>
+                            onClick={handleBatchAction}>{tc('apply')}</Button>
                 </div>
                 <Pagination
                     total={total}
@@ -177,7 +180,7 @@ export default function Page() {
                 />
             </div>
             <Modal
-                title={'请假审批'}
+                title={t('leaveManagement')}
                 open={isModalOpen}
                 onOk={handleSaveLeave}
                 onCancel={() => setIsModalOpen(false)}
@@ -191,22 +194,22 @@ export default function Page() {
                     items={[
                         {
                             key: 'staff',
-                            label: 'Staff',
+                            label: t('staff'),
                             children: leave.staff?.name
                         },
                         {
                             key: 'type',
-                            label: 'Type',
+                            label: t('type'),
                             children: leave.type
                         },
                         {
                             key: 'reason',
-                            label: 'Reason',
+                            label: t('reason'),
                             children: leave.reason
                         }
                     ]}
                 />
-                <Form.Item label={'Date Range'} labelCol={{span: 5}}>
+                <Form.Item label={t('dateRange')} labelCol={{span: 5}}>
                     <RangePicker
                         defaultValue={leaveDateRange}
                         onChange={(value) => {
@@ -226,7 +229,7 @@ export default function Page() {
                         }}
                     />
                 </Form.Item>
-                <Form.Item label={'Status'} labelCol={{span: 5}}>
+                <Form.Item label={t('status')} labelCol={{span: 5}}>
                     <Select
                         className={'w-40!'}
                         value={leave.status}
@@ -237,9 +240,9 @@ export default function Page() {
                             })
                         }}
                         options={[
-                            {label: '待审批', value: 'pending'},
-                            {label: '已批准', value: 'approved'},
-                            {label: '已拒绝', value: 'rejected'},
+                            {label: t('statusPending'), value: 'pending'},
+                            {label: t('statusApproved'), value: 'approved'},
+                            {label: t('statusRejected'), value: 'rejected'},
                         ]}
                     />
                 </Form.Item>

@@ -1,5 +1,9 @@
+'use client';
+
 import CategoryClient from "@/components/backend/CategoryClient";
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 export default function Page() {
-    return <CategoryClient taxonomy={'category'} title={'分类管理'}/>;
+    const {t} = useTranslations('categories');
+    return <CategoryClient taxonomy={'category'} title={t('category')}/>;
 }

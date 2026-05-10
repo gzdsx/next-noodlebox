@@ -12,17 +12,18 @@ import {
     Avatar,
     Pagination,
     App,
-    Popconfirm,
+    Popconfirm, Modal, Form
 } from 'antd';
 import {
     DeleteOutlined,
+    DollarCircleOutlined,
     EditOutlined,
     PlusOutlined,
     SearchOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
-import {apiGet, apiDelete} from '@/lib/backendApi';
+import {apiGet, apiDelete, apiPost} from '@/lib/backendApi';
 import {useTranslations} from '@/contexts/BackendLocaleContext';
 import Link from "next/link";
 import UserRoleSelect from "./UserRoleSelect";
@@ -61,7 +62,10 @@ export default function UsersManagement() {
     const [filterStatus, setFilterStatus] = useState<string>('all');
     const [selectedItems, setSelectedItems] = useState<React.Key[]>([]);
     const [batchAction, setBatchAction] = useState<string>('');
+    const [pointsModalIsOpen, setPointsModalIsOpen] = useState(false);
+    const [editUserId, setEditUserId] = useState<number>(0);
 
+    const [form] = Form.useForm();
     const {message} = App.useApp();
     const {t: tc} = useTranslations('common');
     const {t} = useTranslations('users');
@@ -99,6 +103,18 @@ export default function UsersManagement() {
         }
     };
 
+    const handleEditPoints = (values: any) => {
+        apiPost(`/users/${editUserId}/points`, values).then(() => {
+            setPointsModalIsOpen(false);
+            message.success(t('editPointsSuccess'));
+            fetchUsers();
+        }).catch(reason => {
+            message.error(reason.message || t('editPointsError'));
+        }).finally(() => {
+
+        });
+    }
+
     const columns: ColumnsType<UserType> = [
         {
             title: t('userInfo'),
@@ -133,6 +149,28 @@ export default function UsersManagement() {
                                     danger
                                 >{tc('delete')}</Button>
                             </Popconfirm>
+                            <Link href={`/admin/points-records?user=${record.id}`} target={'_blank'}>
+                                <Button
+                                    type="link"
+                                    size="small"
+                                    icon={<DollarCircleOutlined/>}
+                                    className="px-0!"
+                                >
+                                    {t('pointsDetail')}
+                                </Button>
+                            </Link>
+                            <Button
+                                type="link"
+                                size="small"
+                                icon={<EditOutlined/>}
+                                className="px-0!"
+                                onClick={() => {
+                                    setEditUserId(record.id);
+                                    setPointsModalIsOpen(true);
+                                }}
+                            >
+                                {t('editPoints')}
+                            </Button>
                         </Space>
                     </div>
                 </Space>
@@ -160,7 +198,7 @@ export default function UsersManagement() {
         {
             title: t('points'),
             key: 'points',
-            dataIndex:'points',
+            dataIndex: 'points',
             width: 100
         },
         {
@@ -178,6 +216,7 @@ export default function UsersManagement() {
             dataIndex: 'created_at',
             key: 'created_at',
             width: 180,
+            align: 'end'
         },
     ];
 
@@ -262,7 +301,8 @@ export default function UsersManagement() {
                                 {label: t('batchDelete'), value: 'delete'},
                             ]}
                         />
-                        <Button type="primary" disabled={selectedItems.length === 0} onClick={handleBatchAction}>{t('apply')}</Button>
+                        <Button type="primary" disabled={selectedItems.length === 0}
+                                onClick={handleBatchAction}>{t('apply')}</Button>
                     </div>
                     <Pagination
                         total={total}
@@ -275,6 +315,29 @@ export default function UsersManagement() {
                     />
                 </div>
             </Card>
+            <div key={editUserId}></div>
+            {
+                pointsModalIsOpen && (
+                    <Modal
+                        title={t('editPoints')}
+                        open={true}
+                        onCancel={() => setPointsModalIsOpen(false)}
+                        onOk={() => form.submit()}
+                    >
+                        <Form form={form} onFinish={handleEditPoints}>
+                            <Form.Item label={'Action'} name="action" initialValue={'add'}>
+                                <Select options={[
+                                    {label: 'Add', value: 'add'},
+                                    {label: 'Subtract', value: 'subtract'},
+                                ]}/>
+                            </Form.Item>
+                            <Form.Item label={'Points'} name="amount" initialValue={100}>
+                                <Input/>
+                            </Form.Item>
+                        </Form>
+                    </Modal>
+                )
+            }
         </div>
     );
 }

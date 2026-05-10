@@ -184,7 +184,7 @@ export default function LotterySettingsPage() {
                                 style={{maxWidth: 300}}
                                 placeholder={t('lotteryTypePlaceholder')}
                                 options={[
-                                    {value: 'chest', label: '开宝箱'},
+                                    {value: 'chest', label: t('typeChest')},
                                 ]}
                                 allowClear
                             />

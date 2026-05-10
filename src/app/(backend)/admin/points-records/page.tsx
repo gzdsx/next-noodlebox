@@ -14,6 +14,7 @@ import {SearchOutlined} from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import {apiGet, apiDelete} from "@/lib/backendApi";
 import {useTranslations} from '@/contexts/BackendLocaleContext';
+import {useSearchParams} from "next/navigation";
 
 const {Search} = Input;
 
@@ -29,6 +30,7 @@ interface TransactionType {
 }
 
 export default function PointsRecordsPage() {
+    const searchParams = useSearchParams();
     const [total, setTotal] = useState<number>(0);
     const [records, setRecords] = useState<TransactionType[]>([]);
     const [offset, setOffset] = useState<number>(0);
@@ -83,6 +85,7 @@ export default function PointsRecordsPage() {
             dataIndex: 'created_at',
             key: 'created_at',
             width: 180,
+            align: 'end'
         },
     ];
 
@@ -91,6 +94,7 @@ export default function PointsRecordsPage() {
         apiGet('/users/points/transactions', {
             q: searchText,
             type: filterType === 'all' ? '' : filterType,
+            user: searchParams.get('user') || '',
             offset,
             limit: 20,
         }).then(response => {

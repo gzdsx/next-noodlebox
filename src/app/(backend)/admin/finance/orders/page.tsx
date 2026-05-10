@@ -5,7 +5,6 @@ import {
     Table,
     Card,
     Button,
-    Tag,
     Input,
     Select,
     Pagination,
@@ -13,7 +12,7 @@ import {
     DatePicker, Spin
 } from 'antd';
 import type {ColumnsType} from 'antd/es/table';
-import {apiDelete, apiGet, apiPost, apiPut} from "@/lib/backendApi";
+import {apiDelete, apiGet, apiPost} from "@/lib/backendApi";
 import {useTranslations} from '@/contexts/BackendLocaleContext';
 import {type Order as OrderType} from "@/types"
 import {useMessage, useModal, useOrderProcessor} from "@/contexts/BackendAppContext";
@@ -22,15 +21,6 @@ import DriverSelect from "@/components/backend/DriverSelect";
 import dayjs from "dayjs";
 
 const {RangePicker} = DatePicker;
-
-const statusMap: Record<string, { color: string; labelKey: string }> = {
-    pending: {color: 'warning', labelKey: 'pending'},
-    processing: {color: 'processing', labelKey: 'processing'},
-    delivering: {color: 'cyan', labelKey: 'delivering'},
-    completed: {color: 'success', labelKey: 'completed'},
-    cancelled: {color: 'default', labelKey: 'cancelled'},
-    refunded: {color: 'error', labelKey: 'refunded'},
-};
 
 const createViaMap: Record<string, string> = {
     web: 'WEB',
@@ -56,7 +46,7 @@ export default function Page() {
     const message = useMessage();
     const processor = useOrderProcessor();
     const {t: tc} = useTranslations('common');
-    const {t} = useTranslations('orders');
+    const {t} = useTranslations('financeOrders');
 
     const handleView = (record: OrderType) => {
         processor.open(record, fetchOrders);
@@ -87,7 +77,7 @@ export default function Page() {
             ),
         },
         {
-            title: 'Dirver',
+            title: t('driver'),
             dataIndex: 'driver',
             key: 'driver',
             width: 180,
@@ -101,45 +91,16 @@ export default function Page() {
             ),
         },
         {
-            title: 'Shipping Method',
+            title: t('shippingMethod'),
             dataIndex: 'shipping_method_title',
             key: 'shipping_method_title',
             width: 120,
         },
         {
-            title: t('totalAmount'),
-            dataIndex: 'total',
-            key: 'total',
-            width: 120,
-            render: (amount: number | string, record) => (
-                <div>
-                    <div>{'€' + amount}</div>
-                    <div
-                        className={`text-ellipsis ${record.is_paid ? 'text-green-600' : 'text-gray-600'}`}>{record.payment_method_title}</div>
-                </div>
-            ),
-        },
-        {
-            title: t('status'),
-            dataIndex: 'status',
-            key: 'status',
-            width: 60,
-            render: (status: string) => {
-                const map = statusMap[status];
-                return <Tag color={map?.color || 'default'}>{map ? t(map.labelKey) : status}</Tag>;
-            },
-        },
-        {
-            title: t('createdAt'),
-            dataIndex: 'created_at',
-            key: 'created_at',
-            width: 170,
-        },
-        {
-            title: 'CreatedV',
+            title: t('createdVia'),
             dataIndex: 'created_via',
             key: 'created_via',
-            width: 80,
+            width: 100,
             render: (created_via: string) => createViaMap[created_via]
         }
     ];
@@ -181,7 +142,7 @@ export default function Page() {
                 fetchOrders();
                 setSelectedItems([]);
                 setBatchAction('');
-                message.success('订单已删除');
+                message.success(t('orderDeleted'));
             }).catch(reason => {
                 message.error(reason.message);
             }).finally(() => {
@@ -198,7 +159,7 @@ export default function Page() {
                 fetchOrders();
                 setSelectedItems([]);
                 setBatchAction('');
-                message.success('订单已删除');
+                message.success(t('orderDeleted'));
             }).catch(reason => {
                 message.error(reason.message);
             }).finally(() => {
@@ -212,7 +173,7 @@ export default function Page() {
             }).then(() => {
                 setSelectedItems([]);
                 fetchOrders();
-                message.success('订单已恢复');
+                message.success(t('orderRestored'));
             }).catch(reason => {
                 message.error(reason.message);
             }).finally(() => {
@@ -223,8 +184,8 @@ export default function Page() {
 
     const handleDeleteAll = (force: 'yes' | 'no') => {
         modal.confirm({
-            title: '确认删除',
-            content: '确认删除所有订单吗',
+            title: t('confirmDelete'),
+            content: t('confirmDeleteAll'),
             onOk: () => {
                 setSubmiting(true);
                 apiDelete('/finance/orders/batch', {filters: filterParams, force}).then(() => {
@@ -240,13 +201,13 @@ export default function Page() {
 
     const handleRestoreAll = () => {
         modal.confirm({
-            title: '确认恢复',
-            content: '确认恢复所有订单吗',
+            title: t('confirmRestore'),
+            content: t('confirmRestoreAll'),
             onOk: () => {
                 setSubmiting(true);
                 apiPost('/finance/orders/restore', {filters: filterParams}).then(() => {
                     fetchOrders();
-                    message.success('订单已恢复');
+                    message.success(t('orderRestored'));
                 }).catch(reason => {
                     message.error(reason.message);
                 }).finally(() => {
@@ -265,22 +226,22 @@ export default function Page() {
             <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('orderManagement')}</h2>
             <Card>
                 <div style={{marginBottom: 16, display: 'flex', columnGap: 16, flexWrap: 'wrap'}}>
-                    <Form.Item label={'订单号'}>
+                    <Form.Item label={t('orderNo')}>
                         <Input
                             allowClear={true}
                             style={{width: 200}}
-                            placeholder={'请输入订单号'}
+                            placeholder={t('orderNoPlaceholder')}
                             onChange={e => {
                                 setFilterParams((prev: any) => ({...prev, order_no: e.target.value}));
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'状态'}>
+                    <Form.Item label={t('status')}>
                         <Select
                             defaultValue="all"
                             style={{width: 200}}
                             options={[
-                                {value: 'all', label: t('allStatus')},
+                                {value: 'all', label: tc('search')},
                                 {value: 'pending', label: t('pending')},
                                 {value: 'processing', label: t('processing')},
                                 {value: 'delivering', label: t('delivering')},
@@ -296,12 +257,12 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'CreatedV'}>
+                    <Form.Item label={t('createdVia')}>
                         <Select
                             defaultValue={'all'}
                             style={{width: 200}}
                             options={[
-                                {label: '所有渠道', value: 'all'},
+                                {label: t('allChannels'), value: 'all'},
                                 {label: 'WEB', value: 'web'},
                                 {label: 'App', value: 'app'},
                                 {label: 'POS', value: 'pos'},
@@ -315,15 +276,15 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'ShippingM'}>
+                    <Form.Item label={t('shippingMethod')}>
                         <Select
                             defaultValue={'all'}
                             style={{width: 200}}
                             options={[
-                                {label: 'All Methods', value: 'all'},
-                                {label: 'Delivery', value: 'flat_rate'},
-                                {label: 'Collection', value: 'local_pickup'},
-                                {label: 'Take Away', value: 'take_away'},
+                                {label: t('allMethods'), value: 'all'},
+                                {label: t('methodDelivery'), value: 'flat_rate'},
+                                {label: t('methodCollection'), value: 'local_pickup'},
+                                {label: t('methodTakeAway'), value: 'take_away'},
                             ]}
                             onChange={value => {
                                 setFilterParams((prev: any) => ({
@@ -333,7 +294,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'日期'}>
+                    <Form.Item label={t('date')}>
                         <RangePicker
                             onChange={dates => {
                                 if (dates && dates[0] && dates[1]) {
@@ -352,7 +313,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'支付方式'}>
+                    <Form.Item label={t('paymentMethod')}>
                         <PaymentSelect
                             defaultValue={[]}
                             style={{width: 200}}
@@ -366,7 +327,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'Driver'}>
+                    <Form.Item label={t('driver')}>
                         <DriverSelect
                             style={{width: 200}}
                             defaultValue={'all'}
@@ -378,17 +339,17 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'删除状态'}>
+                    <Form.Item label={t('deleteStatus')}>
                         <Select
                             style={{width: 200}}
                             defaultValue={'no'}
                             options={[
                                 {
-                                    label: '未删除',
+                                    label: t('notDeleted'),
                                     value: 'no',
                                 },
                                 {
-                                    label: '已删除',
+                                    label: t('deleted'),
                                     value: 'yes',
                                 }
                             ]}
@@ -400,7 +361,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Button type={'primary'} onClick={handleSearch}>搜索</Button>
+                    <Button type={'primary'} onClick={handleSearch}>{tc('search')}</Button>
                 </div>
 
                 <Table
@@ -429,15 +390,17 @@ export default function Page() {
                                     onChange={(value) => setBatchAction(value)}
                                     options={[
                                         {value: '', label: tc('batchAction')},
-                                        {value: 'restore', label: '恢复选中项'},
-                                        {value: 'force_delete', label: '永久删除选中项'},
+                                        {value: 'restore', label: t('restoreSelected')},
+                                        {value: 'force_delete', label: t('forceDeleteSelected')},
                                     ]}
                                 />
                                 <Button type="primary"
                                         disabled={selectedItems.length === 0}
                                         onClick={handleBatchAction}>{tc('apply')}</Button>
-                                <Button type="primary" onClick={() => handleRestoreAll()}>恢复全部{total}项</Button>
-                                <Button type="primary" onClick={() => handleDeleteAll('yes')}>永久删除{total}项</Button>
+                                <Button type="primary"
+                                        onClick={() => handleRestoreAll()}>{t('restoreAll', {total})}</Button>
+                                <Button type="primary"
+                                        onClick={() => handleDeleteAll('yes')}>{t('forceDeleteAll', {total})}</Button>
                             </div>
                         ) : (
                             <div className={'grow flex flex-row gap-x-4'}>
@@ -448,7 +411,7 @@ export default function Page() {
                                     onChange={(value) => setBatchAction(value)}
                                     options={[
                                         {value: '', label: tc('batchAction')},
-                                        {value: 'delete', label: '删除选中项'},
+                                        {value: 'delete', label: t('deleteSelected')},
                                     ]}
                                 />
                                 <Button type="primary" disabled={selectedItems.length === 0}
@@ -456,7 +419,7 @@ export default function Page() {
                                 <Button
                                     type="primary"
                                     onClick={() => handleDeleteAll('no')}
-                                >删除全部{total}项</Button>
+                                >{t('deleteAll', {total})}</Button>
                             </div>
                         )
                     }
@@ -473,7 +436,7 @@ export default function Page() {
             </Card>
             {
                 submiting && (
-                    <Spin size={'large'} fullscreen={true} description={'处理中...'}/>
+                    <Spin size={'large'} fullscreen={true} description={t('processing')}/>
                 )
             }
         </div>

@@ -6,6 +6,8 @@ import {apiGet} from "@/lib/backendApi";
 import {useMessage, useOrderProcessor} from "@/contexts/BackendAppContext";
 import dayjs from "dayjs";
 import {capitalize} from "@/lib/utils";
+import {useThrottleFn} from "ahooks";
+import {useEchoPublic} from "@laravel/echo-react";
 
 export default function Page() {
     const message = useMessage();
@@ -48,9 +50,20 @@ export default function Page() {
         return orders.reduce((total: number, order) => total + Number(order.total), 0).toFixed(2);
     }, [orders]);
 
-    useEffect(() => {
+    const {run: refreshOrders} = useThrottleFn(() => {
         fetchOrders();
-        fetchStats();
+    }, {wait: 2000});
+
+    useEchoPublic('noodlebox', '.order.created', (data: any) => {
+        //console.log('order.created', data);
+        refreshOrders();
+    });
+
+    useEffect(() => {
+        setTimeout(() => {
+            fetchOrders();
+            fetchStats();
+        });
     }, [status]);
 
     return (

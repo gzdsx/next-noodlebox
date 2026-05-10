@@ -26,20 +26,20 @@ export function LocaleProvider({children}: { children: ReactNode }) {
 
     useEffect(() => {
         // 从 localStorage 读取语言设置
-        (function () {
-            const savedLocale = localStorage.getItem('locale') as Locale;
-            if (savedLocale && (savedLocale === 'zh' || savedLocale === 'en')) {
-                setLocaleState(savedLocale as Locale);
-            } else {
-                // 检测浏览器语言
-                // const browserLang = navigator.language.toLowerCase();
-                // if (browserLang.startsWith('zh')) {
-                //     setLocaleState('zh');
-                // } else {
-                //     setLocaleState('en');
-                // }
-            }
-        })()
+        // (function () {
+        //     const savedLocale = localStorage.getItem('locale') as Locale;
+        //     if (savedLocale && (savedLocale === 'zh' || savedLocale === 'en')) {
+        //         setLocaleState(savedLocale as Locale);
+        //     } else {
+        //         // 检测浏览器语言
+        //         // const browserLang = navigator.language.toLowerCase();
+        //         // if (browserLang.startsWith('zh')) {
+        //         //     setLocaleState('zh');
+        //         // } else {
+        //         //     setLocaleState('en');
+        //         // }
+        //     }
+        // })()
     }, []);
 
     const setLocale = (newLocale: Locale) => {

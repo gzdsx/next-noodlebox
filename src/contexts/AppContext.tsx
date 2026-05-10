@@ -6,17 +6,20 @@ import {useSession} from "next-auth/react";
 
 interface AppContextType {
     categories: Category[];
+    webconfig: Record<string, any>;
 }
 
 const AppContext = React.createContext<AppContextType | null>(null);
 
-export const AppProvider = ({children, categories = []}: {
+export const AppProvider = ({children, categories = [], webconfig = {}}: {
     children: React.ReactNode,
-    categories: Category[]
+    categories: Category[],
+    webconfig?: Record<string, any>
 }) => {
     return (
         <AppContext.Provider value={{
             categories,
+            webconfig
         }}>
             {children}
         </AppContext.Provider>
@@ -32,11 +35,16 @@ export function useAppContext() {
 }
 
 export function useCategories() {
-    const context = useAppContext();
-    return context.categories;
+    const {categories} = useAppContext();
+    return categories;
 }
 
 export function useCurrentUser() {
     const {data: session} = useSession();
     return session?.user || {};
+}
+
+export function useWebConfig() {
+    const {webconfig} = useAppContext();
+    return webconfig;
 }

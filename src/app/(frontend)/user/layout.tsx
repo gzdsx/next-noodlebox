@@ -4,16 +4,17 @@ import React from 'react';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {useTranslations} from '@/contexts/LocaleContext';
-import {Package, User} from 'lucide-react';
+import {Package, User, Coins} from 'lucide-react';
 
 const menuItems = [
     {href: '/user/orders', icon: Package, labelKey: 'orders'},
+    {href: '/user/points', icon: Coins, labelKey: 'points'},
     {href: '/user/profile', icon: User, labelKey: 'profile'},
 ];
 
 export default function UserLayout({
-    children,
-}: {
+                                       children,
+                                   }: {
     children: React.ReactNode;
 }) {
     const pathname = usePathname();

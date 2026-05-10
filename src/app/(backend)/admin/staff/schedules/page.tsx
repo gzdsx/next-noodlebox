@@ -4,8 +4,11 @@ import React, {useEffect, useState} from "react";
 import {apiGet, apiPost} from "@/lib/backendApi";
 import {useMessage} from "@/contexts/BackendAppContext";
 import {ArrowLeftOutlined} from "@ant-design/icons";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 
 export default function Page() {
+    const {t} = useTranslations('staffSchedules');
+    const {t: tc} = useTranslations('common');
     const message = useMessage();
     const [loading, setLoading] = useState(false);
     const [dates, setDates] = useState<any[]>([]);
@@ -53,7 +56,7 @@ export default function Page() {
         });
 
         apiPost(`/staff/shifts`, {staffs: newShifts}).then(_ => {
-            message.success('数据保存成功');
+            message.success(tc('saveSuccess'));
         }).catch(reason => {
             message.error(reason.message);
         }).finally(() => {
@@ -64,7 +67,7 @@ export default function Page() {
     const handleCopyLastWeek = () => {
         setLoading(true);
         apiPost(`/staff/shifts/copy-last-week`, {weeks}).then(() => {
-            message.success("Last Week Data Copied!");
+            message.success(t('copySuccess'));
             fetchSchedules();
         }).catch((reason) => {
             message.error(reason.message);
@@ -78,25 +81,24 @@ export default function Page() {
     }, [weeks]);
     return (
         <>
-            <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>员工排班</h2>
+            <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('scheduleManagement')}</h2>
             <Card>
                 <div className={'flex justify-between items-center mb-4'}>
                     <Button color={'cyan'} variant={'outlined'} onClick={() => setWeeks(prevState => prevState - 1)}>«
-                        Previous Week</Button>
+                        {t('previousWeek')}</Button>
                     <div className={'flex flex-col justify-center items-center'}>
                         <div>{dateStart} ~ {dateEnd}</div>
                         <div>
-                            <Button color={'cyan'} variant={'filled'} onClick={handleCopyLastWeek}>Copy Last
-                                Week</Button>
+                            <Button color={'cyan'} variant={'filled'} onClick={handleCopyLastWeek}>{t('copyLastWeek')}</Button>
                         </div>
                     </div>
-                    <Button color={'cyan'} variant={'outlined'} onClick={() => setWeeks(prevState => prevState + 1)}>Next
-                        Week »</Button>
+                    <Button color={'cyan'} variant={'outlined'} onClick={() => setWeeks(prevState => prevState + 1)}>{t('nextWeek')}
+                        »</Button>
                 </div>
                 <table className={'w-full border-collapse border border-gray-200 rounded-sm!'}>
                     <thead>
                     <tr>
-                        <th className={'bg-[#fafafa] py-2 min-w-20'}>Name</th>
+                        <th className={'bg-[#fafafa] py-2 min-w-20'}>{t('name')}</th>
                         {
                             dates.map(d => (
                                 <th key={d.date}
@@ -120,7 +122,7 @@ export default function Page() {
                                 <td className={'border border-gray-200 font-bold p-2'}>
                                     <div>{staff?.name}</div>
                                     <Tag
-                                        color={staff.signature ? 'success' : 'warning'}>{staff.signature ? 'Signed' : 'Unsigned'}</Tag>
+                                        color={staff.signature ? 'success' : 'warning'}>{staff.signature ? t('signed') : t('unsigned')}</Tag>
                                 </td>
                                 {
                                     staff.shifts.map((shift: any, idx: number) => (
@@ -214,10 +216,10 @@ export default function Page() {
                                                                     return s;
                                                                 }));
                                                             } else {
-                                                                message.error('No previous shift data');
+                                                                message.error(t('noPreviousData'));
                                                             }
                                                         }}
-                                                    >Copy</Button>
+                                                    >{t('copy')}</Button>
                                                 </div>
                                             </div>
                                         </td>
@@ -229,7 +231,7 @@ export default function Page() {
                     </tbody>
                 </table>
                 <div className={'mt-4 flex items-center justify-center'}>
-                    <Button type={'primary'} onClick={handleSubmit}>Save All</Button>
+                    <Button type={'primary'} onClick={handleSubmit}>{tc('save')}</Button>
                 </div>
             </Card>
         </>

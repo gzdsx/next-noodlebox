@@ -1,20 +1,17 @@
 'use client'
 
 import {CartOptionItem, Product, VariantItem, VariantOptionItem} from "@/types";
-import {useTranslations} from "@/contexts/LocaleContext";
 import {useCart} from "@/contexts/CartContext";
 import React, {useMemo, useState} from "react";
 import ProductImageGallery from "@/components/frontend/ProductImageGallery";
 import {NumberInput} from "@/components/ui/number-input";
 import {ShoppingCartIcon} from "lucide-react";
-import {toast} from "sonner";
 
 
 export const ProductInfoClient = ({product, scrollViewStyle}: {
     product: Product,
     scrollViewStyle?: React.CSSProperties
 }) => {
-    const {t} = useTranslations('ecommerce');
     const {addItem} = useCart();
     const [quantity, setQuantity] = useState(1);
     const [variants, setVariants] = useState<VariantItem[]>(product.variation_list || []);
@@ -57,6 +54,14 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
         return Number(product.point_price) * quantity;
     }, [product.point_price, quantity]);
 
+    const metas = useMemo(() => {
+        const metaData: Record<string, any> = {};
+        product.metas?.forEach((meta: any) => {
+            metaData[meta.key] = meta.value;
+        });
+        return metaData;
+    }, [product.metas]);
+
     const handleAddToCart = async () => {
         try {
             addItem({
@@ -68,7 +73,7 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
                 additional_options: skuData.additional_options,
                 purchase_via: usePoints ? 'point' : 'cash',
             });
-        }catch (e) {
+        } catch (e) {
 
         }
     };
@@ -81,7 +86,7 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
         return (
             <div className={'flex flex-row gap-2'}>
                 {
-                    product.meta_data?.badges?.map((badge: string) => (
+                    metas.badges?.map((badge: string) => (
                         <img
                             key={`badge-${badge}`}
                             className={'w-7.5 h-7.5 object-contain'}
@@ -175,12 +180,12 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
                     <div className={'md:hidden'}>
                         <img
                             src={product.thumbnail}
-                            className={'w-[100px] h-[100px] object-cover'}
+                            className={'w-25 h-25 object-cover'}
                             alt={product.title}
                         />
                     </div>
                     <div className={'space-y-4'}>
-                        <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
+                        <h1 className="text-1xl font-bold mb-2 md:text-2xl">{product.title}</h1>
                         <div className={'bg-[#66beb8] px-4 py-2 rounded text-white'}>
                             Earn Points : {product.points} Points
                         </div>

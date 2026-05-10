@@ -14,7 +14,9 @@ import {
     DatePicker
 } from 'antd';
 import {
-    EyeOutlined, PrinterOutlined, ToolOutlined,
+    EyeOutlined,
+    PrinterOutlined,
+    ToolOutlined,
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import {apiDelete, apiGet, apiPut} from "@/lib/backendApi";
@@ -24,6 +26,8 @@ import {useMessage, useOrderProcessor} from "@/contexts/BackendAppContext";
 import PaymentSelect from "@/components/backend/PaymentSelect";
 import DriverSelect from "@/components/backend/DriverSelect";
 import dayjs from "dayjs";
+import {useEchoPublic} from "@laravel/echo-react";
+import {useThrottleFn} from 'ahooks'; // 推荐使用 ahooks
 
 const {RangePicker} = DatePicker;
 
@@ -87,7 +91,7 @@ export default function Page() {
             ),
         },
         {
-            title: 'Dirver',
+            title: t('driver'),
             dataIndex: 'driver',
             key: 'driver',
             width: 180,
@@ -101,7 +105,7 @@ export default function Page() {
             ),
         },
         {
-            title: 'Shipping Method',
+            title: t('shippingMethod'),
             dataIndex: 'shipping_method_title',
             key: 'shipping_method_title',
             width: 120,
@@ -136,10 +140,10 @@ export default function Page() {
             width: 170,
         },
         {
-            title: 'CreatedV',
+            title: t('createdVia'),
             dataIndex: 'created_via',
             key: 'created_via',
-            width: 80,
+            width: 100,
             render: (created_via: string) => createViaMap[created_via]
         },
         {
@@ -167,21 +171,21 @@ export default function Page() {
                         icon={<PrinterOutlined/>}
                         onClick={() => {
                             apiGet(`/orders/${record.id}/print`).then(() => {
-                                message.success('订单加入打印列表成功');
+                                message.success(t('printSuccess'));
                             }).catch(reason => {
                                 message.error(reason.mesage);
                             }).finally(() => {
 
                             });
                         }}
-                    >打印</Button>
+                    >{t('print')}</Button>
                     <Button
                         type="link"
                         size="small"
                         className={'px-0!'}
                         icon={<ToolOutlined/>}
                         onClick={() => handleView(record)}
-                    >处理</Button>
+                    >{t('process')}</Button>
                 </Space>
             ),
         },
@@ -266,22 +270,31 @@ export default function Page() {
         fetchOrders();
     }, [offset]);
 
+    const {run: refreshOrders} = useThrottleFn(() => {
+        fetchOrders();
+    }, {wait: 2000});
+
+    useEchoPublic('noodlebox', '.order.created', (data: any) => {
+        //console.log('order.created', data);
+        refreshOrders();
+    });
+
     return (
         <div>
             <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('orderManagement')}</h2>
             <Card>
                 <div style={{marginBottom: 16, display: 'flex', columnGap: 16, flexWrap: 'wrap'}}>
-                    <Form.Item label={'订单号'}>
+                    <Form.Item label={t('orderNo')}>
                         <Input
                             allowClear={true}
                             style={{width: 200}}
-                            placeholder={'请输入订单号'}
+                            placeholder={t('orderNoPlaceholder')}
                             onChange={e => {
                                 setFilterParams((prev: any) => ({...prev, order_no: e.target.value}));
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'状态'}>
+                    <Form.Item label={t('status')}>
                         <Select
                             defaultValue="all"
                             style={{width: 200}}
@@ -302,12 +315,12 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'CreatedV'}>
+                    <Form.Item label={t('createdVia')}>
                         <Select
                             defaultValue={'all'}
                             style={{width: 200}}
                             options={[
-                                {label: '所有渠道', value: 'all'},
+                                {label: t('allChannels'), value: 'all'},
                                 {label: 'WEB', value: 'web'},
                                 {label: 'App', value: 'app'},
                                 {label: 'POS', value: 'pos'},
@@ -321,15 +334,15 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'ShippingM'}>
+                    <Form.Item label={t('shippingMethod')}>
                         <Select
                             defaultValue={'all'}
                             style={{width: 200}}
                             options={[
-                                {label: 'All Methods', value: 'all'},
-                                {label: 'Delivery', value: 'flat_rate'},
-                                {label: 'Collection', value: 'local_pickup'},
-                                {label: 'Take Away', value: 'take_away'},
+                                {label: t('allMethods'), value: 'all'},
+                                {label: t('methodDelivery'), value: 'flat_rate'},
+                                {label: t('methodCollection'), value: 'local_pickup'},
+                                {label: t('methodTakeAway'), value: 'take_away'},
                             ]}
                             onChange={value => {
                                 setFilterParams((prev: any) => ({
@@ -339,7 +352,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'日期'}>
+                    <Form.Item label={t('date')}>
                         <RangePicker
                             onChange={dates => {
                                 if (dates && dates[0] && dates[1]) {
@@ -358,7 +371,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'支付方式'}>
+                    <Form.Item label={t('paymentMethod')}>
                         <PaymentSelect
                             defaultValue={[]}
                             style={{width: 200}}
@@ -372,7 +385,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'Driver'}>
+                    <Form.Item label={t('driver')}>
                         <DriverSelect
                             style={{width: 200}}
                             defaultValue={'all'}
@@ -384,7 +397,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Button type={'primary'} onClick={handleSearch}>搜索</Button>
+                    <Button type={'primary'} onClick={handleSearch}>{tc('search')}</Button>
                 </div>
 
                 <Table

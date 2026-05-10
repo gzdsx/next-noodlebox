@@ -22,7 +22,7 @@ const PageClient = ({category, products}: PageClientProps) => {
             <div className={'h-20'}></div>
             <div className={'flex flex-col md:flex-row gap-8'}>
                 <div className={'grow'}>
-                    <h1 className={'text-center text-4xl font-bold my-4'}>{category?.name}</h1>
+                    <h1 className={'text-center text-2xl md:text-4xl font-bold my-4'}>{category?.name}</h1>
                     <div className={'w-full md:max-w-350 p-4 mx-auto'}>
                         <div className={'grid grid-cols-2 md:grid-cols-4 gap-4'}>
                             {

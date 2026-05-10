@@ -79,6 +79,7 @@ export default function LotteryRecordsPage() {
             dataIndex: 'created_at',
             key: 'created_at',
             width: 180,
+            align: 'end'
         },
     ];
 

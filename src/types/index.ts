@@ -55,6 +55,7 @@ export interface Product {
     meta_data?: Record<string, any>;
     allow_point_purchase?: boolean;
     point_price?: number;
+    metas?: Record<string, any>[];
 }
 
 export interface CartOptionItem {
@@ -145,6 +146,7 @@ export interface OrderItem {
     sku_id?: number;
     sku_name?: string;
     options?: CartOptionItem[];
+    variations?: CartOptionItem[] | Record<string, any>;
     additional_options?: CartOptionItem[];
     purchase_via?: string;
 }

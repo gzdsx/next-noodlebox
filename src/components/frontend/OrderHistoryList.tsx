@@ -10,11 +10,13 @@ import {Order, OrderItem} from "@/types";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {useCart} from "@/contexts/CartContext";
+import CustomPagination from "@/components/frontend/CustomPagination";
+import {capitalize} from "@/lib/utils";
 
 const statusMap: Record<string, { color: string; key: string }> = {
     pending: {color: 'orange', key: 'pending'},
-    paid: {color: 'blue', key: 'paid'},
-    shipped: {color: 'cyan', key: 'shipped'},
+    processing: {color: 'blue', key: 'paid'},
+    delivering: {color: 'cyan', key: 'shipped'},
     completed: {color: 'green', key: 'completed'},
     cancelled: {color: 'red', key: 'cancelled'},
     refunded: {color: 'purple', key: 'refunded'},
@@ -35,16 +37,27 @@ export default function OrderHistoryList() {
     const {t} = useTranslations('ecommerce');
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
+    const [total, setTotal] = useState(0);
+    const [offset, setOffset] = useState(0);
 
     const renderOptions = (item: OrderItem) => {
         try {
             const names: string[] = [];
             const regex = /^(?!.*(none|original)).*$/i;
-            item.options?.forEach(option => {
-                if (regex.test(option.value || '')) {
-                    names.push(option.value as string);
-                }
-            });
+            if (Array.isArray(item.variations)) {
+                item.variations?.forEach(option => {
+                    if (regex.test(option.value || '')) {
+                        names.push(option.value as string);
+                    }
+                });
+            } else {
+                Object.values(item.variations || {}).forEach(option => {
+                    if (regex.test(option || '')) {
+                        names.push(option as string);
+                    }
+                });
+            }
+
 
             item.additional_options?.forEach(option => {
                 if (regex.test(option.name)) {
@@ -67,15 +80,20 @@ export default function OrderHistoryList() {
         }
     }
 
+    const fetchOrders = async () => {
+        apiGet('/orders', {
+            offset,
+            limit: 10
+        }).then(response => {
+            setOrders(response.data.items);
+            setTotal(response.data.total);
+        }).catch(() => {
+        }).finally(() => setLoading(false));
+    }
+
     useEffect(() => {
-        apiGet('/orders')
-            .then(response => {
-                setOrders(response.data.items);
-            })
-            .catch(() => {
-            })
-            .finally(() => setLoading(false));
-    }, []);
+        fetchOrders();
+    }, [offset]);
 
     if (loading) {
         return (
@@ -103,7 +121,7 @@ export default function OrderHistoryList() {
                                 <span className={'hidden md:block'}>{t('order.orderNo')}: {order.order_no}</span>
                             </div>
                             <Badge variant="secondary" className={statusBadgeClass[statusInfo.color]}>
-                                {t(`order.${statusInfo.key}`)}
+                                {capitalize(order.status)}
                             </Badge>
                         </div>
 
@@ -153,6 +171,9 @@ export default function OrderHistoryList() {
                     </div>
                 );
             })}
+
+            <CustomPagination total={total} currentPage={1} pageSize={10}
+                              onChange={(page) => setOffset((page - 1) * 10)}/>
         </div>
     );
 }

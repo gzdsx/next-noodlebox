@@ -1,14 +1,13 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Layout, Menu, theme, Avatar, Dropdown, Button, Badge} from 'antd';
+import {Layout, Menu, theme, Avatar, Dropdown, Button} from 'antd';
 import type {MenuProps} from 'antd';
 import {
     DashboardOutlined,
     UserOutlined,
     CommentOutlined,
     SettingOutlined,
-    BellOutlined,
     LogoutOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -60,7 +59,7 @@ export default function AdminLayoutClient({
                 {
                     key: '/admin/products',
                     icon: <ShoppingOutlined/>,
-                    label: <Link href="/admin/products">商品管理</Link>,
+                    label: <Link href="/admin/products">{t('productManagement')}</Link>,
                 },
                 {
                     key: '/admin/orders',
@@ -311,7 +310,7 @@ export default function AdminLayoutClient({
                 {
                     key: '/admin/addressbook',
                     icon: <EnvironmentOutlined/>,
-                    label: <Link href="/admin/addressbook">地址簿</Link>,
+                    label: <Link href="/admin/addressbook">{t('addressBook')}</Link>,
                 },
             ],
         },

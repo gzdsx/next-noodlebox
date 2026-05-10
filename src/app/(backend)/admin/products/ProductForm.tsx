@@ -162,7 +162,7 @@ export const ProductForm = ({
                         <Input placeholder={t('titlePlaceholder')}/>
                     </Form.Item>
 
-                    <Form.Item label={'中文名称'}>
+                    <Form.Item label={t('chineseName')}>
                         <Input
                             value={metas.chinese_name}
                             onChange={(e) => setMetas({...metas, chinese_name: e.target.value})}
@@ -185,12 +185,12 @@ export const ProductForm = ({
 
                     <Row gutter={16}>
                         <Col>
-                            <Form.Item label={'Color'} name={'title_color'}>
+                            <Form.Item label={t('titleColor')} name={'title_color'}>
                                 <ColorPicker/>
                             </Form.Item>
                         </Col>
                         <Col>
-                            <Form.Item label={'积分购买'}>
+                            <Form.Item label={t('pointsPurchase')}>
                                 <Switch
                                     checked={metas.purchase_via_points_enable === 'yes'}
                                     onChange={(value) => {
@@ -200,7 +200,7 @@ export const ProductForm = ({
                             </Form.Item>
                         </Col>
                         <Col>
-                            <Form.Item label={'积分价格'}>
+                            <Form.Item label={t('pointsPrice')}>
                                 <Input
                                     style={{width: 200}}
                                     onChange={(e) => {
@@ -210,7 +210,7 @@ export const ProductForm = ({
                             </Form.Item>
                         </Col>
                         <Col>
-                            <Form.Item label={'徽章'}>
+                            <Form.Item label={t('badge')}>
                                 <ProductBageInput initialValues={metas.badges || []} onChange={(value) => {
                                     setMetas({...metas, badges: value})
                                 }}/>
@@ -220,24 +220,24 @@ export const ProductForm = ({
 
                     <Row gutter={16}>
                         <Col span={8}>
-                            <Form.Item label={'一口价'} name={'price'}>
+                            <Form.Item label={t('fixedPrice')} name={'price'}>
                                 <Input style={{width: '100%'}}/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
-                            <Form.Item label={'原价'} name={'regular_price'}>
+                            <Form.Item label={t('originalPrice')} name={'regular_price'}>
                                 <Input style={{width: '100%'}}/>
                             </Form.Item>
                         </Col>
                         <Col span={8}>
-                            <Form.Item label={'库存'} name={'stock'}>
+                            <Form.Item label={t('stock')} name={'stock'}>
                                 <Input style={{width: '100%'}}/>
                             </Form.Item>
                         </Col>
                     </Row>
 
                     {/* 型号选择 */}
-                    <Form.Item label={'变量和价格'}>
+                    <Form.Item label={t('variantsAndPrice')}>
                         <ProductVariantInput
                             initalValues={initialValues.variation_list}
                             onChange={variants => {
@@ -246,7 +246,7 @@ export const ProductForm = ({
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'附加选项(多选)'}>
+                    <Form.Item label={t('additionalOptions')}>
                         <ProductAdditionalInput
                             initialValues={initialValues.additional_options}
                             onChange={options => {
@@ -323,14 +323,14 @@ export const ProductForm = ({
                     >
                         <Input type="number" placeholder="0"/>
                     </Form.Item>
-                    <Form.Item label={'辣度'}>
+                    <Form.Item label={t('spiciness')}>
                         <Select
                             value={metas.spicy}
                             options={[
-                                {value: 'none', label: 'None'},
-                                {value: 'slightly', label: '微辣'},
-                                {value: 'medium', label: '中辣'},
-                                {value: 'super', label: '超辣'},
+                                {value: 'none', label: t('spicinessNone')},
+                                {value: 'slightly', label: t('spicinessSlightly')},
+                                {value: 'medium', label: t('spicinessMedium')},
+                                {value: 'super', label: t('spicinessSuper')},
                             ]}
                             onChange={(value) => {
                                 setMetas({...metas, spicy: value})

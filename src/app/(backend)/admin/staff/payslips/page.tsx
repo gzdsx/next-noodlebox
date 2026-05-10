@@ -6,8 +6,11 @@ import {apiDelete, apiGet, apiPost} from "@/lib/backendApi";
 import type {ColumnsType} from "antd/es/table";
 import StaffSelect from "@/components/backend/StaffSelect";
 import {useMediaLibrary, useMessage} from "@/contexts/BackendAppContext";
+import {useTranslations} from "@/contexts/BackendLocaleContext";
 
 export default function Page() {
+    const {t} = useTranslations('staffPayslips');
+    const {t: tc} = useTranslations('common');
     const message = useMessage();
     const mediaLibrary = useMediaLibrary();
     const [total, setTotal] = useState<number>(0);
@@ -45,7 +48,7 @@ export default function Page() {
 
     const columns: ColumnsType<any> = [
         {
-            title: 'Staff',
+            title: t('staff'),
             dataIndex: 'staff',
             key: 'staff',
             render: (text, record) => {
@@ -53,27 +56,27 @@ export default function Page() {
             }
         },
         {
-            title: 'Week Start',
+            title: t('weekStart'),
             dataIndex: 'week_start',
             key: 'week_start'
         },
         {
-            title: 'Working Hours',
+            title: t('workingHours'),
             dataIndex: 'working_hours',
             key: 'working_hours'
         },
         {
-            title: 'Est. Gross Pay',
+            title: t('estGrossPay'),
             dataIndex: 'gross_pay',
             key: 'gross_pay'
         },
         {
-            title: 'CreatedAt',
+            title: tc('createdAt'),
             dataIndex: 'created_at',
             key: 'created_at'
         },
         {
-            title: 'Options',
+            title: tc('actions'),
             dataIndex: 'options',
             key: 'options',
             align: 'end',
@@ -87,11 +90,11 @@ export default function Page() {
     const handleSavePayslip = () => {
         setLoading(true);
         apiPost(`/staff/payslips`, payslipData).then(() => {
-            message.success('保存成功');
+            message.success(tc('saveSuccess'));
             setIsModalOpen(false);
             fetchPayslips();
         }).catch(reason => {
-            message.error(reason.message || '保存失败');
+            message.error(reason.message || tc('saveError'));
         }).finally(() => {
             setLoading(false);
         });
@@ -109,7 +112,7 @@ export default function Page() {
         if (batchAction === 'delete') {
             setLoading(true);
             apiDelete('/staff/payslips/batch', {ids: selectedItems as number[]}).then(() => {
-                message.success('删除成功');
+                message.success(tc('deleteSuccess'));
                 setSelectedItems([]);
                 fetchPayslips();
             }).catch(reason => {
@@ -127,12 +130,12 @@ export default function Page() {
     return (
         <>
             <div className={'flex flex-row justify-between items-center mb-4'}>
-                <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>工资单管理</h2>
-                <Button type={'primary'} onClick={() => setIsModalOpen(true)}>Upload PaySlips</Button>
+                <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('payslipManagement')}</h2>
+                <Button type={'primary'} onClick={() => setIsModalOpen(true)}>{t('uploadPayslips')}</Button>
             </div>
             <Card>
                 <div className={'flex flex-row gap-x-4 mb-4'}>
-                    <Form.Item label={'Staff'} layout={'horizontal'}>
+                    <Form.Item label={t('staff')} layout={'horizontal'}>
                         <StaffSelect
                             allowClear={true}
                             className={'w-50!'}
@@ -141,7 +144,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'Week'} layout={'horizontal'}>
+                    <Form.Item label={t('week')} layout={'horizontal'}>
                         <Input
                             type={'week'}
                             className={'w-50!'}
@@ -150,7 +153,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Button type={'primary'} onClick={handleSearch}>Search</Button>
+                    <Button type={'primary'} onClick={handleSearch}>{tc('search')}</Button>
                 </div>
                 <Table
                     rowSelection={{
@@ -174,12 +177,12 @@ export default function Page() {
                         defaultValue=""
                         onChange={(value) => setBatchAction(value)}
                         options={[
-                            {label: '批量操作', value: ''},
-                            {label: '批量删除', value: 'delete'},
+                            {label: tc('batchAction'), value: ''},
+                            {label: tc('batchDelete'), value: 'delete'},
                         ]}
                     />
                     <Button type="primary" disabled={selectedItems.length === 0}
-                            onClick={handleBatchAction}>应用</Button>
+                            onClick={handleBatchAction}>{tc('apply')}</Button>
                 </div>
                 <Pagination
                     total={total}
@@ -191,13 +194,13 @@ export default function Page() {
                 />
             </div>
             <Modal
-                title={'Upload PaySlips'}
+                title={t('uploadPayslips')}
                 open={isModalOpen}
                 onOk={handleSavePayslip}
                 onCancel={() => setIsModalOpen(false)}
             >
                 <Form layout={'vertical'}>
-                    <Form.Item label={'Staff'}>
+                    <Form.Item label={t('staff')}>
                         <StaffSelect
                             value={payslipData.staff_id}
                             onChange={value => {
@@ -205,7 +208,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'Week'}>
+                    <Form.Item label={t('week')}>
                         <Input
                             type={'week'}
                             value={payslipData.date}
@@ -214,7 +217,7 @@ export default function Page() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item label={'Payslip File'}>
+                    <Form.Item label={t('payslipFile')}>
                         <Space.Compact className={'w-full'}>
                             <Input
                                 value={payslipData.file_url}
@@ -228,7 +231,7 @@ export default function Page() {
                                         setPayslipData(prev => ({...prev, file_url: files[0].src}));
                                     }
                                 })
-                            }}>Choose File</Button>
+                            }}>{t('chooseFile')}</Button>
                         </Space.Compact>
                     </Form.Item>
                 </Form>

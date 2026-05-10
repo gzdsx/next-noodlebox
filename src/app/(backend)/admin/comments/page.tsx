@@ -126,7 +126,7 @@ const initialComments: CommentType[] = [
 export default function CommentsManagement() {
     const [comments, setComments] = useState<CommentType[]>(initialComments);
     const [searchText, setSearchText] = useState("");
-    const [filterStatus, setFilterStatus] = useState<string>("全部");
+    const [filterStatus, setFilterStatus] = useState<string>("");
 
     const {message} = App.useApp();
     const {t: tc} = useTranslations('common');
@@ -138,7 +138,7 @@ export default function CommentsManagement() {
             comment.user.toLowerCase().includes(searchText.toLowerCase()) ||
             comment.movie.toLowerCase().includes(searchText.toLowerCase());
         const matchesStatus =
-            filterStatus === t('all') || comment.status === filterStatus;
+            filterStatus === '' || filterStatus === t('all') || comment.status === filterStatus;
         return matchesSearch && matchesStatus;
     });
 

@@ -56,7 +56,7 @@ export default function ProductCard({product}: {product: Product}) {
 
             {/* Info */}
             <div className="p-3">
-                <h3 className="font-medium text-white line-clamp-2 mb-1 min-h-8">
+                <h3 className="font-medium text-white line-clamp-2 mb-1 min-h-8 leading-4 grow">
                     {product.title}
                 </h3>
                 <div className={'flex justify-between items-center'}>

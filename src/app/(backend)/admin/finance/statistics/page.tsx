@@ -8,9 +8,12 @@ import dayjs from "dayjs";
 import PaymentCheckboxGroup from "@/components/backend/PaymentCheckboxGroup";
 import {useMessage} from "@/contexts/BackendAppContext";
 import OrderDeletedHistory from "@/components/backend/OrderDeletedHistory";
+import {useTranslations} from '@/contexts/BackendLocaleContext';
 
 export default function FinanceStatisticsPage() {
     const message = useMessage();
+    const {t} = useTranslations('financeStatistics');
+    const {t: tc} = useTranslations('common');
     const [chartData, setChartData] = useState<any[]>([]);
     const [filterParams, setFilterParams] = useState({
         format: 'monthly',
@@ -37,8 +40,8 @@ export default function FinanceStatisticsPage() {
             setChartData(
                 res.data.labels.map((label: any, index: number) => ({
                     label: label,
-                    '销售额': Number(res.data.sales[index]),
-                    '订单数量': Number(res.data.orders[index])
+                    [t('sales')]: Number(res.data.sales[index]),
+                    [t('orderCount')]: Number(res.data.orders[index])
                 }))
             );
             setStatistics(prevState => ({...prevState, ...res.data}));
@@ -53,12 +56,12 @@ export default function FinanceStatisticsPage() {
             {
                 data: chartData,
                 type: 'line',
-                yField: '销售额'
+                yField: t('sales')
             },
             {
                 data: chartData,
                 type: 'line',
-                yField: '订单数量',
+                yField: t('orderCount'),
                 axis: {y: {position: 'right'}},
             }
         ]
@@ -66,7 +69,7 @@ export default function FinanceStatisticsPage() {
 
     const handleSubmit = (values: any) => {
         if (!values.date_range) {
-            message.error('请选择时间范围');
+            message.error(t('selectDateRange'));
             return false;
         }
 
@@ -80,7 +83,7 @@ export default function FinanceStatisticsPage() {
             created_types: values.created_types || [],
             exclude_payment_methods: values.exclude_payment_methods || [],
         }).then(() => {
-            message.success('订单已处理完成!');
+            message.success(t('processComplete'));
             fetchChartData();
         }).catch(reason => {
             message.error(reason.message);
@@ -95,18 +98,18 @@ export default function FinanceStatisticsPage() {
 
     return (
         <>
-            <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>数据统计</h2>
+            <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('statisticsManagement')}</h2>
             <Card>
                 <div className={'flex flex-row justify-between items-center'}>
                     <div className={'font-bold'}>
-                        数据统计(
-                        订单数量:
+                        {t('statisticsManagement')}(
+                        {t('orderCount')}:
                         {statistics.total_orders} |
-                        总销售额:
+                        {t('totalSales')}:
                         {'€' + statistics.total_sales} |
-                        配送费:
+                        {t('deliveryFee')}:
                         {'€' + statistics.shipping_fee} |
-                        实际销售额:
+                        {t('actualSales')}:
                         {'€' + statistics.net_sales}
                         )
                     </div>
@@ -116,19 +119,19 @@ export default function FinanceStatisticsPage() {
                                 ...prevState,
                                 format: 'weekly'
                             }))
-                        }}>按周</Button>
+                        }}>{t('byWeek')}</Button>
                         <Button color={'default'} variant={'link'} size={'small'} onClick={() => {
                             setFilterParams(prevState => ({
                                 ...prevState,
                                 format: 'monthly'
                             }))
-                        }}>按月</Button>
+                        }}>{t('byMonth')}</Button>
                         <Button color={'default'} variant={'link'} size={'small'} onClick={() => {
                             setFilterParams(prevState => ({
                                 ...prevState,
                                 format: 'yearly'
                             }))
-                        }}>按年</Button>
+                        }}>{t('byYear')}</Button>
                         <DatePicker.RangePicker
                             onChange={dates => {
                                 if (dates) {
@@ -157,18 +160,18 @@ export default function FinanceStatisticsPage() {
             <div className={'h-4'}></div>
             <Card>
                 <Form labelCol={{span: 2}} labelAlign={'left'} onFinish={handleSubmit}>
-                    <Form.Item label={'选择日期'} name={'date_range'}>
+                    <Form.Item label={t('selectDate')} name={'date_range'}>
                         <DatePicker.RangePicker/>
                     </Form.Item>
-                    <Form.Item label={'删除方式'} name={'delete_method'} initialValue={'select'}>
+                    <Form.Item label={t('deleteMethod')} name={'delete_method'} initialValue={'select'}>
                         <Radio.Group
                             options={[
                                 {
-                                    label: '按条件删除',
+                                    label: t('deleteByCondition'),
                                     value: 'select'
                                 },
                                 {
-                                    label: '按金额删除',
+                                    label: t('deleteByAmount'),
                                     value: 'percentage'
                                 }
                             ]}
@@ -178,7 +181,7 @@ export default function FinanceStatisticsPage() {
                     {
                         deleteMethod === 'select' ? (
                             <>
-                                <Form.Item label={'下单方式'} name={'created_types'}>
+                                <Form.Item label={t('orderMethod')} name={'created_types'}>
                                     <Checkbox.Group
                                         options={[
                                             {
@@ -200,16 +203,16 @@ export default function FinanceStatisticsPage() {
                                         ]}
                                     />
                                 </Form.Item>
-                                <Form.Item label={'付款方式'} name={'payment_methods'}>
+                                <Form.Item label={t('paymentMethod')} name={'payment_methods'}>
                                     <PaymentCheckboxGroup className={'gap-y-2'}/>
                                 </Form.Item>
                             </>
                         ) : (
                             <>
-                                <Form.Item label={'保留付款方式'} name={'exclude_payment_methods'}>
+                                <Form.Item label={t('excludePaymentMethod')} name={'exclude_payment_methods'}>
                                     <PaymentCheckboxGroup className={'gap-y-2'}/>
                                 </Form.Item>
-                                <Form.Item label={'调整比例'} name={'percentage'}>
+                                <Form.Item label={t('adjustRatio')} name={'percentage'}>
                                     <Input suffix={'%'} className={'w-50!'}/>
                                 </Form.Item>
                             </>
@@ -218,21 +221,21 @@ export default function FinanceStatisticsPage() {
                     <Row>
                         <Col span={2}></Col>
                         <Col>
-                            <Button type={'primary'} htmlType={'submit'}>确定</Button>
-                            <Button type={'link'} onClick={() => setShowHistory(true)}>查看历史记录</Button>
+                            <Button type={'primary'} htmlType={'submit'}>{tc('confirm')}</Button>
+                            <Button type={'link'} onClick={() => setShowHistory(true)}>{t('viewHistory')}</Button>
                         </Col>
                     </Row>
                 </Form>
             </Card>
             {
                 submitting && (
-                    <Spin size={'large'} fullscreen={true} description={'处理中...'}/>
+                    <Spin size={'large'} fullscreen={true} description={t('processing')}/>
                 )
             }
             {
                 showHistory && (
                     <Modal
-                        title={'订单操作历史'}
+                        title={t('orderHistory')}
                         open={true}
                         footer={null}
                         width={800}

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Pagination as PaginationRoot,
     PaginationContent,
@@ -12,21 +12,29 @@ import {
 } from '@/components/ui/pagination';
 import {useRouter, usePathname, useSearchParams} from 'next/navigation';
 
-export default function CustomPagination({total, current, pageSize}: {
+export default function CustomPagination({total, currentPage, pageSize, onChange: onPageChange, redirect = false}: {
     total: number;
-    current: number,
-    pageSize: number
+    currentPage: number,
+    pageSize: number,
+    onChange?: (page: number) => void,
+    redirect?: boolean
 }) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const [current, setCurrent] = useState(currentPage || 1);
 
     const totalPages = Math.ceil(total / pageSize);
 
     const onChange = (page: number) => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('page', page.toString());
-        router.push(`${pathname}?${params.toString()}`);
+        setCurrent(page);
+        if (redirect) {
+            const params = new URLSearchParams(searchParams.toString());
+            params.set('page', page.toString());
+            router.push(`${pathname}?${params.toString()}`);
+        } else {
+            onPageChange?.(page);
+        }
     };
 
     if (totalPages <= 1) return null;

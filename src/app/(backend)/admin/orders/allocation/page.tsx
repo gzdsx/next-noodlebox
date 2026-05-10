@@ -8,6 +8,8 @@ import SortableProvider from "@/components/common/SortableProvider";
 import {useSortable} from "@dnd-kit/react/sortable";
 import dayjs from "dayjs";
 import {arrayMove} from "@dnd-kit/sortable";
+import {useThrottleFn} from "ahooks";
+import {useEchoPublic} from "@laravel/echo-react";
 
 const {Content, Sider} = Layout;
 
@@ -132,6 +134,15 @@ export default function Page() {
         const assignedOrderIds = drivers.flatMap(driver => driver.orders);
         return orders.filter(order => !assignedOrderIds.includes(order.id));
     }, [drivers, orders]);
+
+    const {run: refreshOrders} = useThrottleFn(() => {
+        fetchOrders();
+    }, {wait: 2000});
+
+    useEchoPublic('noodlebox', '.order.created', (data: any) => {
+        //console.log('order.created', data);
+        refreshOrders();
+    });
 
     useEffect(() => {
         fetchOrders();

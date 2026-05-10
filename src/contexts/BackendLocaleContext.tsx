@@ -1,6 +1,7 @@
 'use client';
 
 import React, {createContext, useContext, useState, useEffect, ReactNode} from 'react';
+import {configureEcho} from "@laravel/echo-react";
 
 export type Locale = 'zh' | 'en';
 
@@ -27,7 +28,7 @@ export function BackendLocaleProvider({children}: { children: ReactNode }) {
     useEffect(() => {
         // 从 localStorage 读取语言设置
         (function () {
-            const savedLocale = localStorage.getItem('locale') as Locale;
+            const savedLocale = localStorage.getItem('adminlocale') as Locale;
             if (savedLocale && (savedLocale === 'zh' || savedLocale === 'en')) {
                 setLocaleState(savedLocale as Locale);
             } else {
@@ -40,11 +41,23 @@ export function BackendLocaleProvider({children}: { children: ReactNode }) {
                 }
             }
         })();
+
+        configureEcho({
+            broadcaster: 'reverb',
+            key: process.env.NEXT_PUBLIC_PUSHER_KEY,
+            wsHost: 'pusher.noodlebox.ie',
+            wssPort: 443,
+            forceTLS: true,
+            debugger: true,
+            logToConsole: true, // 在控制台输出日志
+            enabledTransports: ['ws', 'wss'],
+            authEndpoint: 'https://dev.noodlebox.ie/broadcasting/auth',
+        });
     }, []);
 
     const setLocale = (newLocale: Locale) => {
         setLocaleState(newLocale);
-        localStorage.setItem('locale', newLocale);
+        localStorage.setItem('adminlocale', newLocale);
         document.documentElement.lang = newLocale;
     };
 

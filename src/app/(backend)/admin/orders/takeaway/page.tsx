@@ -7,6 +7,8 @@ import dayjs from "dayjs";
 import {capitalize} from "@/lib/utils";
 import {CheckCircleOutlined} from "@ant-design/icons";
 import {useMessage} from "@/contexts/BackendAppContext";
+import {useThrottleFn} from "ahooks";
+import {useEchoPublic} from "@laravel/echo-react";
 
 export default function Page() {
     const message = useMessage();
@@ -62,6 +64,15 @@ export default function Page() {
             setSubmiting(false);
         });
     }
+
+    const {run: refreshOrders} = useThrottleFn(() => {
+        fetchOrders();
+    }, {wait: 2000});
+
+    useEchoPublic('noodlebox', '.order.created', (data: any) => {
+        //console.log('order.created', data);
+        refreshOrders();
+    });
 
     useEffect(() => {
         fetchOrders();
