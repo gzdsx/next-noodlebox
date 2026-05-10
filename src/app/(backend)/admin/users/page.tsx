@@ -315,7 +315,6 @@ export default function UsersManagement() {
                     />
                 </div>
             </Card>
-            <div key={editUserId}></div>
             {
                 pointsModalIsOpen && (
                     <Modal

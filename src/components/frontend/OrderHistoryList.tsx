@@ -166,7 +166,7 @@ export default function OrderHistoryList() {
 
                         <div
                             className="flex justify-end items-center pt-4 text-gray-200 text-sm border-t border-gray-100/20">
-                            <Button onClick={() => handleRepurchase(order.id)}>Order Again</Button>
+                            <Button size={'sm'} onClick={() => handleRepurchase(order.id)}>Order Again</Button>
                         </div>
                     </div>
                 );
