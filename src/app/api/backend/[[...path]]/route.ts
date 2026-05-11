@@ -46,8 +46,6 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
         headers
     };
 
-    //console.log('requestOptions:', requestOptions)
-
     try {
         const backendResponse = await fetch(targetUrl, requestOptions);
         //console.log('backendResponse', backendResponse);
@@ -55,10 +53,12 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
         const responseHeaders = new Headers(backendResponse.headers);
         // 【关键步骤】移除导致解析错误的 Header
         // 因为 fetch 已经帮你解压了，所以必须删掉这两个字段
+        responseHeaders.delete('content-length');
         responseHeaders.delete('content-encoding');
         responseHeaders.delete('transfer-encoding');
 
-        return new NextResponse(backendResponse.body, {
+        const buffer = await backendResponse.arrayBuffer();
+        return new NextResponse(buffer, {
             headers: responseHeaders,
             status: backendResponse.status,
             statusText: backendResponse.statusText

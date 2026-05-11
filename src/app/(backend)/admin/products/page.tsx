@@ -240,8 +240,8 @@ export default function ProductsManagement() {
                         onChange={setFilterStatus}
                         options={[
                             {label: t('allStatus'), value: 'all'},
-                            {label: t('active'), value: 'active'},
-                            {label: t('inactive'), value: 'inactive'},
+                            {label: t('active'), value: 'onsale'},
+                            {label: t('inactive'), value: 'offsale'},
                             {label: t('soldout'), value: 'soldout'},
                         ]}
                     />

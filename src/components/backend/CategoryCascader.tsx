@@ -53,6 +53,7 @@ export const CategoryCascader = ({
                                      taxonomy = 'category',
                                      extraOptions = []
                                  }: CategoryCascaderProps) => {
+    const [loading, setLoading] = useState(true);
     const [categooryOptions, setCategooryOptions] = useState<Option[]>([]);
 
     useEffect(() => {
@@ -62,9 +63,13 @@ export const CategoryCascader = ({
                 setCategooryOptions([...extraOptions, ...formatCategoryToOptions(response.data.items)]);
             } catch (e: unknown) {
                 console.error(e);
+            } finally {
+                setLoading(false);
             }
         })();
     }, [taxonomy])
+
+    if (loading) return null;
 
     return (
         <Cascader
