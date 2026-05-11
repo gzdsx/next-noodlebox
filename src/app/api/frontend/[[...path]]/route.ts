@@ -79,10 +79,23 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
 }
 
 // 导出所有支持的 HTTP 方法
-export const GET = handleProxy;
-export const POST = handleProxy;
-export const PUT = handleProxy;
-export const PATCH = handleProxy;
-export const DELETE = handleProxy;
-export const HEAD = handleProxy;
-export const OPTIONS = handleProxy;
+// 明确导出每一个方法，确保类型匹配
+export async function GET(request: NextRequest, context: any) {
+    return handleProxy(request, context);
+}
+
+export async function POST(request: NextRequest, context: any) {
+    return handleProxy(request, context);
+}
+
+export async function PUT(request: NextRequest, context: any) {
+    return handleProxy(request, context);
+}
+
+export async function DELETE(request: NextRequest, context: any) {
+    return handleProxy(request, context);
+}
+
+export async function PATCH(request: NextRequest, context: any) {
+    return handleProxy(request, context);
+}
