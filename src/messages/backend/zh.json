@@ -385,7 +385,7 @@
 		"lotteryTypePlaceholder": "请选择抽奖类型",
 		"loadLotteryConfigError": "加载抽奖设置失败",
 		"typeChest": "开宝箱",
-		"lotterySettings": "参数设置f"
+		"lotterySettings": "参数设置"
 	},
 	"pages": {
 		"title": "标题",
