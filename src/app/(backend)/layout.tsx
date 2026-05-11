@@ -1,9 +1,11 @@
 import {ConfigProvider, App} from "antd";
 import {Metadata} from "next";
+import {cookies} from "next/headers";
 import {AntdRegistry} from "@ant-design/nextjs-registry";
 import {BackendLocaleProvider} from "@/contexts/BackendLocaleContext";
 import AdminRootLayout from "./admin/AdminRootLayout";
 import './globals.css';
+import AdminLoginClient from "@/components/backend/AdminLoginClient";
 
 export const metadata: Metadata = {
     title: "后台管理中心",
@@ -23,6 +25,9 @@ export default async function RootLayout({
                                          }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const tokenStorage = await cookies();
+    const accessToken = tokenStorage.get('adminToken')?.value;
+
     return (
         <html lang="en" className="w-full overflow-x-hidden relative">
         <body className={`min-h-screen w-full overflow-x-hidden relative overscroll-x-none`}>
@@ -40,7 +45,13 @@ export default async function RootLayout({
             }}>
                 <AntdRegistry>
                     <App>
-                        <AdminRootLayout>{children}</AdminRootLayout>
+                        {
+                            accessToken ? (
+                                <AdminRootLayout>{children}</AdminRootLayout>
+                            ) : (
+                                <AdminLoginClient/>
+                            )
+                        }
                     </App>
                 </AntdRegistry>
             </ConfigProvider>

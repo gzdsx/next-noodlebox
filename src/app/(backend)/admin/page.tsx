@@ -254,8 +254,7 @@ export default function AdminDashboard() {
                                     <Statistic
                                         title={t('monthlySales')}
                                         value={statData.monthSales}
-                                        prefix={<><ArrowUpOutlined style={{color: '#52c41a'}}/> ¥</>}
-                                        suffix={t('unitTenThousand')}
+                                        prefix={<><ArrowUpOutlined style={{color: '#52c41a'}}/> €</>}
                                         styles={{content: {color: '#262626'}}}
                                     />
                                 </Card>

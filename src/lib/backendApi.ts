@@ -1,6 +1,3 @@
-import Cookies from "js-cookie";
-const BASE_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-
 interface FetchOptions extends RequestInit {
     data?: any;
     params?: Record<string, any>;
@@ -25,27 +22,15 @@ function serializeParams(params: Record<string, any>) {
 
 export async function apiFetch(endpoint: string, {data, params, ...options}: FetchOptions = {}) {
     // 1. 处理 URL 参数
-    let url = `${BASE_API_URL}${endpoint}`;
+    let url = `/api/backend${endpoint}`;
     if (params) {
         url += '?' + serializeParams(params);
     }
 
-    // 2. 默认 Headers 配置
-    const headers = new Headers({
-        ...options.headers,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    });
+    const headers = new Headers(options.headers);
+    headers.set('Content-Type', 'application/json');
 
-    // 3. 自动注入 Token (如果是 Token 认证方案)
-    // 如果是 Sanctum Cookie 方案，fetch 会自动携带凭证，无需手动加 Authorization
-    const token = Cookies.get('adminToken');
-
-    if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-    }
-
-    if (data) {
+    if (options.method === 'POST') {
         if (data instanceof FormData) {
             options.body = data;
             headers.delete('Content-Type');
@@ -55,11 +40,8 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
     }
 
     try {
-        const response = await fetch(url, {
-            ...options,
-            headers: headers,
-            credentials: 'include',
-        });
+        const response = await fetch(url, {...options, headers});
+        //console.log('response:', response.json());
 
         if (!response.ok) {
             const errorData = await response.json();

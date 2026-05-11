@@ -14,6 +14,7 @@ const getImages = async (page: number) => {
         return [];
     }
 }
+
 export default async function Page({searchParams}: { searchParams: Promise<any> }) {
     const {page} = await searchParams;
     const images = await getImages(page);
