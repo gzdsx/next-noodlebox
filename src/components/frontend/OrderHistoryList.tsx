@@ -12,6 +12,7 @@ import {toast} from "sonner";
 import {useCart} from "@/contexts/CartContext";
 import CustomPagination from "@/components/frontend/CustomPagination";
 import {capitalize} from "@/lib/utils";
+import {redirect} from "next/navigation";
 
 const statusMap: Record<string, { color: string; key: string }> = {
     pending: {color: 'orange', key: 'pending'},
@@ -78,6 +79,17 @@ export default function OrderHistoryList() {
         } catch (e) {
             console.log(e);
         }
+    }
+
+    const handlePayOrder = (orderId: number) => {
+        apiPost(`/orders/${orderId}/create-paypal-order`, {
+            return_url: window.location.origin + '/user/orders/paypal/capture'
+        }).then(response => {
+            //console.log('response', response.data);
+            window.location.href = response.data.links[1].href;
+        }).catch(e => {
+            toast.error(e.message);
+        })
     }
 
     const fetchOrders = async () => {
@@ -165,7 +177,13 @@ export default function OrderHistoryList() {
                         </div>
 
                         <div
-                            className="flex justify-end items-center pt-4 text-gray-200 text-sm border-t border-gray-100/20">
+                            className="flex justify-end items-center pt-4 gap-x-4 text-gray-200 text-sm border-t border-gray-100/20">
+                            {
+                                (order.payment_type === 'online' && !order.is_paid) && (
+                                    <Button className={'bg-[#7cbcb8] hover:bg-[#2cbcb8]'} size={'sm'}
+                                            onClick={() => handlePayOrder(order.id)}>Pay Now</Button>
+                                )
+                            }
                             <Button size={'sm'} onClick={() => handleRepurchase(order.id)}>Order Again</Button>
                         </div>
                     </div>

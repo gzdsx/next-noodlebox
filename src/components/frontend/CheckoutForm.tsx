@@ -31,7 +31,7 @@ interface CheckoutFormProps {
 }
 
 export default function CheckoutForm({options, onChange, onPlaced}: CheckoutFormProps) {
-    const {totalPrice} = useCart();
+    const {totalPrice, reloadCart} = useCart();
     const currentUser = useCurrentUser();
     const {t} = useTranslations('ecommerce');
     const [shipping, setShipping] = useState<ShippingAddress>({
@@ -51,7 +51,6 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     const [isVerifyOpen, setIsVerifyOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [orderId, setOrderId] = useState<number>(0);
-    const [paypalOrderId, setPaypalOrderId] = useState<string>('');
 
     const loadData = async () => {
         try {
@@ -82,9 +81,10 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
 
             const {order_id, payment_method} = response.data;
             setOrderId(order_id);
+            reloadCart();
+
             if (payment_method === 'paypal') {
                 response = await apiPost(`/orders/${order_id}/create-paypal-order`);
-                setPaypalOrderId(response.data.id);
                 return response.data.id;
             } else {
                 await onPlaced?.(order_id);
@@ -100,13 +100,18 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         }
     }
 
-    const handleApprove = async () => {
+    const handleApprove = async (data: any, actions: any) => {
         try {
-            await apiPost(`/orders/${paypalOrderId}/capture-paypal-order`);
-            await onPlaced?.(orderId);
+            await apiPost(`/orders/${data.orderID}/capture-paypal-order`);
         } catch (e: any) {
             toast.error(e.message);
+        } finally {
+            await onPlaced?.(orderId);
         }
+    }
+
+    const handlePapalCancel = () => {
+        onPlaced?.(orderId);
     }
 
     useEffect(() => {
@@ -302,7 +307,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                             <PayPalButtons
                                 createOrder={handleCrateOrder}
                                 onApprove={handleApprove}
-                                onCancel={(data) => console.log("Cancelled:", data)}
+                                onCancel={handlePapalCancel}
                                 onError={(error) => console.error("Error:", error)}
                             />
                         </div>

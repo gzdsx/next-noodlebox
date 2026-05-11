@@ -28,6 +28,7 @@ import {useTranslations} from '@/contexts/BackendLocaleContext';
 import LanguageSwitcher from '@/components/backend/LanguageSwitcher';
 import {useAdministrator} from "@/contexts/BackendAppContext";
 import {apiPost} from "@/lib/backendApi";
+import Cookies from "js-cookie";
 
 const {Header, Sider, Content} = Layout;
 
@@ -345,8 +346,8 @@ export default function AdminLayoutClient({
 
     const logout = async () => {
         await apiPost('/auth/logout');
-        await localStorage.removeItem('adminToken');
-        await localStorage.removeItem('adminUser');
+        await Cookies.remove('adminToken');
+        await Cookies.remove('adminUser');
         window.location.reload();
     }
 

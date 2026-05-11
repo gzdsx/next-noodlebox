@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 const BASE_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 interface FetchOptions extends RequestInit {
@@ -38,7 +39,7 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
 
     // 3. 自动注入 Token (如果是 Token 认证方案)
     // 如果是 Sanctum Cookie 方案，fetch 会自动携带凭证，无需手动加 Authorization
-    const token = localStorage.getItem('adminToken');
+    const token = Cookies.get('adminToken');
 
     if (token) {
         headers.set('Authorization', `Bearer ${token}`);

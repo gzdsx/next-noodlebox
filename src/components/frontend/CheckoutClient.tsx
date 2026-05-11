@@ -1,23 +1,17 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
-import {useSession} from 'next-auth/react';
+import Link from 'next/link';
+import React, {useState} from 'react';
 import {Button} from '@/components/ui/button';
-import {Spinner} from '@/components/ui/spinner';
 import {ResultPage} from '@/components/ui/result-page';
 import {useTranslations} from '@/contexts/LocaleContext';
 import CheckoutForm from '@/components/frontend/CheckoutForm';
-import Link from 'next/link';
-import {ShippingAddress, ShippingZone} from "@/types";
 import CheckoutSummary, {CheckoutOrderInfo} from "@/components/frontend/CheckoutSummary";
 import {useCart} from "@/contexts/CartContext";
 
-export default function CheckoutClient({options, address, shippingZones}: {
+export default function CheckoutClient({options}: {
     options?: any,
-    address?: ShippingAddress,
-    shippingZones?: ShippingZone[]
 }) {
-    const {data: session, status} = useSession();
     const {t} = useTranslations('ecommerce');
     const {clearCart} = useCart();
     const [orderPlaced, setOrderPlaced] = useState(false);
@@ -27,16 +21,6 @@ export default function CheckoutClient({options, address, shippingZones}: {
         shipping_total: 0,
         payment_fee: 0,
     });
-
-    useEffect(() => {
-        if (!session) {
-            window.location.href = '/login?redirect=' + encodeURIComponent(window.location.href);
-        }
-    }, [session])
-
-    if (status === 'loading') {
-        return <div className="flex justify-center py-24"><Spinner size="lg"/></div>;
-    }
 
     if (orderPlaced) {
         return (

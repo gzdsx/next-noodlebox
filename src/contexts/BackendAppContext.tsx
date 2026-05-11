@@ -1,10 +1,11 @@
 'use client';
 
-import React, {createContext, useContext, useState, useCallback, useEffect, useRef} from 'react';
+import React, {createContext, useContext, useState, useCallback, useRef, useLayoutEffect} from 'react';
 import {App} from "antd";
 import {Order as OrderType} from "@/types";
 import MediaLibrary, {MediaType} from "@/components/backend/MediaLibrary";
 import ModalOrderProcessor from "@/components/backend/ModalOrderProcessor";
+import Cookies from "js-cookie";
 
 interface MediaLibraryOptions {
     multiple?: boolean;
@@ -43,10 +44,10 @@ export function BackendAppProvider({children}: { children: React.ReactNode }) {
 
     const orderProcessorCallbackRef = useRef<((order: OrderType) => void) | undefined>(undefined);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         (function () {
             try {
-                const data = localStorage.getItem('adminUser');
+                const data = Cookies.get('adminUser');
                 if (data) {
                     setAdministrator(JSON.parse(data));
                 }

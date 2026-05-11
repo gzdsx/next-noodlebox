@@ -16,7 +16,7 @@ export default function CartItemRow({item}: { item: CartItem }) {
         const names: string[] = [];
         const regex = /^(?!.*(none|original)).*$/i;
         try {
-            console.log('item.options', item.options);
+            //console.log('item.options', item.options);
             if (Array.isArray(item.options)) {
                 item.options.forEach(option => {
                     if (regex.test(option.value || '')) {

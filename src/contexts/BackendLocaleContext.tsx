@@ -1,6 +1,6 @@
 'use client';
 
-import React, {createContext, useContext, useState, useEffect, ReactNode} from 'react';
+import React, {createContext, useContext, useState, useEffect, ReactNode, useLayoutEffect} from 'react';
 import {configureEcho} from "@laravel/echo-react";
 
 export type Locale = 'zh' | 'en';
@@ -22,10 +22,22 @@ const messages: Record<Locale, any> = {
     en: enMessages,
 };
 
+configureEcho({
+    broadcaster: 'reverb',
+    key: process.env.NEXT_PUBLIC_PUSHER_KEY,
+    wsHost: 'pusher.noodlebox.ie',
+    wssPort: 443,
+    forceTLS: true,
+    debugger: true,
+    logToConsole: true, // 在控制台输出日志
+    enabledTransports: ['ws', 'wss'],
+    authEndpoint: 'https://dev.noodlebox.ie/broadcasting/auth',
+});
+
 export function BackendLocaleProvider({children}: { children: ReactNode }) {
     const [locale, setLocaleState] = useState<Locale>('en');
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         // 从 localStorage 读取语言设置
         (function () {
             const savedLocale = localStorage.getItem('adminlocale') as Locale;
@@ -41,18 +53,10 @@ export function BackendLocaleProvider({children}: { children: ReactNode }) {
                 }
             }
         })();
+    }, []);
 
-        configureEcho({
-            broadcaster: 'reverb',
-            key: process.env.NEXT_PUBLIC_PUSHER_KEY,
-            wsHost: 'pusher.noodlebox.ie',
-            wssPort: 443,
-            forceTLS: true,
-            debugger: true,
-            logToConsole: true, // 在控制台输出日志
-            enabledTransports: ['ws', 'wss'],
-            authEndpoint: 'https://dev.noodlebox.ie/broadcasting/auth',
-        });
+    useEffect(() => {
+
     }, []);
 
     const setLocale = (newLocale: Locale) => {
