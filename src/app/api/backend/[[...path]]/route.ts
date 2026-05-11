@@ -20,24 +20,17 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
     const realIp = headerStore.get('x-forwarded-for')?.split(',')[0] || '';
     // 复制原始请求中必要的 Header
     const headers = new Headers();
-    const whiteList = ['accept', 'user-agent', 'content-type'];
-    request.headers.forEach((value, key) => {
-        if (whiteList.includes(key.toLowerCase())) {
-            headers.set(key, value);
-        }
-    });
-
+    headers.set('X-Real-IP', realIp);
+    headers.set('X-Forwarded-For', realIp);
     if (token) {
         headers.set('Authorization', `Bearer ${token}`);
     }
-    headers.set('X-Real-IP', realIp);
-    headers.set('X-Forwarded-For', realIp);
 
     // 2. 准备转发的 Request 选项
     const requestOptions: RequestInit = {
         method: request.method,
         // 只有非 GET/HEAD 请求才转发 body
-        body: request.body,
+        body: request.method !== 'GET' && request.method !== 'HEAD' ? await request.blob() : undefined,
         // 强制不缓存，确保每次请求都到达后端
         cache: 'no-store',
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -48,7 +41,8 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
 
     try {
         const backendResponse = await fetch(targetUrl, requestOptions);
-        //console.log('backendResponse', backendResponse);
+        //const text = await backendResponse.text();
+        //console.log("Raw Backend Output:", text);
         // 4. 将后端的响应（包括状态码、Header、Body）原样返回给前端
         const responseHeaders = new Headers(backendResponse.headers);
         // 【关键步骤】移除导致解析错误的 Header
@@ -56,8 +50,10 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
         responseHeaders.delete('content-length');
         responseHeaders.delete('content-encoding');
         responseHeaders.delete('transfer-encoding');
+        responseHeaders.set('Content-Type', 'application/json; charset=utf-8');
 
-        const buffer = await backendResponse.arrayBuffer();
+        const arrayBuffer = await backendResponse.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
         return new NextResponse(buffer, {
             headers: responseHeaders,
             status: backendResponse.status,
