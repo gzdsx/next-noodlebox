@@ -26,23 +26,29 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
         headers.set('Authorization', `Bearer ${token}`);
     }
 
+    const contentType = request.headers.get('content-type');
+    if (contentType) headers.set('content-type', contentType);
+
     // 2. 准备转发的 Request 选项
     const requestOptions: RequestInit = {
         method: request.method,
         // 只有非 GET/HEAD 请求才转发 body
-        body: request.method !== 'GET' && request.method !== 'HEAD' ? await request.blob() : undefined,
         // 强制不缓存，确保每次请求都到达后端
         cache: 'no-store',
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        duplex: 'half',
         headers
     };
 
+    if (!['GET', 'HEAD'].includes(request.method)) {
+        // 获取原始 Body 字节流
+        (requestOptions as any).body = await request.arrayBuffer();
+        (requestOptions as any).duplex = 'half';
+    }
+
+    //console.log('method', request.method);
+    //console.log('requestOptions:', requestOptions);
+
     try {
         const backendResponse = await fetch(targetUrl, requestOptions);
-        //const text = await backendResponse.text();
-        //console.log("Raw Backend Output:", text);
         // 4. 将后端的响应（包括状态码、Header、Body）原样返回给前端
         const responseHeaders = new Headers(backendResponse.headers);
         // 【关键步骤】移除导致解析错误的 Header
@@ -50,7 +56,6 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
         responseHeaders.delete('content-length');
         responseHeaders.delete('content-encoding');
         responseHeaders.delete('transfer-encoding');
-        responseHeaders.set('Content-Type', 'application/json; charset=utf-8');
 
         const arrayBuffer = await backendResponse.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);

@@ -30,10 +30,12 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
     const headers = new Headers(options.headers);
     headers.set('Content-Type', 'application/json');
 
-    if (options.method === 'POST') {
+    // --- 修改这里：支持所有带有 Body 的动词 ---
+    const method = options.method?.toUpperCase() || 'GET';
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method) && data !== undefined) {
         if (data instanceof FormData) {
             options.body = data;
-            headers.delete('Content-Type');
+            headers.delete('Content-Type'); // FormData 必须让 fetch 自动生成带 boundary 的 Header
         } else {
             options.body = JSON.stringify(data);
         }

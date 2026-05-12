@@ -17,7 +17,7 @@ const LotteryClient = (props: { isOpen?: boolean, onClose?: () => void }) => {
             const response = await apiGet('/lottery/settings');
             setSettings({...response.data});
         } catch (e: unknown) {
-            console.error((e as Error).message);
+            console.log((e as Error).message);
         } finally {
             setLoading(false);
         }
