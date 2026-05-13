@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/dialog"
 import {ProductInfoClient} from "@/components/frontend/ProductInfoClient";
 import {loadCarts, addCartItem, removeCartItem, updateCartQuantity} from "@/actions/cart";
-import {useSession} from "next-auth/react";
 import {toast} from "sonner";
 import {useTranslations} from "@/contexts/LocaleContext";
+import {useSession} from "next-auth/react";
 
 
 interface CartContextType {
@@ -68,7 +68,7 @@ export function CartProvider({children}: { children: ReactNode }) {
         (async () => {
             await fetchItems();
         })()
-    }, [sesstion.status]);
+    }, [sesstion]);
 
     // Sync to localStorage on change
     useEffect(() => {

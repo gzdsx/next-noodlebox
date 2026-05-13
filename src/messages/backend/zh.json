@@ -710,7 +710,8 @@
 		"pointsDetail": "积分明细",
 		"editPoints": "修改积分",
 		"editPointsSuccess": "修改积分成功",
-		"editPointsError": "修改积分失败"
+		"editPointsError": "修改积分失败",
+		"updateSuccess": "更新成功"
 	},
 	"roles": {
 		"roleManagement": "角色管理",

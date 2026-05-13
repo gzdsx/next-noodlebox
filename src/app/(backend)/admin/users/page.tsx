@@ -224,8 +224,8 @@ export default function UsersManagement() {
         setLoading(true);
         apiGet('/users', {
             q: searchText,
-            role: filterRole === 'all' ? '' : filterRole,
-            status: filterStatus === 'all' ? '' : filterStatus,
+            role: filterRole,
+            status: filterStatus,
             offset,
             limit: 20,
         }).then((response) => {
@@ -260,14 +260,20 @@ export default function UsersManagement() {
                     <UserRoleSelect
                         value={filterRole}
                         style={{width: 120}}
-                        onChange={setFilterRole}
                         extraOptions={[{label: t('allRoles'), value: 'all'}]}
+                        onChange={value => {
+                            setOffset(0);
+                            setFilterRole(value);
+                        }}
                     />
                     <UserStatusSelect
                         value={filterStatus}
                         style={{width: 120}}
-                        onChange={setFilterStatus}
                         extraOptions={[{value: 'all', label: t('allStatus')}]}
+                        onChange={value => {
+                            setOffset(0);
+                            setFilterStatus(value);
+                        }}
                     />
                     <Button type="primary" icon={<PlusOutlined/>} onClick={handleAdd}>
                         {t('addUser')}

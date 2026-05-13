@@ -22,14 +22,15 @@ const OrderNotification = () => {
     });
 
     useEffect(() => {
-        audioRef.current = new Audio('/ring.wav');
-        audioRef.current.volume = 0;
-        audioRef.current.volume = 1;
-        if (typeof window !== 'undefined') {
-            window.onclick = () => {
+        const createAudio = () => {
+            audioRef.current = new Audio('/ring.wav');
+        }
 
-                //playNotification();
-            }
+        if (typeof window !== 'undefined') {
+            window.addEventListener('click', createAudio);
+        }
+        return () => {
+            window.removeEventListener('click', createAudio);
         }
     }, []);
     return null;

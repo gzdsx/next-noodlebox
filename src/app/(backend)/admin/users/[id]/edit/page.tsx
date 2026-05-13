@@ -3,7 +3,7 @@
 import React, {useState} from "react";
 import {App, Card} from "antd";
 import {useTranslations} from "@/contexts/BackendLocaleContext";
-import {useParams, useRouter} from "next/navigation";
+import {useParams} from "next/navigation";
 import UserForm, {UserType} from "@/app/(backend)/admin/users/UserForm";
 import {apiGet, apiPut} from "@/lib/backendApi";
 
@@ -11,7 +11,6 @@ export default function Page() {
     const params = useParams();
     const {message} = App.useApp();
     const {t} = useTranslations('users');
-    const router = useRouter();
     const [loading, setLoading] = useState<boolean>(true);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [initvalValues, setInitvalValues] = useState<UserType>({});
@@ -21,7 +20,6 @@ export default function Page() {
             setSubmitting(true);
             await apiPut(`/users/${params.id}`, values);
             message.success(t('updateSuccess'));
-            router.replace('/admin/users');
         } catch (e: unknown) {
             if (e instanceof Error) message.error(e.message || t('createError'));
         } finally {

@@ -22,7 +22,7 @@ function serializeParams(params: Record<string, any>) {
 
 export async function apiFetch(endpoint: string, {data, params, ...options}: FetchOptions = {}) {
     // 1. 处理 URL 参数
-    let url = `/api/backend${endpoint}`;
+    let url = `/api/frontend${endpoint}`;
     if (params) {
         url += '?' + serializeParams(params);
     }

@@ -46,6 +46,7 @@ export default function Page() {
     const message = useMessage();
     const processor = useOrderProcessor();
     const {t: tc} = useTranslations('common');
+    const {t: to} = useTranslations('orders');
     const {t} = useTranslations('financeOrders');
 
     const handleView = (record: OrderType) => {
@@ -102,7 +103,14 @@ export default function Page() {
             key: 'created_via',
             width: 100,
             render: (created_via: string) => createViaMap[created_via]
-        }
+        },
+        {
+            title: to('createdAt'),
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: 180,
+            align: 'end'
+        },
     ];
 
     const fetchOrders = () => {

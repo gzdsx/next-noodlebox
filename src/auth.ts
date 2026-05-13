@@ -3,6 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import {apiGet, apiPost} from "@/lib/api";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+//import {cookies} from "next/headers";
+import Cookies from "js-cookie";
 
 export const {handlers, auth} = NextAuth({
     trustHost: true,
@@ -119,6 +121,7 @@ export const {handlers, auth} = NextAuth({
         async jwt({token, user, trigger}) {
             //console.log('jwt token:', token);
             //console.log('jwt user:', user);
+            //Cookies.set('accessToken', token.accessToken as string);
             if (trigger === 'update') {
                 try {
                     const response = await apiGet(`/auth/user`);
@@ -134,12 +137,12 @@ export const {handlers, auth} = NextAuth({
         },
         // 2. 将 JWT 中的信息暴露给前端 session
         async session({session, token}) {
-            (session as any).accessToken = token.accessToken as string;
             (session as any).user.id = token.id as string;
             (session as any).user.name = token.name as string;
             (session as any).user.image = token.image as string;
-            (session as any).user.role = token.role as string;
+            //(session as any).user.role = token.role as string;
             (session as any).user.points = token.points as string;
+            (session as any).accessToken = token.accessToken as string;
 
             return session;
         }
@@ -167,5 +170,5 @@ export const {handlers, auth} = NextAuth({
         error: '/auth/login',
     },
     debug: true,
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.AUTH_SECRET,
 });

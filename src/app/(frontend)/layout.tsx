@@ -1,4 +1,3 @@
-import {SessionProvider} from "next-auth/react";
 import {LocaleProvider} from "@/contexts/LocaleContext";
 import {CartProvider} from "@/contexts/CartContext";
 import {auth} from "@/auth";
@@ -11,6 +10,8 @@ import './globals.css';
 import {apiGet} from "@/lib/api";
 import {Category} from "@/types";
 import {LotteryProvider} from "@/contexts/LotteryContext";
+import {Metadata} from "next";
+import {SessionProvider} from "next-auth/react";
 
 const getConfig = async () => {
     try {
@@ -22,12 +23,16 @@ const getConfig = async () => {
     }
 }
 
-export const generateMetadata = async () => {
-    const config = await getConfig();
-    return {
-        title: config.sitename,
-        keywords: config.keywords,
-        description: config.description,
+export async function generateMetadata() {
+    try {
+        const config = await getConfig();
+        return {
+            title: config.sitename,
+            keywords: config.keywords,
+            description: config.description,
+        } as Metadata;
+    } catch {
+        return {};
     }
 }
 

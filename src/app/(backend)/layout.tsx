@@ -4,8 +4,8 @@ import {cookies} from "next/headers";
 import {AntdRegistry} from "@ant-design/nextjs-registry";
 import {BackendLocaleProvider} from "@/contexts/BackendLocaleContext";
 import AdminRootLayout from "./admin/AdminRootLayout";
-import './globals.css';
 import AdminLoginClient from "@/components/backend/AdminLoginClient";
+import './globals.css';
 
 export const metadata: Metadata = {
     title: "后台管理中心",

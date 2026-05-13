@@ -1,6 +1,6 @@
 //'use server'
 
-import {apiDelete, apiGet, apiPost, apiPut} from "@/lib/api";
+import {apiDelete, apiGet, apiPost, apiPut} from "@/lib/frontendApi";
 import {CartItem} from "@/types";
 
 export async function loadCarts() {

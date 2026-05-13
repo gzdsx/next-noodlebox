@@ -80,18 +80,11 @@ export default function BatchUploader({
         activeUploadsRef.current++;
 
         try {
-            const session = await import('next-auth/react').then(({getSession}) => getSession());
-
             await new Promise<void>((resolve) => {
                 const xhr = new XMLHttpRequest();
                 const formData = new FormData();
                 formData.append(fieldName, task.file);
-
-                xhr.open('POST', uploadUrl);
-
-                const token = (session as any)?.accessToken;
-                if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-
+                xhr.open('POST', '/api/backend/materials');
                 xhr.upload.onprogress = (e) => {
                     if (e.lengthComputable) {
                         const pct = Math.round((e.loaded / e.total) * 100);
@@ -154,7 +147,7 @@ export default function BatchUploader({
             setTimeout(() => processQueue(), 0);
         }
         // Check if all done — reset queue and show upload area again
-        if (uploadTasks.length > 0 && uploadTasks.every(t => t.status === 'success' || t.status === 'error')) {
+        if (uploadTasks.length > 0 && uploadTasks.every(t => t.status === 'success')) {
             if (!completedNotifiedRef.current) {
                 completedNotifiedRef.current = true;
                 message.success(i18n.uploadComplete);

@@ -14,7 +14,7 @@ const AppContext = React.createContext<AppContextType | null>(null);
 export const AppProvider = ({children, categories = [], webconfig = {}}: {
     children: React.ReactNode,
     categories: Category[],
-    webconfig?: Record<string, any>
+    webconfig?: Record<string, any>,
 }) => {
     return (
         <AppContext.Provider value={{
@@ -39,12 +39,12 @@ export function useCategories() {
     return categories;
 }
 
-export function useCurrentUser() {
-    const {data: session} = useSession();
-    return session?.user || {};
-}
-
 export function useWebConfig() {
     const {webconfig} = useAppContext();
     return webconfig;
+}
+
+export function useCurrentUser() {
+    const {data: session} = useSession();
+    return session?.user || {};
 }

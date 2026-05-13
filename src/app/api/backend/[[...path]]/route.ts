@@ -32,7 +32,6 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
     // 2. 准备转发的 Request 选项
     const requestOptions: RequestInit = {
         method: request.method,
-        // 只有非 GET/HEAD 请求才转发 body
         // 强制不缓存，确保每次请求都到达后端
         cache: 'no-store',
         headers
@@ -40,7 +39,7 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
 
     if (!['GET', 'HEAD'].includes(request.method)) {
         // 获取原始 Body 字节流
-        (requestOptions as any).body = await request.arrayBuffer();
+        (requestOptions as any).body = await request.body;
         (requestOptions as any).duplex = 'half';
     }
 

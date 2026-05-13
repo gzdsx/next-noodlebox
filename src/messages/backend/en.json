@@ -703,7 +703,8 @@
 		"pointsDetail": "Points Detail",
 		"editPoints": "Edit Points",
 		"editPointsSuccess": "Points updated successfully",
-		"editPointsError": "Failed to update points"
+		"editPointsError": "Failed to update points",
+		"updateSuccess": "Updated successfully"
 	},
 	"roles": {
 		"roleManagement": "Roles",

@@ -1,14 +1,14 @@
 'use client'
 
-import {useSession} from "next-auth/react";
-import {apiGet} from "@/lib/api";
-import {useEffect, useState} from "react";
+import {apiGet} from "@/lib/frontendApi";
+import {useState} from "react";
 import {Spinner} from "@/components/ui/spinner";
 import LotteryPrizeClient from "@/components/frontend/LotteryPrizeClient";
 import LotteryChestBox from "@/components/frontend/LotteryChestBox";
 import {toast} from "sonner";
 import {useCart} from "@/contexts/CartContext";
 import {X} from "lucide-react";
+import {useSession} from "next-auth/react";
 
 const LotteryOverlayer = ({settings, onClose}: { settings: Record<string, string>, onClose?: () => void }) => {
     const {reloadCart} = useCart();

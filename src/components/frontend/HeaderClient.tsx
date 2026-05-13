@@ -3,7 +3,7 @@
 import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import {useRouter} from 'next/navigation';
-import {useSession, signOut} from 'next-auth/react';
+import {signOut, useSession} from 'next-auth/react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -35,7 +35,7 @@ import {useCategories, useCurrentUser} from "@/contexts/AppContext";
 
 export default function HeaderClient() {
     const currentUser = useCurrentUser();
-    const {data: session} = useSession();
+    const session = useSession();
     const foodCategories = useCategories();
     const {totalItems} = useCart();
     const {t} = useTranslations('ecommerce');
@@ -184,7 +184,7 @@ export default function HeaderClient() {
                                 </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                {session ? (
+                                {session.status === 'authenticated' ? (
                                     <>
                                         <DropdownMenuItem onClick={() => router.push('/user/orders')}>
                                             <Package size={14}/>
