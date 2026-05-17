@@ -8,7 +8,7 @@ export default async function page() {
     return (
         <>
             <div className="w-full">
-                <img src="/rmixvP3ywRWRlvWHPOGVNyilUlCtOoM6l8CGwvJ9.jpg" className={'w-full object-cover h-[20vw]'}
+                <img src="/rmixvP3ywRWRlvWHPOGVNyilUlCtOoM6l8CGwvJ9.jpg" className={'w-full object-cover h-[24vw]'}
                      alt=""/>
             </div>
             <div className={'max-w-350 mx-auto px-4 md:px-0 py-6 text-[#f19e39]'}>

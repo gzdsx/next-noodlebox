@@ -8,17 +8,17 @@ const getImages = async (page: number) => {
             offset: (page - 1) * 30,
             limit: 30
         });
-        return response.data.items;
+        return response.data;
     } catch (e) {
         console.log('获取店铺图片失败:', e);
-        return [];
+        return {total: 0, items: []};
     }
 }
 
 export default async function Page({searchParams}: { searchParams: Promise<any> }) {
     const {page} = await searchParams;
-    const images = await getImages(page);
+    const {items: images, total} = await getImages(page);
     return (
-        <PageClient images={images}/>
+        <PageClient images={images} total={total} page={page}/>
     )
 }

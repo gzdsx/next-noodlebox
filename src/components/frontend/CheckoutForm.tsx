@@ -115,6 +115,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     }
 
     useEffect(() => {
+        console.log(options);
         loadData();
     }, [shippingZoneId, shippingMethod, paymentMethod, usePointsValue]);
 

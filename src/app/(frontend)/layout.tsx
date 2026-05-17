@@ -12,6 +12,7 @@ import {Category} from "@/types";
 import {LotteryProvider} from "@/contexts/LotteryContext";
 import {Metadata} from "next";
 import {SessionProvider} from "next-auth/react";
+import CookieClient from "@/components/frontend/CookieClient";
 
 const getConfig = async () => {
     try {
@@ -77,6 +78,7 @@ export default async function FrontendLayout({
                             <main className="min-h-125">{children}</main>
                             <Footer/>
                             <MobileTabbar/>
+                            <CookieClient/>
                             <Toaster richColors position="top-center"/>
                         </LotteryProvider>
                     </CartProvider>

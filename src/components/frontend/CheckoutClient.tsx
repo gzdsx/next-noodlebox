@@ -8,6 +8,7 @@ import {useTranslations} from '@/contexts/LocaleContext';
 import CheckoutForm from '@/components/frontend/CheckoutForm';
 import CheckoutSummary, {CheckoutOrderInfo} from "@/components/frontend/CheckoutSummary";
 import {useCart} from "@/contexts/CartContext";
+import CheckoutNoticeDialog from "@/components/frontend/CheckoutNoticeDialog";
 
 export default function CheckoutClient({options}: {
     options?: any,
@@ -21,6 +22,7 @@ export default function CheckoutClient({options}: {
         shipping_total: 0,
         payment_fee: 0,
     });
+    const [showWarning, setShowWarning] = useState(!options.in_delivery_hours);
 
     if (orderPlaced) {
         return (
@@ -66,6 +68,10 @@ export default function CheckoutClient({options}: {
                     </div>
                 </div>
             </div>
+            {
+                showWarning &&
+                <CheckoutNoticeDialog message={options.order_warning} onClose={() => setShowWarning(false)}/>
+            }
         </div>
     );
 }

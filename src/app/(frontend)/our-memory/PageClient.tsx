@@ -2,12 +2,15 @@
 
 import React, {useState} from "react";
 import Lightbox from "yet-another-react-lightbox";
+import CustomPagination from "@/components/frontend/CustomPagination";
 
 interface PageClientProps {
     images: { id: number; src: string; thumbnail: string, name: string }[];
+    total?: number;
+    page?: number;
 }
 
-const PageClient = ({images = []}: PageClientProps) => {
+const PageClient = ({images = [], page = 1, total = 0}: PageClientProps) => {
     const [open, setOpen] = useState(false);
     const [imageIndex, setImageIndex] = useState(0);
     return (
@@ -29,6 +32,7 @@ const PageClient = ({images = []}: PageClientProps) => {
                         ))
                     }
                 </div>
+                <CustomPagination total={total} currentPage={page} pageSize={30} redirect={true}/>
             </div>
             <Lightbox
                 open={open}
