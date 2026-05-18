@@ -115,7 +115,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     }
 
     useEffect(() => {
-        console.log(options);
+        //console.log(options);
         loadData();
     }, [shippingZoneId, shippingMethod, paymentMethod, usePointsValue]);
 
@@ -309,7 +309,10 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                 createOrder={handleCrateOrder}
                                 onApprove={handleApprove}
                                 onCancel={handlePapalCancel}
-                                onError={(error) => console.error("Error:", error)}
+                                onError={(error) => {
+                                    console.error("Error:", error);
+                                    onPlaced?.(orderId);
+                                }}
                             />
                         </div>
                     ) : (

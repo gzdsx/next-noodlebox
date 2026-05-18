@@ -1,14 +1,10 @@
-# Movie Website
+# Noodlebox Website
 
-A video website built with Next.js 16 and Tailwind CSS 4.
+A Ecommerce website built with Next.js 16 and Tailwind CSS 4.
 
 ## Features
 
-- Home page with carousel, latest movies, and popular movies
-- Category pages for movies, TV shows, variety, anime, documentaries, and sports
-- Video player page with related videos and user comments
-- User login and registration pages
-- Dark theme and full-screen layout
+- Home page with carousel, popular movies
 
 ## Getting Started
 
