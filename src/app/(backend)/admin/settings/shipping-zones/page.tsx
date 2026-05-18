@@ -28,7 +28,7 @@ const {TextArea} = Input;
 
 interface ShippingZoneType {
     id: number;
-    name: string;
+    title: string;
     description: string;
     fee: number;
     created_at: string;
@@ -61,7 +61,7 @@ export default function ShippingZonesManagement() {
     const handleEdit = (record: ShippingZoneType) => {
         setEditingRecord(record);
         form.setFieldsValue({
-            name: record.name,
+            title: record.title,
             description: record.description,
             fee: record.fee,
         });
