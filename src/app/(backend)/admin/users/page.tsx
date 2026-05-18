@@ -181,7 +181,7 @@ export default function UsersManagement() {
             dataIndex: 'phone',
             key: 'phone',
             width: 200,
-            render: (phone: string, record) => <span>{record.iddcode + record.phone_number}</span>,
+            render: (phone: string, record) => <span>{(record.iddcode || '') + (record.phone_number || '-')}</span>,
         },
         {
             title: t('email'),

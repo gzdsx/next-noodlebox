@@ -219,12 +219,12 @@ export default function AdminLayoutClient({
                     label: <Link href="/admin/roles">{t('roleManagement')}</Link>,
                     roles: ['manager']
                 },
-                {
-                    key: '/admin/comments',
-                    icon: <CommentOutlined/>,
-                    label: <Link href="/admin/comments">{t('commentManagement')}</Link>,
-                    roles: []
-                },
+                // {
+                //     key: '/admin/comments',
+                //     icon: <CommentOutlined/>,
+                //     label: <Link href="/admin/comments">{t('commentManagement')}</Link>,
+                //     roles: []
+                // },
             ],
             roles: []
         },
