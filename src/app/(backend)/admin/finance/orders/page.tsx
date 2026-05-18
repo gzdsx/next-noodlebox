@@ -249,13 +249,13 @@ export default function Page() {
                             defaultValue="all"
                             style={{width: 200}}
                             options={[
-                                {value: 'all', label: tc('search')},
-                                {value: 'pending', label: t('pending')},
-                                {value: 'processing', label: t('processing')},
-                                {value: 'delivering', label: t('delivering')},
-                                {value: 'completed', label: t('completed')},
-                                {value: 'cancelled', label: t('cancelled')},
-                                {value: 'refunded', label: t('refunded')},
+                                {value: 'all', label: to('allStatus')},
+                                {value: 'pending', label: to('pending')},
+                                {value: 'processing', label: to('processing')},
+                                {value: 'delivering', label: to('delivering')},
+                                {value: 'completed', label: to('completed')},
+                                {value: 'cancelled', label: to('cancelled')},
+                                {value: 'refunded', label: to('refunded')},
                             ]}
                             onChange={value => {
                                 setFilterParams((prev: any) => ({

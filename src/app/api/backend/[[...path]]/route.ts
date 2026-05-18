@@ -1,6 +1,7 @@
 import {NextRequest, NextResponse} from 'next/server';
 import {headers as getHeaders} from "next/headers";
 import {cookies} from "next/headers";
+import sha1 from "@/lib/sha1";
 
 // 定义真实的后端基础地址
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'https://www.noodlebox.ie/admin';
@@ -20,6 +21,9 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
     const realIp = headerStore.get('x-forwarded-for')?.split(',')[0] || '';
     // 复制原始请求中必要的 Header
     const headers = new Headers();
+    headers.set('X-appid', '123456');
+    headers.set('X-appkey', '123456');
+    headers.set('X-Forwarded-For', realIp);
     headers.set('X-Real-IP', realIp);
     headers.set('X-Forwarded-For', realIp);
     if (token) {

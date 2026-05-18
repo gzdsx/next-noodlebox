@@ -1,8 +1,7 @@
 'use client';
 
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 import {Layout, Menu, theme, Avatar, Dropdown, Button} from 'antd';
-import type {MenuProps} from 'antd';
 import {
     DashboardOutlined,
     UserOutlined,
@@ -457,7 +456,7 @@ export default function AdminLayoutClient({
                 <Menu
                     mode="inline"
                     selectedKeys={[pathname]}
-                    defaultOpenKeys={[]}
+                    defaultOpenKeys={[pathname]}
                     style={{borderRight: 0}}
                     items={roleMenus}
                 />

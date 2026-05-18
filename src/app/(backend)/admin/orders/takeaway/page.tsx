@@ -5,13 +5,15 @@ import React, {useEffect, useState} from "react";
 import {apiGet, apiPut} from "@/lib/backendApi";
 import dayjs from "dayjs";
 import {capitalize} from "@/lib/utils";
-import {CheckCircleOutlined} from "@ant-design/icons";
+import {ArrowLeftOutlined, CheckCircleOutlined} from "@ant-design/icons";
 import {useMessage} from "@/contexts/BackendAppContext";
 import {useThrottleFn} from "ahooks";
 import {useEchoPublic} from "@laravel/echo-react";
+import {useRouter} from "next/navigation";
 
 export default function Page() {
     const message = useMessage();
+    const router = useRouter();
     const [orders, setOrders] = useState<any[]>([]);
     const [stats, setStats] = useState<any>({
         pending: 0,
@@ -79,7 +81,13 @@ export default function Page() {
     }, [filterParams]);
     return (
         <>
-            <div className={'flex justify-between mb-6 items-center'}>
+            <div className={'flex justify-between mb-4 items-center'}>
+                <Button
+                    type="text"
+                    icon={<ArrowLeftOutlined/>}
+                    onClick={() => router.push('/admin/orders/pilot')}
+                    className={'font-bold'}
+                />
                 <h2 style={{fontSize: 24, fontWeight: 'bold'}}>Takeaway Orders</h2>
                 <div className={'flex gap-2'}>
                     <Button

@@ -8,9 +8,12 @@ import dayjs from "dayjs";
 import {capitalize} from "@/lib/utils";
 import {useThrottleFn} from "ahooks";
 import {useEchoPublic} from "@laravel/echo-react";
+import {ArrowLeftOutlined} from "@ant-design/icons";
+import {useRouter} from "next/navigation";
 
 export default function Page() {
     const message = useMessage();
+    const router = useRouter();
     const processor = useOrderProcessor();
     const [loading, setLoading] = useState(false);
     const [orders, setOrders] = useState<any[]>([]);
@@ -68,7 +71,12 @@ export default function Page() {
 
     return (
         <>
-            <div className={'flex justify-between mb-6 items-center'}>
+            <div className={'flex justify-between mb-4 items-center'}>
+                <Button
+                    type="text"
+                    icon={<ArrowLeftOutlined/>}
+                    onClick={() => router.push('/admin/orders/pilot')}
+                />
                 <h2 style={{fontSize: 24, fontWeight: 'bold'}}>Collection Orders (Order Total:€{orderTotal})</h2>
                 <div className={'flex gap-2'}>
                     <Button variant={'solid'} color={'yellow'}

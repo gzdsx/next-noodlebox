@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useEffect, useMemo, useState} from "react";
-import {Card, Layout, Spin, Tag} from "antd";
+import {Button, Card, Layout, Spin, Tag} from "antd";
 import {apiGet, apiPost} from "@/lib/backendApi";
 import {useMessage, useModal} from "@/contexts/BackendAppContext";
 import SortableProvider from "@/components/common/SortableProvider";
@@ -10,6 +10,8 @@ import dayjs from "dayjs";
 import {arrayMove} from "@dnd-kit/sortable";
 import {useThrottleFn} from "ahooks";
 import {useEchoPublic} from "@laravel/echo-react";
+import {ArrowLeftOutlined} from "@ant-design/icons";
+import {useRouter} from "next/navigation";
 
 const {Content, Sider} = Layout;
 
@@ -38,6 +40,7 @@ function SortableCard({id, index, children, checked = false, onClick}: {
 export default function Page() {
     const modal = useModal();
     const message = useMessage();
+    const router = useRouter();
     const [drivers, setDrivers] = useState<any[]>([]);
     const [orders, setOrders] = useState<any[]>([]);
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
@@ -151,7 +154,14 @@ export default function Page() {
 
     return (
         <>
-            <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>Order Allocation</h2>
+            <div className={'flex items-center gap-2 mb-4'}>
+                <Button
+                    type="text"
+                    icon={<ArrowLeftOutlined/>}
+                    onClick={() => router.push('/admin/orders/pilot')}
+                />
+                <h2 style={{fontSize: 24, fontWeight: 'bold'}}>Order Allocation</h2>
+            </div>
             <Card>
                 <Layout style={{backgroundColor: '#fff'}}>
                     <Sider style={{backgroundColor: '#fff'}} width={205}>

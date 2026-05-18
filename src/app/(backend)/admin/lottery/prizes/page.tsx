@@ -190,9 +190,9 @@ export default function LotteryPrizesPage() {
             dataIndex: 'status',
             key: 'status',
             width: 100,
-            render: (status: string) => {
-                const color = status === 'active' ? 'success' : 'default';
-                const label = status === 'active' ? t('statusActive') : t('statusInactive');
+            render: (status: number) => {
+                const color = status === 1 ? 'success' : 'default';
+                const label = status === 1 ? t('statusActive') : t('statusInactive');
                 return <Tag color={color}>{label}</Tag>;
             },
         },
@@ -255,7 +255,7 @@ export default function LotteryPrizesPage() {
             setLoading(true);
             apiPut(`/lottery/prizes/batch`, {
                 ids: selectedItems,
-                data: {status: 'active'},
+                data: {status: 1},
             }).then(() => {
                 message.success(t('activateSuccess'));
                 setSelectedItems([]);
@@ -271,7 +271,7 @@ export default function LotteryPrizesPage() {
             setLoading(true);
             apiPut(`/lottery/prizes/batch`, {
                 ids: selectedItems,
-                data: {status: 'inactive'},
+                data: {status: 0},
             }).then(() => {
                 message.success(t('deactivateSuccess'));
                 setSelectedItems([]);
