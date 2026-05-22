@@ -136,19 +136,27 @@ const ModalOrderProcessor = ({
         const options: string[] = [];
         try {
 
-            if (Array.isArray(item.variations)){
-                item.variations.forEach((option: any) => {
+            if (Array.isArray(item.options)) {
+                item.options.forEach((option: any) => {
                     options.push(option.value);
                 });
-            }else {
-                Object.values(item.variations).forEach((option: any) => {
+            } else {
+                Object.values(item.options).forEach((option: any) => {
                     options.push(option.toString());
                 });
             }
 
-            item.additional_options.forEach((addon: any) => {
-                options.push(addon.name);
-            });
+            if (Array.isArray(item.additional_options)) {
+                item.additional_options.forEach((addon: any) => {
+                    options.push(addon.name);
+                });
+            }
+
+            if (Array.isArray(item.comments)) {
+                item.comments.forEach((comment: any) => {
+                    options.push(`${comment.type}-${comment.name}`);
+                });
+            }
         } catch {
 
         }

@@ -148,5 +148,6 @@ export interface OrderItem {
     options?: CartOptionItem[];
     variations?: CartOptionItem[] | Record<string, any>;
     additional_options?: CartOptionItem[];
+    comments?: { type: string, name: string }[];
     purchase_via?: string;
 }

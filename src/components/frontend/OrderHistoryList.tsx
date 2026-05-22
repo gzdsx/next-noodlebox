@@ -12,7 +12,6 @@ import {toast} from "sonner";
 import {useCart} from "@/contexts/CartContext";
 import CustomPagination from "@/components/frontend/CustomPagination";
 import {capitalize} from "@/lib/utils";
-import {redirect} from "next/navigation";
 
 const statusMap: Record<string, { color: string; key: string }> = {
     pending: {color: 'orange', key: 'pending'},
@@ -45,26 +44,33 @@ export default function OrderHistoryList() {
         try {
             const names: string[] = [];
             const regex = /^(?!.*(none|original)).*$/i;
-            if (Array.isArray(item.variations)) {
-                item.variations?.forEach(option => {
+            if (Array.isArray(item.options)) {
+                item.options?.forEach(option => {
                     if (regex.test(option.value || '')) {
                         names.push(option.value as string);
                     }
                 });
             } else {
-                Object.values(item.variations || {}).forEach(option => {
-                    if (regex.test(option || '')) {
+                Object.values(item.options || {}).forEach(option => {
+                    if (regex.test(option as string)) {
                         names.push(option as string);
                     }
                 });
             }
 
+            if (Array.isArray(item.additional_options)) {
+                item.additional_options?.forEach(option => {
+                    if (regex.test(option.name)) {
+                        names.push(option.name);
+                    }
+                })
+            }
 
-            item.additional_options?.forEach(option => {
-                if (regex.test(option.name)) {
-                    names.push(option.name);
-                }
-            })
+            if (Array.isArray(item.comments)) {
+                item.comments?.forEach(comment => {
+                    names.push(`${comment.type}: ${comment.name}`);
+                })
+            }
             return names.join(', ');
         } catch {
             return '';
