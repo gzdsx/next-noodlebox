@@ -8,7 +8,13 @@ import {ShoppingCartIcon} from "lucide-react";
 import {Product} from "@/types";
 import {useProductModal} from "@/contexts/CartContext";
 
-export default function ProductCard({product}: {product: Product}) {
+export const spicyMap: Record<string, string> = {
+    slightly: '/spicy-slightly.png',
+    medium: '/spicy-medium.png',
+    super: '/spicy-super.png',
+}
+
+export default function ProductCard({product}: { product: Product }) {
     const {t} = useTranslations('ecommerce');
     const modal = useProductModal();
 
@@ -16,6 +22,10 @@ export default function ProductCard({product}: {product: Product}) {
     const discountPercent = hasDiscount
         ? Math.round((1 - product.price / product.original_price!) * 100)
         : 0;
+    const metas = product.metas?.reduce((acc, meta) => {
+        acc[meta.key] = meta.value;
+        return acc;
+    }, {}) || {};
 
     return (
         <div className="group block overflow-hidden bg-[#444] rounded-sm">
@@ -46,12 +56,13 @@ export default function ProductCard({product}: {product: Product}) {
                         {product.icon}
                     </Badge>
                 )}
-                {/* Discount badge */}
-                {hasDiscount && (
-                    <Badge className="absolute top-2 right-2 text-xs m-0 bg-orange-500 hover:bg-orange-500">
-                        -{discountPercent}%
-                    </Badge>
-                )}
+
+                {
+                    spicyMap[metas.spicy] && (
+                        <img src={spicyMap[metas.spicy]} className={'absolute top-2 right-2 w-[24px] h-[24px] md:w-[32px] md:h-[32px]'}
+                             alt={metas.spicy}/>
+                    )
+                }
             </div>
 
             {/* Info */}

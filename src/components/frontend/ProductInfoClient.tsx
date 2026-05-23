@@ -6,7 +6,13 @@ import React, {useMemo, useState} from "react";
 import ProductImageGallery from "@/components/frontend/ProductImageGallery";
 import {NumberInput} from "@/components/ui/number-input";
 import {ShoppingCartIcon} from "lucide-react";
+import {Badge} from "@/components/ui/badge";
 
+const spicyMap: Record<string, string> = {
+    slightly: '/spicy-slightly.png',
+    medium: '/spicy-medium.png',
+    super: '/spicy-super.png',
+}
 
 export const ProductInfoClient = ({product, scrollViewStyle}: {
     product: Product,
@@ -54,13 +60,10 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
         return Number(product.point_price) * quantity;
     }, [product.point_price, quantity]);
 
-    const metas = useMemo(() => {
-        const metaData: Record<string, any> = {};
-        product.metas?.forEach((meta: any) => {
-            metaData[meta.key] = meta.value;
-        });
-        return metaData;
-    }, [product.metas]);
+    const metas = product.metas?.reduce((acc, meta) => {
+        acc[meta.key] = meta.value;
+        return acc;
+    }, {}) || {};
 
     const handleAddToCart = async () => {
         try {
@@ -79,7 +82,7 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
     };
 
     const renderBadges = () => {
-        if (!product.meta_data?.badges?.length) {
+        if (!metas.badges?.length) {
             return null;
         }
 
@@ -172,17 +175,39 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className={'hidden md:block'}>
+            <div className={'hidden md:block relative'}>
                 <ProductImageGallery images={product.images}/>
+                {product.icon && (
+                    <Badge variant="destructive" className="absolute top-2 left-2 text-sm m-0">
+                        {product.icon}
+                    </Badge>
+                )}
+                {
+                    spicyMap[metas.spicy] && (
+                        <img src={spicyMap[metas.spicy]} className={'absolute top-2 right-2 w-[36px] h-[36px]'}
+                             alt={metas.spicy}/>
+                    )
+                }
             </div>
             <div className="space-y-4">
                 <div className={'flex flex-row md:flex-col gap-4'}>
-                    <div className={'md:hidden'}>
+                    <div className={'md:hidden relative'}>
                         <img
                             src={product.thumbnail}
                             className={'w-25 h-25 object-cover'}
                             alt={product.title}
                         />
+                        {product.icon && (
+                            <Badge variant="destructive" className="absolute top-1 left-1 text-xs m-0">
+                                {product.icon}
+                            </Badge>
+                        )}
+                        {
+                            spicyMap[metas.spicy] && (
+                                <img src={spicyMap[metas.spicy]} className={'absolute top-1 right-1 w-[24px] h-[24px]'}
+                                     alt={metas.spicy}/>
+                            )
+                        }
                     </div>
                     <div className={'space-y-4'}>
                         <h1 className="text-1xl font-bold mb-2 md:text-2xl">{product.title}</h1>

@@ -9,15 +9,13 @@ import {
 } from "@/components/ui/carousel";
 import AutoHeight from "embla-carousel-auto-height"
 import React, {useRef, useState} from "react";
-import {ShoppingCartIcon} from "lucide-react";
-import {useProductModal} from "@/contexts/CartContext";
+import ProductVerticalCard from "@/components/frontend/ProductVerticalCard";
 
 interface ProductClientMobileProps {
     categories: Category[];
 }
 
 const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
-    const modal = useProductModal();
     const [currentCategory, setCurrentCategory] = useState(categories[0]);
     const carouselRef = useRef<CarouselApi | null>(null);
     const tabsRef = useRef<Record<string, HTMLDivElement>>({});
@@ -81,56 +79,7 @@ const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
                                 <div className={''}>
                                     {
                                         cat.products?.map((product) => (
-                                            <div key={`product-${product.id}`} className={'flex flex-row gap-4 py-2'}>
-                                                <div className={`w-[36vw] max-w-25`}>
-                                                    <div className={`aspect-square relative`}>
-                                                        <img
-                                                            src={product.thumbnail}
-                                                            alt={product.title}
-                                                            className={`w-full h-full object-cover rounded-sm`}
-                                                        />
-                                                        {
-                                                            product.icon === 'new' && (
-                                                                <span
-                                                                    className={'absolute px-2 py-1 bg-[#8743d0] text-white text-[12px] left-0 top-0'}>NEW!</span>
-                                                            )
-                                                        }
-                                                        {
-                                                            product.icon === 'hot' && (
-                                                                <span
-                                                                    className={'absolute px-2 py-1 bg-red-500 text-white text-[12px] left-0 top-0'}>HOT!</span>
-                                                            )
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div className={'grow flex flex-col gap-2 justify-between'}>
-                                                    <h3 className={'text-[16px] font-bold'}>{product.title}</h3>
-                                                    <div className={'flex flex-row gap-4'}>
-                                                        {
-                                                            product.meta_data?.badges?.map((badge: string) => (
-                                                                <img
-                                                                    key={`badge-${badge}`}
-                                                                    className={'w-7.5 h-7.5 object-contain'}
-                                                                    src={badge}
-                                                                    alt={''}
-                                                                />
-                                                            ))
-                                                        }
-                                                    </div>
-                                                    <div className={'flex flex-row gap-2 items-center justify-between'}>
-                                                        <span
-                                                            className={'text-[16px] font-bold text-[#66beb8]'}>€{product.price}</span>
-                                                        <button
-                                                            onClick={() => {
-                                                                modal.open(product);
-                                                            }}
-                                                            className={'flex items-center gap-2 bg-[#66beb8] text-white px-2 py-1.25 rounded-[5px] hover:bg-[#41918b] cursor-pointer'}>
-                                                            <ShoppingCartIcon size={16}/>
-                                                            <span>Add</span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <ProductVerticalCard key={`product-${product.id}`} product={product}/>
                                         ))
                                     }
                                 </div>
