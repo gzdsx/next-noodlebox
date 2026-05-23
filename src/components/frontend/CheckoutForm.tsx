@@ -70,7 +70,17 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     const handleCrateOrder = async () => {
         try {
             setSubmitting(true);
-            let response = await apiPost('/orders', {
+            let response = await apiPost('/my/phones/check', {
+                iddcode: shipping.iddcode,
+                phone_number: shipping.phone_number,
+            });
+
+            if (response.data !== true) {
+                setIsVerifyOpen(true);
+                return;
+            }
+
+            response = await apiPost('/orders', {
                 shipping_method: shippingMethod,
                 shipping_zone_id: shippingZoneId,
                 payment_method: paymentMethod,
@@ -90,11 +100,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                 await onPlaced?.(order_id);
             }
         } catch (e: any) {
-            if (e.status === 'shipping.phone_number.unverified') {
-                setIsVerifyOpen(true);
-            } else {
-                toast.error(e.message);
-            }
+            toast.error(e.message);
         } finally {
             setSubmitting(false);
         }

@@ -40,6 +40,7 @@ interface CashierTransactionType {
     net_total: string;
     status: string;
     created_at: string;
+    links?: any;
 }
 
 export default function CashierTransactionsPage() {
@@ -56,7 +57,7 @@ export default function CashierTransactionsPage() {
     const [dateRange, setDateRange] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null] | null>(null);
 
     const handlePrint = (record: CashierTransactionType) => {
-        window.open(`/admin/cashier/transactions/${record.id}/print`, '_blank');
+        window.open(record.links?.invoice?.href, '_blank');
     };
 
     const columns: ColumnsType<CashierTransactionType> = [
