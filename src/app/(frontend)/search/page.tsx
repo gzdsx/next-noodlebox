@@ -1,5 +1,6 @@
 import {apiGet} from "@/lib/api";
 import ProductCard from "@/components/frontend/ProductCard";
+import {Metadata} from "next";
 
 const searchProducts = async (q: string) => {
     try {
@@ -8,6 +9,10 @@ const searchProducts = async (q: string) => {
     } catch {
         return [];
     }
+}
+
+export const metadata: Metadata = {
+    title: 'Search Results - The Best Chinese Takeaway In Drogheda',
 }
 
 export default async function Page({searchParams}: { searchParams: { q: string } }) {

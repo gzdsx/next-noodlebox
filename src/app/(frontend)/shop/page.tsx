@@ -6,6 +6,7 @@ import HeroCarousel, {Slide} from "@/app/(frontend)/shop/HeroCarousel";
 import CategoryClient from "@/app/(frontend)/shop/CategoryClient";
 import {ProductClientPC} from "@/app/(frontend)/shop/ProductClientPC";
 import ProductClientMobile from "@/app/(frontend)/shop/ProductClientMobile";
+import {Metadata} from "next";
 
 
 const getProducts = async (): Promise<Category[]> => {
@@ -25,6 +26,10 @@ const getSlides = async () => {
         console.log('获取轮播图失败:', e);
         return [];
     }
+}
+
+export const metadata: Metadata = {
+    title: 'Drogheda Shop - The Best Chinese Takeaway In Drogheda',
 }
 
 export default async function ProductsPage() {

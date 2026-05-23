@@ -24,7 +24,7 @@ const getConfig = async () => {
     }
 }
 
-export async function generateMetadata() {
+export async function generateMetadata():Promise<Metadata> {
     try {
         const config = await getConfig();
         return {

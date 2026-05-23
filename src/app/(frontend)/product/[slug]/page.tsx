@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import {ProductInfoClient} from "@/components/frontend/ProductInfoClient";
 import {Product} from "@/types";
+import {Metadata} from "next";
 
 async function fetchProduct(id: string): Promise<Product | null> {
     try {
@@ -21,6 +22,16 @@ async function fetchProduct(id: string): Promise<Product | null> {
         return null;
     }
 }
+
+export async function generateMetadata({params}: { params: { slug: string } }): Promise<Metadata> {
+    const {slug} = await params;
+    const product = await fetchProduct(slug);
+    return {
+        title: product?.title + ' - The Best Chinese Takeaway In Drogheda',
+        description: product?.description,
+    }
+}
+
 
 export default async function ProductDetailPage({params}: { params: Promise<{ slug: string }> }) {
     const {slug} = await params;

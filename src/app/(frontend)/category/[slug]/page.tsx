@@ -1,5 +1,6 @@
 import {apiGet} from "@/lib/api";
 import PageClient from "./PageClient";
+import {Metadata} from "next";
 
 const fetchCategory = async (slug: string) => {
     try {
@@ -18,6 +19,14 @@ const fetchProducts = async (categoryId: number) => {
     } catch (e) {
         console.log('获取产品失败:', e);
         return [];
+    }
+}
+
+export async function generateMetadata({params}: {params: {slug: string}}):Promise<Metadata> {
+    const {slug} = await params;
+    const category = await fetchCategory(slug);
+    return {
+        title: `${category?.name} - The Best Chinese Takeaway In Drogheda`,
     }
 }
 

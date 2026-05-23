@@ -1,4 +1,9 @@
 import OrderHistoryList from '@/components/frontend/OrderHistoryList';
+import {Metadata} from "next";
+
+export const metadata: Metadata = {
+    title: 'My Orders - The Best Chinese Takeaway In Drogheda',
+}
 
 export default async function UserOrdersPage() {
 

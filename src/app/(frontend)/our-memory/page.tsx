@@ -1,6 +1,7 @@
 import {apiGet} from "@/lib/api";
 import PageClient from "./PageClient";
 import "yet-another-react-lightbox/styles.css";
+import {Metadata} from "next";
 
 const getImages = async (page: number) => {
     try {
@@ -12,6 +13,12 @@ const getImages = async (page: number) => {
     } catch (e) {
         console.log('获取店铺图片失败:', e);
         return {total: 0, items: []};
+    }
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+    return {
+        title: `Our Memory - The Best Chinese Takeaway In Drogheda`,
     }
 }
 

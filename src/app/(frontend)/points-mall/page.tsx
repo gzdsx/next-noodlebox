@@ -1,6 +1,7 @@
 import {Suspense} from "react";
 import PageClient from "./PageClient";
 import {apiGet} from "@/lib/api";
+import {Metadata} from "next";
 
 const getCategories = async () => {
     try {
@@ -9,6 +10,12 @@ const getCategories = async () => {
     } catch (e) {
         console.error(e);
         return [];
+    }
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+    return {
+        title: 'Points Mall - The Best Chinese Takeaway In Drogheda',
     }
 }
 
