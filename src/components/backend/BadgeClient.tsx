@@ -26,7 +26,7 @@ import {useTranslations} from '@/contexts/BackendLocaleContext';
 import {useMediaLibrary} from "@/contexts/BackendAppContext";
 
 interface BadgeType {
-    id: number;
+    id?: number;
     icon: string;
     name: string;
     created_at?: string;
@@ -37,8 +37,7 @@ const BadgeClient = ({onSelect}: { onSelect?: (badges: BadgeType[]) => void }) =
     const [total, setTotal] = useState<number>(0);
     const [loading, setLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
-    const [editingItem, setEditingItem] = useState<BadgeType | null>(null);
-    const [form] = Form.useForm();
+    const [editingItem, setEditingItem] = useState<BadgeType>({name: '', icon: ''});
     const [submitting, setSubmitting] = useState(false);
     const [offset, setOffset] = useState<number>(0);
     const [selectedItems, setSelectedItems] = useState<React.Key[]>([]);
@@ -70,19 +69,14 @@ const BadgeClient = ({onSelect}: { onSelect?: (badges: BadgeType[]) => void }) =
     }, [offset]);
 
     const handleAdd = () => {
-        setEditingItem(null);
+        setEditingItem({name: '', icon: ''});
         setIconUrl('');
-        form.resetFields();
         setModalVisible(true);
     };
 
     const handleEdit = (record: BadgeType) => {
         setEditingItem(record);
         setIconUrl(record.icon || '');
-        form.setFieldsValue({
-            icon: record.icon,
-            name: record.name,
-        });
         setModalVisible(true);
     };
 
@@ -92,7 +86,7 @@ const BadgeClient = ({onSelect}: { onSelect?: (badges: BadgeType[]) => void }) =
             onSelect: (medias) => {
                 const url = medias[0].src || medias[0].url || '';
                 setIconUrl(url);
-                form.setFieldValue('icon', url);
+                setEditingItem((prevState: any) => ({...prevState, icon: url}))
             },
         });
     };
@@ -126,13 +120,12 @@ const BadgeClient = ({onSelect}: { onSelect?: (badges: BadgeType[]) => void }) =
 
     const handleSave = async () => {
         try {
-            const values = await form.validateFields();
             setSubmitting(true);
-            if (editingItem) {
-                await apiPut(`/badges/${editingItem.id}`, values);
+            if (editingItem?.id) {
+                await apiPut(`/badges/${editingItem.id}`, editingItem);
                 message.success('Update successful');
             } else {
-                await apiPost('/badges', values);
+                await apiPost('/badges', editingItem);
                 message.success('Create successful');
             }
             setModalVisible(false);
@@ -193,7 +186,7 @@ const BadgeClient = ({onSelect}: { onSelect?: (badges: BadgeType[]) => void }) =
                     </Button>
                     <Popconfirm
                         title="Are you sure you want to delete this badge?"
-                        onConfirm={() => handleDelete(record.id)}
+                        onConfirm={() => handleDelete(record.id || 0)}
                         okText={tc('confirm')}
                         cancelText={tc('cancel')}
                     >
@@ -229,7 +222,7 @@ const BadgeClient = ({onSelect}: { onSelect?: (badges: BadgeType[]) => void }) =
                     columns={columns}
                     loading={loading}
                     pagination={false}
-                    rowKey={record => record.id}
+                    rowKey={record => (record.id || 0)}
                 />
 
                 <div className={'flex justify-between items-center mt-4'}>
@@ -276,7 +269,7 @@ const BadgeClient = ({onSelect}: { onSelect?: (badges: BadgeType[]) => void }) =
                 cancelText={tc('cancel')}
                 destroyOnHidden
             >
-                <Form form={form} layout="vertical" style={{marginTop: 16}}>
+                <Form layout="vertical" style={{marginTop: 16}}>
                     <Form.Item
                         name="icon"
                         label="Icon"
@@ -306,6 +299,7 @@ const BadgeClient = ({onSelect}: { onSelect?: (badges: BadgeType[]) => void }) =
                         name="name"
                         label="Name"
                         rules={[{required: true, message: 'Please enter badge name'}]}
+                        initialValue={editingItem?.name}
                     >
                         <Input placeholder="Enter badge name"/>
                     </Form.Item>

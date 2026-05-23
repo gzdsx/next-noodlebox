@@ -46,8 +46,10 @@ export default function HeaderClient() {
     const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
     const [mobileSubmenu, setMobileSubmenu] = useState<string | null>(null);
 
-    const normalStyle = `hover:bg-gray-100 hover:text-gray-900`;
-    const scrolledStyle = `hover:bg-white/10 hover:text-white`;
+    const normalStyle = `hover:bg-black/90 hover:text-gray-100`;
+    const scrolledStyle = `hover:bg-red-500/90 hover:text-white`;
+    const submenuClass = `absolute top-full left-0 bg-black/90 rounded-sm shadow-xl py-2 min-w-60 z-50`;
+    const submenuLinkClass = `flex items-center gap-2 px-4 py-2 text-gray-200 hover:bg-red-500/90 text-sm`;
 
     const routeLogin = () => {
         router.push('/auth/login?redirect=' + encodeURIComponent(window.location.origin + window.location.pathname));
@@ -70,10 +72,10 @@ export default function HeaderClient() {
             {/* Desktop Header */}
             <header
                 className={`fixed w-full top-0 z-50 transition-colors duration-300 ${scrolled ? 'bg-crimson text-gray-200' : 'text-gray-100'}`}>
-                <div className="w-full mx-auto px-4 h-16 flex items-center justify-between gap-4">
+                <div className="w-full mx-auto px-4 h-20 flex items-center justify-between gap-4">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2 shrink-0">
-                        <img src="/logo.png" alt="Noodle Box" style={{height: 45}}/>
+                        <img src="/logo.png" alt="Noodle Box" style={{height: 60}}/>
                     </Link>
 
                     {/* Nav Links - Desktop */}
@@ -92,15 +94,12 @@ export default function HeaderClient() {
                                              className={`transition-transform ${openSubmenu === 'shop' ? 'rotate-180' : ''}`}/>
                             </button>
                             {openSubmenu === 'shop' && (
-                                <div
-                                    className="absolute top-full left-0 bg-white rounded-lg shadow-xl border border-gray-100 py-2 min-w-50 z-50">
-                                    <Link href="/shop"
-                                          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50 text-sm">
+                                <div className={submenuClass}>
+                                    <Link href="/shop" className={submenuLinkClass}>
                                         <ShoppingCart size={14}/>
                                         DROGHEDA SHOP
                                     </Link>
-                                    <Link href="/points-mall"
-                                          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50 text-sm">
+                                    <Link href="/points-mall" className={submenuLinkClass}>
                                         <Gift size={14}/>
                                         POINTS MALL
                                     </Link>
@@ -121,11 +120,9 @@ export default function HeaderClient() {
                                              className={`transition-transform ${openSubmenu === 'food' ? 'rotate-180' : ''}`}/>
                             </button>
                             {openSubmenu === 'food' && (
-                                <div
-                                    className="absolute top-full left-0 bg-white rounded-lg shadow-xl border border-gray-100 py-2 min-w-65 max-h-100 overflow-y-auto z-50">
+                                <div className={submenuClass}>
                                     {foodCategories.map(cat => (
-                                        <Link key={cat.slug} href={`/category/${cat.slug}`}
-                                              className="block px-4 py-2 text-gray-700 hover:bg-gray-50 text-sm">
+                                        <Link key={cat.slug} href={`/category/${cat.slug}`} className={submenuLinkClass}>
                                             {cat.name}
                                         </Link>
                                     ))}

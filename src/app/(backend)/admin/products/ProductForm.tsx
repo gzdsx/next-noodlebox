@@ -37,6 +37,7 @@ interface MetasType {
     badges: string[];
     variations: ProductVariant[];
     additional_options: ProductVariantOption[];
+    points: number;
 }
 
 interface ProductType {
@@ -114,7 +115,8 @@ export const ProductForm = ({
         purchase_via_points: '0',
         badges: [],
         variations: [],
-        additional_options: []
+        additional_options: [],
+        points: 0,
     });
 
     // Intercept form submit to include skus & model_type
@@ -129,10 +131,12 @@ export const ProductForm = ({
 
     useEffect(() => {
         (function () {
-            setMetas(p => ((initialValues.metas || []).reduce((acc, cur) => ({
-                ...acc,
-                [cur.meta_key]: cur.meta_value
-            }), p)));
+            setMetas(p => ((initialValues.metas || []).reduce((acc, cur) => {
+                return {
+                    ...acc,
+                    [cur.meta_key]: cur.meta_value
+                };
+            }, p)));
         })()
     }, [initialValues]);
 
@@ -180,7 +184,7 @@ export const ProductForm = ({
                         label={t('description')}
                         name="description"
                     >
-                        <TextArea rows={3} placeholder={t('descriptionPlaceholder')}/>
+                        <RichTextEditor placeholder={t('descriptionPlaceholder')} height={120}/>
                     </Form.Item>
 
                     <Row gutter={16}>
@@ -203,6 +207,7 @@ export const ProductForm = ({
                             <Form.Item label={t('pointsPrice')}>
                                 <Input
                                     style={{width: 200}}
+                                    value={metas.purchase_via_points}
                                     onChange={(e) => {
                                         setMetas({...metas, purchase_via_points: e.target.value})
                                     }}
@@ -211,7 +216,7 @@ export const ProductForm = ({
                         </Col>
                         <Col>
                             <Form.Item label={t('badge')}>
-                                <ProductBageInput initialValues={metas.badges || []} onChange={(value) => {
+                                <ProductBageInput badges={metas.badges || []} onChange={(value) => {
                                     setMetas({...metas, badges: value})
                                 }}/>
                             </Form.Item>
@@ -284,11 +289,15 @@ export const ProductForm = ({
                         <InputNumber min={0} style={{width: '100%'}} placeholder="0"/>
                     </Form.Item>
 
-                    <Form.Item
-                        label={t('points')}
-                        name="points"
-                    >
-                        <InputNumber min={0} style={{width: '100%'}} placeholder="0"/>
+                    <Form.Item label={t('points')}>
+                        <InputNumber
+                            value={metas.points} min={0}
+                            style={{width: '100%'}}
+                            placeholder="0"
+                            onChange={(value) => {
+                                setMetas({...metas, points: value || 0})
+                            }}
+                        />
                     </Form.Item>
 
                     <Form.Item

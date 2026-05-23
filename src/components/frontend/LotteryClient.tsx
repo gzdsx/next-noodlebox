@@ -41,7 +41,7 @@ const LotteryClient = (props: { isOpen?: boolean, onClose?: () => void }) => {
                         <img src={settings.float_icon} alt="" className={'w-[64px] h-[64px]'}
                              onClick={() => setIsOpen(true)}/>
                         <span
-                            className={'absolute rounded-full leading-3 p-2 -top-4 right-0 bg-red-500 text-white text-center'}>{currentUser?.points || 0}</span>
+                            className={'absolute rounded-full leading-3 p-2 -top-4 right-0 bg-red-500 text-[12px] text-white text-center'}>{currentUser?.points || 0}</span>
                     </div>
                 )
             }

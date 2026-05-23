@@ -11,6 +11,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import CustomPagination from "@/components/frontend/CustomPagination";
+import ReferrLinkClient from "@/components/frontend/ReferrLinkClient";
 
 export default function Page() {
     const [pointsData, setPointsData] = useState<any>({
@@ -62,6 +63,7 @@ export default function Page() {
             <h1 className="text-2xl font-bold mb-6">My Points</h1>
             <div className={'bg-black/80 p-4 rounded-md text-[#f19e39] text-[18px]'}>
                 <div dangerouslySetInnerHTML={{__html: pointsData.referral_link_description}}></div>
+                <ReferrLinkClient link={pointsData.referralLink}/>
             </div>
 
             <h1 className="text-2xl font-bold my-6">Points Records</h1>

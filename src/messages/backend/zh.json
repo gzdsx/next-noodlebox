@@ -337,6 +337,7 @@
 		"tillPasswordPlaceholder": "请输入 Till机密码",
 		"discountAuthPassword": "打折授权密码",
 		"discountAuthPasswordPlaceholder": "请输入打折授权密码",
+		"CashierReportPassword": "收银台密码",
 		"holidayWageMultiplier": "节假日工资倍数",
 		"holidayWageMultiplierPlaceholder": "请输入节假日工资倍数",
 		"orderSettings": "订单设置",

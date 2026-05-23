@@ -1,7 +1,7 @@
 'use client';
 
 import React, {createContext, useContext, useState, useCallback, useRef, useLayoutEffect} from 'react';
-import {App} from "antd";
+import {App, Spin} from "antd";
 import {Order as OrderType} from "@/types";
 import MediaLibrary, {MediaType} from "@/components/backend/MediaLibrary";
 import ModalOrderProcessor from "@/components/backend/ModalOrderProcessor";
@@ -30,6 +30,10 @@ interface BackendAppContextType {
     orderProcessor: {
         open: (order: OrderType, callback?: (order: OrderType) => void) => void;
         close: () => void;
+    },
+    spinner: {
+        show: (description?: string) => void;
+        hide: () => void;
     }
 }
 
@@ -41,6 +45,9 @@ export function BackendAppProvider({children}: { children: React.ReactNode }) {
     const [administrator, setAdministrator] = useState<AdminUser | null>(null);
     const [currentOrder, setCurrentOrder] = useState<OrderType | null>(null);
     const [orderProcessorVisible, setOrderProcessorVisible] = useState(false);
+
+    const [isSpinnerShow, setIsSpinnerShow] = useState(false);
+    const [spinnerDescription, setSpinnerDescription] = useState<string | undefined>(undefined);
 
     const orderProcessorCallbackRef = useRef<((order: OrderType) => void) | undefined>(undefined);
 
@@ -79,6 +86,16 @@ export function BackendAppProvider({children}: { children: React.ReactNode }) {
         orderProcessorCallbackRef.current = undefined;
     }
 
+    const showSpinner = useCallback((description?: string) => {
+        setIsSpinnerShow(true);
+        setSpinnerDescription(description);
+    }, []);
+
+    const hideSpinner = useCallback(() => {
+        setIsSpinnerShow(false);
+        setSpinnerDescription(undefined);
+    }, []);
+
     return (
         <BackendAppContext.Provider value={{
             mediaLibrary: {
@@ -89,6 +106,10 @@ export function BackendAppProvider({children}: { children: React.ReactNode }) {
             orderProcessor: {
                 open: openOrderProcessor,
                 close: closeOrderProcessor,
+            },
+            spinner: {
+                show: showSpinner,
+                hide: hideSpinner,
             }
         }}>
             {children}
@@ -109,6 +130,9 @@ export function BackendAppProvider({children}: { children: React.ReactNode }) {
                         onClose={closeOrderProcessor}
                     />
                 )
+            }
+            {
+                isSpinnerShow && <Spin fullscreen={true} description={spinnerDescription}/>
             }
         </BackendAppContext.Provider>
     )
@@ -146,6 +170,11 @@ export function useModal() {
 export function useNotification() {
     const {notification} = App.useApp();
     return notification;
+}
+
+export function useSpinner() {
+    const {spinner} = useBackendApp();
+    return spinner;
 }
 
 export function useOrderProcessor() {

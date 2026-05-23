@@ -3,7 +3,7 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {Button, Card, Layout, Spin, Tag} from "antd";
 import {apiGet, apiPost} from "@/lib/backendApi";
-import {useMessage, useModal} from "@/contexts/BackendAppContext";
+import {useMessage, useModal, useSpinner} from "@/contexts/BackendAppContext";
 import SortableProvider from "@/components/common/SortableProvider";
 import {useSortable} from "@dnd-kit/react/sortable";
 import dayjs from "dayjs";
@@ -39,6 +39,7 @@ function SortableCard({id, index, children, checked = false, onClick}: {
 
 export default function Page() {
     const modal = useModal();
+    const spinner = useSpinner();
     const message = useMessage();
     const router = useRouter();
     const [drivers, setDrivers] = useState<any[]>([]);
@@ -92,7 +93,7 @@ export default function Page() {
             return;
         }
 
-        setLoading(true);
+        spinner.show();
         apiPost(`/orders/allocate`, {
             deliveryer_id: driver.id,
             orders: driver.orders
@@ -104,7 +105,7 @@ export default function Page() {
         }).catch(reason => {
             message.error(reason.message);
         }).finally(() => {
-            setLoading(false);
+            spinner.hide();
         })
     }
 
@@ -162,7 +163,7 @@ export default function Page() {
                 />
                 <h2 style={{fontSize: 24, fontWeight: 'bold'}}>Order Allocation</h2>
             </div>
-            <Card>
+            <Card loading={loading}>
                 <Layout style={{backgroundColor: '#fff'}}>
                     <Sider style={{backgroundColor: '#fff'}} width={205}>
                         <div className={'flex flex-col gap-2'}>
@@ -239,11 +240,6 @@ export default function Page() {
                     </Content>
                 </Layout>
             </Card>
-            {
-                loading && (
-                    <Spin fullscreen={true}/>
-                )
-            }
         </>
     )
 }

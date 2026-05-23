@@ -100,7 +100,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         }
     }
 
-    const handleApprove = async (data: any, actions: any) => {
+    const handleApprove = async (data: any) => {
         try {
             await apiPost(`/orders/${data.orderID}/capture-paypal-order`);
         } catch (e: any) {

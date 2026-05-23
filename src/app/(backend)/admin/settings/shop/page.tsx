@@ -69,6 +69,7 @@ export default function ShopSettingsPage() {
                 till_password: data.till_password,
                 discount_password: data.discount_password,
                 holiday_pay_rate: data.holiday_pay_rate,
+                casher_report_password: data.casher_report_password
             });
 
             if (data.float_image) {
@@ -371,6 +372,9 @@ export default function ShopSettingsPage() {
                             </Form.Item>
                             <Form.Item label={t('discountAuthPassword')} name="discount_password">
                                 <Input.Password placeholder={t('discountAuthPasswordPlaceholder')} className="w-60!"/>
+                            </Form.Item>
+                            <Form.Item label={t('CashierReportPassword')} name="casher_report_password">
+                                <Input.Password className="w-60!"/>
                             </Form.Item>
                             <Form.Item label={t('holidayWageMultiplier')} name="holiday_pay_rate">
                                 <Input placeholder={t('holidayWageMultiplierPlaceholder')} className="w-60!"/>

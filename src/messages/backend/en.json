@@ -329,6 +329,7 @@
 		"tillPasswordPlaceholder": "Enter Till password",
 		"discountAuthPassword": "Discount Auth Password",
 		"discountAuthPasswordPlaceholder": "Enter discount authorization password",
+		"CashierReportPassword": "Cashier Report Password",
 		"holidayWageMultiplier": "Holiday Wage Multiplier",
 		"holidayWageMultiplierPlaceholder": "Enter holiday wage multiplier",
 		"orderSettings": "Order Settings",

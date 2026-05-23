@@ -19,6 +19,21 @@ import {capitalize} from "@/lib/utils";
 
 const {Column} = Table;
 
+const CreatedViaMap: Record<string, string> = {
+    'app': 'App',
+    'web': 'WEB',
+    'pos': 'POS',
+    'ai': 'AI'
+}
+
+const statusColorMap: Record<string, string> = {
+    'processing': 'processing',
+    'completed': 'success',
+    'pending': 'warning',
+    'cancelled': 'error',
+};
+
+
 export default function AdminDashboard() {
     const {t: tc} = useTranslations('common');
     const {t} = useTranslations('dashboard');
@@ -30,25 +45,11 @@ export default function AdminDashboard() {
         todaySales: 0,
         todayVisitors: 0,
         conversionRate: 4.2,
-        monthSales:0,
-        monthUsers:0,
-        activeUsers:0,
+        monthSales: 0,
+        monthUsers: 0,
+        activeUsers: 0,
     });
-
-    const categoryData = [
-        {name: t('categoryDigital'), value: 38},
-        {name: t('categoryClothing'), value: 24},
-        {name: t('categoryHome'), value: 18},
-        {name: t('categoryFood'), value: 12},
-        {name: t('categoryBeauty'), value: 8},
-    ];
-
-    const statusColorMap: Record<string, string> = {
-        'processing': 'processing',
-        'completed': 'success',
-        'pending': 'warning',
-        'cancelled': 'error',
-    };
+    const [soldAnalytics, setSoldAnalytics] = useState<{ name: string, percent: number }[]>([]);
 
     const fetchOrders = async () => {
         apiGet(`/orders`, {limit: 5}).then(res => {
@@ -68,10 +69,23 @@ export default function AdminDashboard() {
         });
     }
 
+    const fetchSoldAnalytics = () => {
+        apiGet(`/dashboard/sold-analysis`).then(response => {
+            const {total, items} = response.data;
+            setSoldAnalytics(
+                items.map((item: any) => ({
+                    name: CreatedViaMap[item.name],
+                    percent: (item.value / total * 100).toFixed(0)
+                }))
+            );
+        });
+    }
+
     useEffect(() => {
         fetchOrders();
         fetchProducts();
         fetchStats();
+        fetchSoldAnalytics();
     }, []);
 
     return (
@@ -234,13 +248,13 @@ export default function AdminDashboard() {
             <Row gutter={[16, 16]} style={{marginTop: 16}}>
                 <Col xs={24} lg={12}>
                     <Card title={t('categorySalesRatio')}>
-                        {categoryData.map((item, index) => (
+                        {soldAnalytics.map((item, index) => (
                             <div key={index} style={{marginBottom: 16}}>
                                 <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 4}}>
                                     <span>{item.name}</span>
-                                    <span>{item.value}%</span>
+                                    <span>{item.percent}%</span>
                                 </div>
-                                <Progress percent={item.value} strokeColor="#ff4d4f" showInfo={false}/>
+                                <Progress percent={item.percent} strokeColor="#ff4d4f" showInfo={false}/>
                             </div>
                         ))}
                     </Card>

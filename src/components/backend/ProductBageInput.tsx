@@ -1,6 +1,6 @@
+import React, {useState} from "react";
 import SortableProvider from "@/components/common/SortableProvider";
 import {useSortable} from "@dnd-kit/react/sortable";
-import React, {useEffect, useState} from "react";
 import {CloseOutlined, PlusOutlined} from "@ant-design/icons";
 import ModalBadge from "@/components/backend/ModalBadge";
 import {arrayMove} from "@dnd-kit/sortable";
@@ -23,22 +23,17 @@ const SortableBage = ({id, index, children, className}: {
     );
 }
 
-const ProductBageInput = ({onChange, initialValues = []}: {
-    initialValues: string[],
+const ProductBageInput = ({onChange, badges = []}: {
+    badges: string[],
     onChange: (values: string[]) => void
 }) => {
-    const [badges, setBadges] = useState(initialValues);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    useEffect(() => {
-        onChange?.(badges);
-    }, [badges]);
 
     return (
         <>
             <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 8}}>
                 <SortableProvider onSortEnd={(oldIndex, newIndex) => {
-                    setBadges(prev => arrayMove(prev, oldIndex, newIndex));
+                    onChange?.(arrayMove(badges, oldIndex, newIndex));
                 }}>
                     {
                         badges.map((badge, index) => (
@@ -62,7 +57,7 @@ const ProductBageInput = ({onChange, initialValues = []}: {
                                     color: '#fff'
                                 }}>
                                     <CloseOutlined color={'#fff'} size={20} onClick={() => {
-                                        setBadges(prev => prev.filter((_, i) => i !== index));
+                                        onChange?.(badges.filter((_, i) => i !== index));
                                     }}/>
                                 </div>
                             </SortableBage>
@@ -95,7 +90,7 @@ const ProductBageInput = ({onChange, initialValues = []}: {
                 isOpen={isDialogOpen}
                 onClose={() => setIsDialogOpen(false)}
                 onConfirm={(newBagdes) => {
-                    setBadges(prev => [...prev, ...newBagdes.map((b) => b.icon)]);
+                    onChange?.([...badges, ...newBagdes.map((b) => b.icon)]);
                     setIsDialogOpen(false);
                 }}
             />
