@@ -36,7 +36,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 const CART_STORAGE_KEY = 'cart_items';
 
 export function CartProvider({children}: { children: ReactNode }) {
-    const sesstion = useSession();
+    const session = useSession();
     const {t} = useTranslations('ecommerce');
     const [items, setItems] = useState<CartItem[]>([]);
     const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
@@ -53,7 +53,7 @@ export function CartProvider({children}: { children: ReactNode }) {
     }
 
     const fetchItems = async () => {
-        if (sesstion.status === 'authenticated') {
+        if (session.status === 'authenticated') {
             try {
                 const items = await loadCarts();
                 setItems([...items]);
@@ -68,7 +68,7 @@ export function CartProvider({children}: { children: ReactNode }) {
         (async () => {
             await fetchItems();
         })()
-    }, [sesstion]);
+    }, [session]);
 
     // Sync to localStorage on change
     useEffect(() => {
@@ -76,18 +76,22 @@ export function CartProvider({children}: { children: ReactNode }) {
     }, [items]);
 
     const addItem = async (newItem: CartItem) => {
-        if (sesstion.status === 'authenticated') {
-            await addCartItem({
-                product_id: newItem.product_id,
-                product_type: newItem.product_type,
-                price: newItem.price,
-                quantity: newItem.quantity,
-                purchase_via: newItem.purchase_via,
-                options: newItem.options,
-                additional_options: newItem.additional_options,
-            });
-            await fetchItems();
-            toast.success(t('product.addToCart') + ' ✓');
+        if (session.status === 'authenticated') {
+            try {
+                await addCartItem({
+                    product_id: newItem.product_id,
+                    product_type: newItem.product_type,
+                    price: newItem.price,
+                    quantity: newItem.quantity,
+                    purchase_via: newItem.purchase_via,
+                    options: newItem.options,
+                    additional_options: newItem.additional_options,
+                });
+                await fetchItems();
+                toast.success(t('product.addToCart') + ' ✓');
+            } catch (e: any) {
+                toast.error(e.message);
+            }
         } else {
             window.location.href = '/auth/login?redirect=' + window.location.origin + window.location.pathname;
         }

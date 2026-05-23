@@ -1,7 +1,7 @@
 import {Metadata} from "next";
 
 export const metadata: Metadata = {
-    title: 'Search Results - The Best Chinese Takeaway In Drogheda',
+    title: 'About Us - The Best Chinese Takeaway In Drogheda',
 }
 
 export default function Page() {
