@@ -157,20 +157,20 @@ export default function Page() {
                         </div>
                     ))}
                 </div>
-                {
-                    selectedItems.length > 0 && (
-                        <div className={'flex justify-center items-center mt-4'}>
-                            {
-                                filterParams.serving_status === 'setout' ? (
-                                    <Button variant={'solid'} color={'red'} onClick={restoreOrders}>Restore</Button>
-                                ) : (
-                                    <Button variant={'solid'} color={'green'} onClick={processOrders}>Done</Button>
-                                )
-                            }
-                        </div>
-                    )
-                }
             </Card>
+            {
+                selectedItems.length > 0 && (
+                    <div className={'flex justify-center items-center mt-4 fixed bottom-6 left-0 right-0'}>
+                        {
+                            filterParams.serving_status === 'setout' ? (
+                                <Button style={{width: 100}} variant={'solid'} color={'red'} onClick={restoreOrders}>Restore</Button>
+                            ) : (
+                                <Button style={{width: 100}} variant={'solid'} color={'green'} onClick={processOrders}>Done</Button>
+                            )
+                        }
+                    </div>
+                )
+            }
             {
                 submiting && (
                     <Spin fullscreen={true} size={'large'}/>

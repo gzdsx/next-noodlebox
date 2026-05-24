@@ -74,73 +74,63 @@ export default function CashierTransactionsPage() {
             title: t('float'),
             dataIndex: 'actual_balance',
             key: 'actual_balance',
-            width: 100,
         },
         {
             title: t('pm'),
             dataIndex: 'driver_pm',
             key: 'driver_pm',
-            width: 80,
         },
         {
             title: t('shippingTotal'),
             dataIndex: 'shipping_total',
-            key: 'shipping_total',
-            width: 120,
         },
         {
             title: t('onlineTotal'),
             dataIndex: 'online_total',
             key: 'online_total',
-            width: 110,
         },
         {
             title: t('cardTotal'),
             dataIndex: 'card_total',
             key: 'card_total',
-            width: 100,
         },
         {
             title: t('cashTotal'),
             dataIndex: 'cash_total',
             key: 'cash_total',
-            width: 100,
         },
         {
             title: t('costTotal'),
             dataIndex: 'cost_total',
             key: 'cost_total',
-            width: 100,
         },
         {
             title: t('refundTotal'),
             dataIndex: 'refund_total',
             key: 'refund_total',
-            width: 100,
         },
         {
             title: t('handOnTotal'),
             dataIndex: 'actual_total',
             key: 'actual_total',
-            width: 120,
         },
         {
             title: t('total'),
             dataIndex: 'total',
             key: 'total',
-            width: 80,
+            fixed: 'right',
         },
         {
             title: t('netTotal'),
             dataIndex: 'net_total',
             key: 'net_total',
-            width: 100,
+            fixed: 'right',
         },
         {
             title: t('status'),
             dataIndex: 'status',
             key: 'status',
-            width: 100,
+            fixed: 'right',
             render: (status: string) => {
                 const colorMap: Record<string, string> = {
                     open: 'processing',
@@ -154,13 +144,15 @@ export default function CashierTransactionsPage() {
             title: tc('createdAt'),
             dataIndex: 'created_at',
             key: 'created_at',
-            width: 160,
+            width: 140,
+            fixed: 'right',
         },
         {
             title: tc('actions'),
             key: 'action',
             width: 100,
             align: 'end',
+            fixed: 'right',
             render: (_, record) => (
                 <Space size="small">
                     <Button

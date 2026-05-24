@@ -197,10 +197,10 @@ const ProductVariantInput = ({initalValues = [], onChange}: {
                                                         onChange={e => {
                                                             setVariants(prev => prev.map((v, i) => i === index ? {
                                                                 ...v,
-                                                                options: v.options.map((o, i) => i === idx ? {
+                                                                options: v.options.map((o, i) => ({
                                                                     ...o,
-                                                                    selected: e.target.checked
-                                                                } : o)
+                                                                    selected: i === idx ? e.target.checked : false
+                                                                }))
                                                             } : v));
                                                         }}
                                                     />

@@ -86,41 +86,42 @@ export default function Page() {
                 </div>
             </div>
             <Card>
-                <div className={'grid grid-cols-2 md:grid-cols-4 gap-4'}>
-                    {
-                        orders.map((order: any) => (
-                            <div
-                                key={`order-${order.id}`}
-                                className={'border border-gray-200 rounded-md p-2 flex flex-col gap-y-1 cursor-pointer'}
-                                onClick={() => processor.open(order)}
-                            >
-                                <div className={'grid grid-cols-[80px_1fr] gap-1'}>
-                                    <div className={'font-bold'}>OrderN</div>
-                                    <div className={'font-bold'}>{order.short_code}</div>
-                                </div>
-                                <div className={'grid grid-cols-[80px_1fr] gap-1'}>
-                                    <div className={'font-bold'}>OrderD</div>
-                                    <div>{dayjs(order.created_at).format('MM/DD/YY HH:mm')}</div>
-                                </div>
-                                <div className={'grid grid-cols-[80px_1fr] gap-1'}>
-                                    <div className={'font-bold'}>OrderS</div>
-                                    <div>
-                                        <Tag
-                                            color={order.status === 'completed' ? 'green' : 'yellow'}>{capitalize(order.status)}</Tag>
+                <Spin spinning={loading}>
+                    <div className={'grid grid-cols-2 md:grid-cols-4 gap-4'}>
+                        {
+                            orders.map((order: any) => (
+                                <div
+                                    key={`order-${order.id}`}
+                                    className={'border border-gray-200 rounded-md p-2 flex flex-col gap-y-1 cursor-pointer'}
+                                    onClick={() => processor.open(order, fetchOrders)}
+                                >
+                                    <div className={'grid grid-cols-[80px_1fr] gap-1'}>
+                                        <div className={'font-bold'}>OrderN</div>
+                                        <div className={'font-bold'}>{order.short_code}</div>
+                                    </div>
+                                    <div className={'grid grid-cols-[80px_1fr] gap-1'}>
+                                        <div className={'font-bold'}>OrderD</div>
+                                        <div>{dayjs(order.created_at).format('MM/DD/YY HH:mm')}</div>
+                                    </div>
+                                    <div className={'grid grid-cols-[80px_1fr] gap-1'}>
+                                        <div className={'font-bold'}>OrderS</div>
+                                        <div>
+                                            <Tag
+                                                color={order.status === 'completed' ? 'green' : 'yellow'}>{capitalize(order.status)}</Tag>
+                                        </div>
+                                    </div>
+                                    <div className={'grid grid-cols-[80px_1fr] gap-1'}>
+                                        <div className={'font-bold'}>Customer</div>
+                                        <div>
+                                            <div>{order.shipping.name}</div>
+                                            <div>{order.shipping.phone_number}</div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className={'grid grid-cols-[80px_1fr] gap-1'}>
-                                    <div className={'font-bold'}>Customer</div>
-                                    <div>
-                                        <div>{order.shipping.name}</div>
-                                        <div>{order.shipping.phone_number}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    }
-                </div>
-                {loading && <Spin fullscreen={true}/>}
+                            ))
+                        }
+                    </div>
+                </Spin>
             </Card>
         </>
     )

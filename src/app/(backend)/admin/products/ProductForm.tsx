@@ -21,9 +21,6 @@ import ProductVariantInput from "@/components/backend/ProductVariantInput";
 import ProductAdditionalInput from "@/components/backend/ProductAdditionalInput";
 import {ProductVariant, ProductVariantOption} from "@/components/backend/ProductVariantModal";
 import ProductBageInput from "@/components/backend/ProductBageInput";
-
-const {TextArea} = Input;
-
 interface MetaItem {
     meta_key: string;
     meta_value: string;
@@ -37,7 +34,7 @@ interface MetasType {
     badges: string[];
     variations: ProductVariant[];
     additional_options: ProductVariantOption[];
-    points: number;
+    earn_points: number;
 }
 
 interface ProductType {
@@ -116,7 +113,7 @@ export const ProductForm = ({
         badges: [],
         variations: [],
         additional_options: [],
-        points: 0,
+        earn_points: 0,
     });
 
     // Intercept form submit to include skus & model_type
@@ -291,11 +288,11 @@ export const ProductForm = ({
 
                     <Form.Item label={t('points')}>
                         <InputNumber
-                            value={metas.points} min={0}
+                            value={metas.earn_points} min={0}
                             style={{width: '100%'}}
                             placeholder="0"
                             onChange={(value) => {
-                                setMetas({...metas, points: value || 0})
+                                setMetas({...metas, earn_points: value || 0})
                             }}
                         />
                     </Form.Item>

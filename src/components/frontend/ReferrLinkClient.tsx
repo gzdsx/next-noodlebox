@@ -1,9 +1,10 @@
 'use client';
 
-import {InputGroup, InputGroupAddon, InputGroupInput} from "@/components/ui/input-group";
-import {Button} from "@/components/ui/button";
 import React from "react";
 import {toast} from 'sonner';
+import {ButtonGroup} from "@/components/ui/button-group";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
 
 const ReferrLinkClient = ({link}: { link: string }) => {
     const copyLink = () => {
@@ -22,20 +23,12 @@ const ReferrLinkClient = ({link}: { link: string }) => {
             });
     }
     return (
-        <InputGroup className={'px-0 w-full mt-4'}>
-            <InputGroupInput
-                placeholder=""
-                value={link}
-                readOnly={true}
-            />
-            <InputGroupAddon align={'inline-end'}>
-                <Button
-                    type={'button'}
-                    className={'-mr-1.5 rounded-l-none cursor-pointer'}
-                    onClick={copyLink}
-                >COPY</Button>
-            </InputGroupAddon>
-        </InputGroup>
+        <>
+            <ButtonGroup className={'w-full mt-4'}>
+                <Input value={link} readOnly={true}/>
+                <Button type={'button'} onClick={copyLink}>COPY</Button>
+            </ButtonGroup>
+        </>
     );
 };
 

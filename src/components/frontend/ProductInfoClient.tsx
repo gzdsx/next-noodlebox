@@ -212,7 +212,7 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
                     <div className={'space-y-4'}>
                         <h1 className="text-1xl font-bold mb-2 md:text-2xl">{product.title}</h1>
                         <div className={'bg-[#66beb8] px-4 py-2 rounded text-white'}>
-                            Earn Points : {product.points} Points
+                            Earn Points : {metas.earn_points} Points
                         </div>
                         <div className={'rounded text-[#71f4fd] font-bold text-2xl'}>
                             {usePoints ? totalPoints + ' Noodle Box Points' : `€` + skuData.price.toFixed?.(2)}

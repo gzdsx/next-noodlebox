@@ -23,6 +23,7 @@ import {toast} from "sonner";
 import DialogVerifyPhoneNumber from "@/components/frontend/DialogVerifyPhoneNumber";
 import {ShippingAddress, ShippingZone} from "@/types";
 import {useCurrentUser} from "@/contexts/AppContext";
+import AutoAddressInput from "@/components/frontend/AutoAddressInput";
 
 interface CheckoutFormProps {
     options?: any;
@@ -202,15 +203,19 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                         <>
                             <div className="space-y-2 mt-4">
                                 <Label htmlFor="address">{t('checkout.address')}</Label>
-                                <Textarea
-                                    id="address"
-                                    rows={2}
-                                    placeholder={t('checkout.address')}
-                                    value={shipping.address}
-                                    onChange={(e) => {
-                                        setShipping(prev => ({...prev, address: e.target.value}));
+                                <AutoAddressInput
+                                    defaultValue={shipping.address}
+                                    onChange={(value) => {
+                                        console.log('value:', value);
+                                        setShipping(prev => ({...prev, ...value}));
+
+                                        const address = value.address.toLowerCase();
+                                        options.shipping_zones.forEach((zone: ShippingZone) => {
+                                            if (address.includes(zone.title.toLowerCase())) {
+                                                setShippingZoneId(zone.id);
+                                            }
+                                        });
                                     }}
-                                    required
                                 />
                             </div>
 
