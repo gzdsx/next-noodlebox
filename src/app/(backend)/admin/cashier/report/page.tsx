@@ -4,12 +4,13 @@ import React, {useMemo, useState} from 'react';
 import {
     Card,
     Descriptions,
-    App,
     Spin, Select, Input, Button,
 } from 'antd';
 import {apiGet, apiPost} from "@/lib/backendApi";
 import {useTranslations} from '@/contexts/BackendLocaleContext';
 import Link from "next/link";
+import {useMessage} from "@/contexts/BackendAppContext";
+import {useRouter} from "next/navigation";
 
 interface CashierReportType {
     actual_balance: string;
@@ -29,7 +30,8 @@ interface CashierReportType {
 }
 
 export default function CashierReportPage() {
-    const {message} = App.useApp();
+    const message = useMessage();
+    const router = useRouter();
     const {t} = useTranslations('cashierReport');
     const {t: tc} = useTranslations('common');
 
@@ -85,6 +87,12 @@ export default function CashierReportPage() {
         });
     }
 
+    const handleViewHistory = () => {
+        if (verified) {
+            router.push('/admin/cashier/transactions');
+        }
+    }
+
     const netTotal = useMemo(() => {
         if (!report) return '-';
         const {actual_total, actual_balance, driver_pm} = report
@@ -104,9 +112,7 @@ export default function CashierReportPage() {
         <div>
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16}}>
                 <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('cashierReport')}</h2>
-                <Link href={'/admin/cashier/transactions'}>
-                    <Button type="primary">{t('historyBills')}</Button>
-                </Link>
+                <Button type="primary" onClick={handleViewHistory}>{t('historyBills')}</Button>
             </div>
             <Card>
                 {

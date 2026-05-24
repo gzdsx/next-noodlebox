@@ -13,8 +13,6 @@ const ProductVerticalCard = ({product}: { product: Product }) => {
         return acc;
     }, {}) || {};
 
-    console.log('metas', metas);
-
     return (
         <div key={`product-${product.id}`} className={'flex flex-row gap-4 py-2'}>
             <div className={`w-[36vw] max-w-25`}>

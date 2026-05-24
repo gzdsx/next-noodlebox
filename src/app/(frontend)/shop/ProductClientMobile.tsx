@@ -16,9 +16,11 @@ interface ProductClientMobileProps {
 }
 
 const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
+    const [fixed, setFixed] = useState(false);
     const [currentCategory, setCurrentCategory] = useState(categories[0]);
     const carouselRef = useRef<CarouselApi | null>(null);
     const tabsRef = useRef<Record<string, HTMLDivElement>>({});
+    const fixedTabsRef = useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
         const activeElement = tabsRef.current[currentCategory.id.toString()];
@@ -31,10 +33,27 @@ const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
         }
     }, [currentCategory]);
 
+    React.useEffect(() => {
+        const handleScroll = () => {
+            if (fixedTabsRef.current) {
+                const rect = fixedTabsRef.current.getBoundingClientRect();
+                console.log('rect.top', rect.top);
+                // 💡 核心判断：当占位元素距离顶部 <= 0 时，说明该吸顶了
+                if (rect.top <= 80) {
+                    setFixed(true);
+                } else {
+                    setFixed(false);
+                }
+            }
+        }
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <div className={'w-full block px-4 md:hidden'}>
+        <div className={'w-full block px-4 md:hidden'} ref={fixedTabsRef}>
             <div
-                className={`relative after:h-px after:content-[' '] after:bg-gray-400 after:absolute after:bottom-0 after:left-0 after:w-full after:z-0`}>
+                className={`bg-[#444] after:h-px after:content-[' '] after:bg-gray-400 after:absolute after:bottom-0 after:left-0 after:w-full after:z-0 ${fixed ? 'fixed top-20 left-0 w-full z-100 px-4' : 'relative'}`}>
                 <div
                     style={{'WebkitOverflowScrolling': 'touch'}}
                     className={`flex flex-row flex-nowrap gap-4 items-center overflow-x-auto overflow-y-hidden no-scrollbar z-10`}>
@@ -65,6 +84,13 @@ const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
                     if (api) {
                         api.on('select', () => {
                             setCurrentCategory(categories[api.selectedScrollSnap()]);
+                            if (fixedTabsRef.current) {
+                                const rect = fixedTabsRef.current.getBoundingClientRect();
+                                window.scrollTo({
+                                    top: rect.top - 80,
+                                    behavior: 'smooth'
+                                });
+                            }
                         });
                         carouselRef.current = api;
                     }

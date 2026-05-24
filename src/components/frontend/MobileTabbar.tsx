@@ -32,10 +32,6 @@ export default function MobileTabbar() {
                         className="flex flex-col items-center gap-0.5 text-gray-600 hover:text-crimson">
                     <div className={'relative'}>
                         <Heart size={20}/>
-                        <span
-                            className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
-                                {currentUser?.points||0}
-                        </span>
                     </div>
                     <span className="text-[10px]">Lottery</span>
                 </button>
@@ -53,7 +49,13 @@ export default function MobileTabbar() {
 
                 <Link href="/user/profile"
                       className="flex flex-col items-center gap-0.5 text-gray-600 hover:text-crimson">
-                    <User size={20}/>
+                    <div className={'relative'}>
+                        <User size={20}/>
+                        <span
+                            className="absolute -top-4 -right-full bg-red-500 text-white text-[10px] rounded-full h-4 px-2 flex items-center justify-center">
+                                {currentUser?.points||0}
+                        </span>
+                    </div>
                     <span className="text-[10px]">Mine</span>
                 </Link>
             </div>

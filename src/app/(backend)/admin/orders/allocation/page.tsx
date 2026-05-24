@@ -98,6 +98,7 @@ export default function Page() {
             deliveryer_id: driver.id,
             orders: driver.orders
         }).then(() => {
+            setOrders(prevState => prevState.filter(item => !driver.orders.includes(item.id)));
             setDrivers(prevState => prevState.map(item => item.id === driver.id ? {
                 ...item,
                 orders: []
@@ -230,7 +231,7 @@ export default function Page() {
                                             </div>
                                             <div className={'grid gap-2 grid-cols-[80px_1fr] px-2'}>
                                                 <div className={'font-bold'}>ShippingT</div>
-                                                <div>{order.shipping?.address}</div>
+                                                <div style={{wordBreak: 'break-word'}}>{order.shipping?.address}</div>
                                             </div>
                                         </SortableCard>
                                     ))
