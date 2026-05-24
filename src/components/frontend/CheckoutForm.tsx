@@ -237,7 +237,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                     </select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="eircode">{t('checkout.zipCode')}</Label>
+                                    <Label htmlFor="eircode">{'Eircode'}</Label>
                                     <Input
                                         id="eircode"
                                         className="h-11"
