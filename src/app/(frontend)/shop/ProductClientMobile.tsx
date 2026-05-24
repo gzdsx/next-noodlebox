@@ -37,7 +37,7 @@ const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
         const handleScroll = () => {
             if (fixedTabsRef.current) {
                 const rect = fixedTabsRef.current.getBoundingClientRect();
-                console.log('rect.top', rect.top);
+                // console.log('rect.top', rect.top);
                 // 💡 核心判断：当占位元素距离顶部 <= 0 时，说明该吸顶了
                 if (rect.top <= 80) {
                     setFixed(true);
@@ -87,7 +87,7 @@ const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
                             if (fixedTabsRef.current) {
                                 const rect = fixedTabsRef.current.getBoundingClientRect();
                                 window.scrollTo({
-                                    top: rect.top - 80,
+                                    top: rect.top + window.scrollY,
                                     behavior: 'smooth'
                                 });
                             }
