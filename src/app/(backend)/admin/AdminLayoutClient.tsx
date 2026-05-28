@@ -419,10 +419,15 @@ export default function AdminLayoutClient({
     const roleMenus = filterMenus(menuItems, administrator.role);
 
     const logout = async () => {
-        await apiPost('/auth/logout');
-        await Cookies.remove('adminToken');
-        await Cookies.remove('adminUser');
-        window.location.reload();
+        try {
+            await apiPost('/auth/logout');
+        } catch (e) {
+            console.error(e);
+        } finally {
+            await Cookies.remove('adminToken');
+            await Cookies.remove('adminUser');
+            window.location.reload();
+        }
     }
 
     return (

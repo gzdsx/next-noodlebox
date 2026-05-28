@@ -53,23 +53,25 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
     try {
         const backendResponse = await fetch(targetUrl, requestOptions);
         // 4. 将后端的响应（包括状态码、Header、Body）原样返回给前端
-        const responseHeaders = new Headers(backendResponse.headers);
-        // 【关键步骤】移除导致解析错误的 Header
-        // 因为 fetch 已经帮你解压了，所以必须删掉这两个字段
-        responseHeaders.delete('content-length');
-        responseHeaders.delete('content-encoding');
-        responseHeaders.delete('transfer-encoding');
-
-        const arrayBuffer = await backendResponse.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        return new NextResponse(buffer, {
-            headers: responseHeaders,
-            status: backendResponse.status,
-            statusText: backendResponse.statusText
-        });
+        // const responseHeaders = new Headers(backendResponse.headers);
+        // // 【关键步骤】移除导致解析错误的 Header
+        // // 因为 fetch 已经帮你解压了，所以必须删掉这两个字段
+        // responseHeaders.delete('content-length');
+        // responseHeaders.delete('content-encoding');
+        // responseHeaders.delete('transfer-encoding');
+        //
+        // const arrayBuffer = await backendResponse.arrayBuffer();
+        // const buffer = Buffer.from(arrayBuffer);
+        // return new NextResponse(buffer, {
+        //     headers: responseHeaders,
+        //     status: backendResponse.status,
+        //     statusText: backendResponse.statusText
+        // });
+        const json = await backendResponse.json();
+        return NextResponse.json(json);
     } catch (error) {
         console.error('Proxy Error:', error);
-        return NextResponse.json({message: (error as Error).message}, {status: 502});
+        return NextResponse.json({message: (error as Error).message}, {status: 422});
     }
 }
 
