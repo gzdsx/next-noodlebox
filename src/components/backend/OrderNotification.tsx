@@ -9,11 +9,13 @@ const OrderNotification = () => {
 
     const playNotification = () => {
         // 2. 播放音频逻辑
-        //audioRef.current.currentTime = 0; // 重置到开始位置
-        audioRef.current?.play().catch(err => {
-            // 浏览器通常限制自动播放，需要用户点击过页面后才能生效
-            console.warn('播放失败，可能需要用户先与页面交互:', err);
-        });
+        if (audioRef.current){
+            (audioRef.current as any).currentTime = 0; // 重置到开始位置
+            audioRef.current.play().catch(err => {
+                // 浏览器通常限制自动播放，需要用户点击过页面后才能生效
+                console.warn('播放失败，可能需要用户先与页面交互:', err);
+            });
+        }
     };
 
     useEchoPublic('noodlebox', '.order.created', (data: any) => {
@@ -24,6 +26,7 @@ const OrderNotification = () => {
     useEffect(() => {
         const createAudio = () => {
             audioRef.current = new Audio('/ring.wav');
+            //playNotification();
         }
 
         if (typeof window !== 'undefined') {
