@@ -112,7 +112,7 @@ export default function CashierReportPage() {
         <div>
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16}}>
                 <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('cashierReport')}</h2>
-                <Button type="primary" onClick={handleViewHistory}>{t('historyBills')}</Button>
+                <Button type="primary" disabled={!verified} onClick={handleViewHistory}>{t('historyBills')}</Button>
             </div>
             <Card>
                 {

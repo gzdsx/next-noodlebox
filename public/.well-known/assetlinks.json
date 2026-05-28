@@ -1,0 +1,11 @@
+[
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "ie.noodlebox.app",
+			"sha256_cert_fingerprints":
+			["4D:7F:18:86:16:8D:7D:D2:01:6A:8D:08:BA:E4:87:1D:77:BF:1B:BD:E1:49:4E:B6:A3:9C:28:CF:20:B4:08:1B"]
+		}
+	}
+]

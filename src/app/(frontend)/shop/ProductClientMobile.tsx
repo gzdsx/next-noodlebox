@@ -23,7 +23,7 @@ const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
     const fixedTabsRef = useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-        const activeElement = tabsRef.current[currentCategory.id.toString()];
+        const activeElement = tabsRef.current[currentCategory?.id.toString()];
         if (activeElement) {
             activeElement.scrollIntoView({
                 behavior: 'smooth',   // 平滑滚动
@@ -53,7 +53,7 @@ const ProductClientMobile = ({categories}: ProductClientMobileProps) => {
     return (
         <div className={'w-full block px-4 md:hidden'} ref={fixedTabsRef}>
             <div
-                className={`bg-[#444] after:h-px after:content-[' '] after:bg-gray-400 after:absolute after:bottom-0 after:left-0 after:w-full after:z-0 ${fixed ? 'fixed top-20 left-0 w-full z-100 px-4' : 'relative'}`}>
+                className={`bg-[#444] after:h-px after:content-[' '] after:bg-gray-400 after:absolute after:bottom-0 after:left-0 after:w-full after:z-0 ${fixed ? 'fixed top-20 left-0 w-full z-20 px-4' : 'relative'}`}>
                 <div
                     style={{'WebkitOverflowScrolling': 'touch'}}
                     className={`flex flex-row flex-nowrap gap-4 items-center overflow-x-auto overflow-y-hidden no-scrollbar z-10`}>
