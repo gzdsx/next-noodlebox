@@ -251,10 +251,8 @@ export default function UsersManagement() {
                         placeholder={t('searchPlaceholder')}
                         allowClear
                         style={{width: 250}}
-                        onSearch={(value) => {
-                            setSearchText(value);
-                            fetchUsers();
-                        }}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onSearch={fetchUsers}
                         prefix={<SearchOutlined/>}
                     />
                     <UserRoleSelect

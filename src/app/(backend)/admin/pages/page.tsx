@@ -190,10 +190,8 @@ export default function PagesManagement() {
                         placeholder={t('searchPlaceholder')}
                         allowClear
                         style={{width: 250}}
-                        onSearch={(value) => {
-                            setSearchText(value);
-                            fetchPages();
-                        }}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onSearch={fetchPages}
                         prefix={<SearchOutlined/>}
                     />
                     <Select

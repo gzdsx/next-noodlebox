@@ -297,10 +297,8 @@ export default function LotteryPrizesPage() {
                         placeholder={t('searchPlaceholder')}
                         allowClear
                         style={{width: 250}}
-                        onSearch={(value) => {
-                            setSearchText(value);
-                            fetchPrizes();
-                        }}
+                        onChange={e => setSearchText(e.target.value)}
+                        onSearch={fetchPrizes}
                         prefix={<SearchOutlined/>}
                     />
                     <Select

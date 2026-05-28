@@ -323,10 +323,8 @@ export default function DriversPage() {
                         placeholder={t('searchPlaceholder')}
                         allowClear
                         style={{width: 250}}
-                        onSearch={(value) => {
-                            setSearchText(value);
-                            fetchDrivers();
-                        }}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onSearch={fetchDrivers}
                         prefix={<SearchOutlined/>}
                     />
                     <Select

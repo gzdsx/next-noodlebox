@@ -217,10 +217,8 @@ export default function PostsManagement() {
                         placeholder={t('searchPlaceholder')}
                         allowClear
                         style={{width: 250}}
-                        onSearch={(value) => {
-                            setSearchText(value);
-                            fetchPosts();
-                        }}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onSearch={fetchPosts}
                         prefix={<SearchOutlined/>}
                     />
                     <Select

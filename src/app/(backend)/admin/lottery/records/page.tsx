@@ -130,10 +130,8 @@ export default function LotteryRecordsPage() {
                         placeholder={t('searchPlaceholder')}
                         allowClear
                         style={{width: 250}}
-                        onSearch={(value) => {
-                            setSearchText(value);
-                            fetchRecords();
-                        }}
+                        onChange={e=>setSearchText(e.target.value)}
+                        onSearch={fetchRecords}
                         prefix={<SearchOutlined/>}
                     />
                 </div>

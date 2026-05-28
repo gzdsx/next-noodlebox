@@ -344,10 +344,8 @@ export default function StaffsPage() {
                         placeholder={t('searchPlaceholder')}
                         allowClear
                         style={{width: 250}}
-                        onSearch={(value) => {
-                            setSearchText(value);
-                            fetchStaffs();
-                        }}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onSearch={fetchStaffs}
                         prefix={<SearchOutlined/>}
                     />
                     <Select

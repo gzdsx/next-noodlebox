@@ -228,10 +228,8 @@ export default function ProductsManagement() {
                         placeholder={t('searchPlaceholder')}
                         allowClear
                         style={{width: 250}}
-                        onSearch={(value) => {
-                            setSearchText(value);
-                            fetchProducts();
-                        }}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onSearch={fetchProducts}
                         prefix={<SearchOutlined/>}
                     />
                     <Select
