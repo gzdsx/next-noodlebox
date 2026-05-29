@@ -69,7 +69,7 @@ export default function CheckoutClient({options}: {
                 </div>
             </div>
             {
-                showWarning &&
+                !options?.in_delivery_hours &&
                 <CheckoutNoticeDialog message={options.order_warning} onClose={() => setShowWarning(false)}/>
             }
         </div>
