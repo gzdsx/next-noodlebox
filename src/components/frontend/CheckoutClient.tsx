@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {ResultPage} from '@/components/ui/result-page';
 import {useTranslations} from '@/contexts/LocaleContext';
@@ -22,7 +22,11 @@ export default function CheckoutClient({options}: {
         shipping_total: 0,
         payment_fee: 0,
     });
-    const [showWarning, setShowWarning] = useState(!options.in_delivery_hours);
+    const [showWarning, setShowWarning] = useState(false);
+
+    useEffect(() => {
+        setShowWarning(!options.in_delivery_hours);
+    }, [options]);
 
     if (orderPlaced) {
         return (
@@ -69,7 +73,7 @@ export default function CheckoutClient({options}: {
                 </div>
             </div>
             {
-                !options?.in_delivery_hours &&
+                showWarning &&
                 <CheckoutNoticeDialog message={options.order_warning} onClose={() => setShowWarning(false)}/>
             }
         </div>
