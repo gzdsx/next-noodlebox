@@ -5,6 +5,7 @@ import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {Button} from '@/components/ui/button';
 import {Textarea} from '@/components/ui/textarea';
+import {Spinner} from '@/components/ui/spinner';
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 import {useTranslations} from '@/contexts/LocaleContext';
 import {useCart} from '@/contexts/CartContext';
@@ -334,7 +335,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                             className="w-full h-12 text-base mt-8"
                             onClick={handleCrateOrder}
                         >
-                            {submitting ? '...' : `${t('checkout.placeOrder')} · €${totalPrice.toFixed(2)}`}
+                            {submitting ? <Spinner className={'text-white'}/> : `${t('checkout.placeOrder')} · €${totalPrice.toFixed(2)}`}
                         </Button>
                     )
                 }
