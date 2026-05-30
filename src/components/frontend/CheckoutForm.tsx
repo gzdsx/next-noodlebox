@@ -53,7 +53,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     const [isVerifyOpen, setIsVerifyOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [orderId, setOrderId] = useState<number>(0);
-    const [orderTotal, setOrderTotal] = useState<string>('0.00');
+    const [orderTotal, setOrderTotal] = useState<string>(totalPrice.toFixed(2));
 
     const loadData = async () => {
         try {
