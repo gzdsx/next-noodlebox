@@ -21,7 +21,8 @@ export default function Page() {
     const [stats, setStats] = useState<any>({
         completed: 0,
         processing: 0
-    })
+    });
+    //const [currentOrder, setCurrentOrder] = useState<any>({});
 
     const fetchOrders = () => {
         setLoading(true);

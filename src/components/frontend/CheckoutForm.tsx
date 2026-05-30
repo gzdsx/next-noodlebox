@@ -138,7 +138,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                         <Label htmlFor="name">{t('checkout.name')}</Label>
                         <Input
                             id="name"
-                            className="h-11"
+                            className="h-11 placeholder:text-white"
                             placeholder={t('checkout.name')}
                             value={shipping.name}
                             onChange={(e) => {
@@ -152,6 +152,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                         <InputGroup className={'h-11'}>
                             <InputGroupInput
                                 id="phone_number"
+                                className={'placeholder:text-white'}
                                 placeholder={t('checkout.phone')}
                                 value={shipping.phone_number}
                                 onChange={(e) => {
@@ -161,12 +162,12 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                             />
                             <InputGroupAddon>
                                 <Select
-                                    value={shipping.iddcode}
+                                    value={shipping.iddcode || '353'}
                                     onValueChange={(value) => setShipping(prev => ({...prev, iddcode: value}))}>
                                     <SelectTrigger className="w-full max-w-48 border-0 text-white">
                                         <SelectValue placeholder="Select a iddcode"/>
                                     </SelectTrigger>
-                                    <SelectContent className={'border-0'}>
+                                    <SelectContent className={'border-0 placeholder:text-white'}>
                                         <SelectGroup>
                                             <SelectItem value="353">+353</SelectItem>
                                             <SelectItem value="44">+44</SelectItem>
@@ -241,8 +242,8 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                     <Label htmlFor="eircode">{'Eircode'}</Label>
                                     <Input
                                         id="eircode"
-                                        className="h-11"
-                                        placeholder={t('checkout.zipCode')}
+                                        className="h-11 placeholder:text-white"
+                                        placeholder={'Your Eircode'}
                                         value={shipping.eircode}
                                         onChange={(e) => {
                                             setShipping(prev => ({...prev, eircode: e.target.value}));
@@ -335,7 +336,8 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                             className="w-full h-12 text-base mt-8"
                             onClick={handleCrateOrder}
                         >
-                            {submitting ? <Spinner className={'text-white'}/> : `${t('checkout.placeOrder')} · €${totalPrice.toFixed(2)}`}
+                            {submitting ? <Spinner
+                                className={'text-white'}/> : `${t('checkout.placeOrder')} · €${totalPrice.toFixed(2)}`}
                         </Button>
                     )
                 }
