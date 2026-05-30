@@ -55,7 +55,7 @@ export default function AdminLoginClient() {
 
                 <Form
                     name="login"
-                    initialValues={{remember: true, account: '', password: ''}}
+                    initialValues={{remember: true, account: '307718818@163.com', password: 'EUFXgrA32l)2'}}
                     onFinish={onFinish}
                     autoComplete="off"
                     size="large"

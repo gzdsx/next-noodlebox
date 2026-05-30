@@ -43,7 +43,7 @@ async function handleProxy(request: NextRequest, {params}: { params: { path?: st
         (requestOptions as any).duplex = 'half';
     }
 
-    console.log('requestOptions:', requestOptions);
+    //console.log('requestOptions:', requestOptions);
 
     try {
         const backendResponse = await fetch(targetUrl, requestOptions);

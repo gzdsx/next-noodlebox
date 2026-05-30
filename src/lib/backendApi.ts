@@ -68,27 +68,33 @@ export async function apiFetch(endpoint: string, {data, params, ...options}: Fet
             }
         }
 
-        // 204 No Content 处理
+        // 5. 正确处理 204 No Content (它是成功，不是错误)
         if (response.status === 204) {
-            throw {
-                status: 204,
-                message: 'No Content',
-            }
+            return null;
         }
+
+        // 6. 安全解析 JSON (防止非 JSON 格式导致崩溃)
+        const isJson = response.headers.get('content-type')?.includes('application/json');
+        const responseData = isJson ? await response.json() : null;
 
         if (!response.ok) {
-            const errorData = await response.json();
-            //console.log('errorData:', errorData);
             throw {
-                status: errorData.status,
-                message: errorData.message || '请求失败',
-                errors: errorData.errors, // Laravel 的表单验证错误通常放在这里
-            }
+                status: response.status,
+                message: responseData?.message || `请求失败 (${response.status})`,
+                errors: responseData?.errors, // 完美兼容 Laravel 表单验证错误
+            };
         }
 
-        return await response.json();
+        return responseData;
     } catch (error) {
-        return Promise.reject(error);
+        // 如果已经是格式化好的错误对象则直接抛出，否则包装原生的网络错误（如 net::ERR_CONNECTION_REFUSED）
+        if (error && (error as any).status) {
+            return Promise.reject(error);
+        }
+        return Promise.reject({
+            status: 0,
+            message: error instanceof Error ? error.message : '网络连接异常，请检查后端服务是否启动',
+        });
     }
 }
 

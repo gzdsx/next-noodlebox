@@ -207,7 +207,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                 <AutoAddressInput
                                     defaultValue={shipping.address}
                                     onChange={(value) => {
-                                        console.log('value:', value);
+                                        //console.log('value:', value);
                                         setShipping(prev => ({...prev, ...value}));
 
                                         const address = value.address.toLowerCase();

@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useEffect, useMemo, useState} from "react";
-import {Button, Card, Layout, Spin, Tag} from "antd";
+import {Button, Card, Layout, Tag} from "antd";
 import {apiGet, apiPost} from "@/lib/backendApi";
 import {useMessage, useModal, useSpinner} from "@/contexts/BackendAppContext";
 import SortableProvider from "@/components/common/SortableProvider";
@@ -12,6 +12,7 @@ import {useThrottleFn} from "ahooks";
 import {useEchoPublic} from "@laravel/echo-react";
 import {ArrowLeftOutlined} from "@ant-design/icons";
 import {useRouter} from "next/navigation";
+import ModalDriverOrders from "@/components/backend/ModalDriverOrders";
 
 const {Content, Sider} = Layout;
 
@@ -31,7 +32,7 @@ function SortableCard({id, index, children, checked = false, onClick}: {
     return (
         <div ref={ref}
              onClick={onClick}
-             className={`border border-gray-200 rounded-md flex flex-col gap-y-1 pb-1 ${checked ? 'bg-gray-100' : ''}`}>
+             className={`border border-gray-200 rounded-md flex flex-col gap-y-1 pb-1 ${checked ? 'bg-gray-400' : ''}`}>
             {children}
         </div>
     )
@@ -46,6 +47,8 @@ export default function Page() {
     const [orders, setOrders] = useState<any[]>([]);
     const [selectedItems, setSelectedItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
+    const [isDriverModalOpen, setIsDriverModalOpen] = useState(false);
+    const [currentDriver, setCurrentDriver] = useState<any>(null);
 
     const fetchOrders = () => {
         apiGet(`/orders`, {
@@ -173,7 +176,11 @@ export default function Page() {
                                     <div key={driver.id}
                                          className={'border border-gray-200 rounded-md overflow-hidden'}>
                                         <div
-                                            className={'font-bold text-center bg-cyan-600 text-white py-2'}>{driver.name}</div>
+                                            onClick={() => {
+                                                setCurrentDriver({...driver});
+                                                setIsDriverModalOpen(true);
+                                            }}
+                                            className={'font-bold text-center bg-cyan-600 text-white py-2 cursor-pointer'}>{driver.name}</div>
                                         <div className={'p-2 font-bold text-wrap flex flex-wrap gap-2'}>
                                             {driver.orders.map((c: string) => (
                                                 <Tag key={c}
@@ -241,6 +248,20 @@ export default function Page() {
                     </Content>
                 </Layout>
             </Card>
+            {
+                (currentDriver && isDriverModalOpen) && (
+                    <ModalDriverOrders
+                        driver={currentDriver}
+                        onConfirm={()=>{
+                            fetchOrders();
+                        }}
+                        onCancel={()=>{
+                            setCurrentDriver({})
+                            setIsDriverModalOpen(false);
+                        }}
+                    />
+                )
+            }
         </>
     )
 }
