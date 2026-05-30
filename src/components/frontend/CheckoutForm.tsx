@@ -41,7 +41,8 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         iddcode: '',
         phone_number: '',
         address: '',
-        eircode: ''
+        eircode: '',
+        ...options.shipping_address
     });
     const [shippingMethod, setShippingMethod] = useState('flat_rate');
     const [shippingZoneId, setShippingZoneId] = useState<string | number | undefined>(options?.shipping_zone_id);
@@ -125,15 +126,6 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         //console.log(options);
         loadData();
     }, [shippingZoneId, shippingMethod, paymentMethod, usePointsValue]);
-
-    useEffect(() => {
-        //console.log(options.shipping_address.iddcode);
-        setShipping(prevState => ({
-            ...prevState,
-            ...options.shipping_address,
-            iddcode: options.shipping_address.iddcode || '353'
-        }));
-    }, [options.shipping_address]);
 
     return (
         <>
