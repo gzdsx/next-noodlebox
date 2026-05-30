@@ -41,8 +41,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         iddcode: '',
         phone_number: '',
         address: '',
-        eircode: '',
-        ...options.shipping_address
+        eircode: ''
     });
     const [shippingMethod, setShippingMethod] = useState('flat_rate');
     const [shippingZoneId, setShippingZoneId] = useState<string | number | undefined>(options?.shipping_zone_id);
@@ -127,6 +126,14 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         loadData();
     }, [shippingZoneId, shippingMethod, paymentMethod, usePointsValue]);
 
+    useEffect(() => {
+        setShipping(prevState => ({
+            ...prevState,
+            ...options.shipping_address,
+            eircode: options.shipping_address.eircode || '353'
+        }));
+    }, [options.shipping_address]);
+
     return (
         <>
             <form className="space-y-0">
@@ -162,7 +169,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                             />
                             <InputGroupAddon>
                                 <Select
-                                    value={shipping.iddcode || '353'}
+                                    value={shipping.iddcode}
                                     onValueChange={(value) => setShipping(prev => ({...prev, iddcode: value}))}>
                                     <SelectTrigger className="w-full max-w-48 border-0 text-white">
                                         <SelectValue placeholder="Select a iddcode"/>
