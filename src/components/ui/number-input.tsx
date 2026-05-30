@@ -57,6 +57,7 @@ function NumberInput({
         max={max}
         step={step}
         disabled={disabled}
+        inputMode={'none'}
         className="h-9 w-14 border-y border-input bg-background text-center text-sm focus:outline-none focus:ring-1 focus:ring-ring [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
       />
       <button
