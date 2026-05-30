@@ -53,6 +53,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     const [isVerifyOpen, setIsVerifyOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [orderId, setOrderId] = useState<number>(0);
+    const [orderTotal, setOrderTotal] = useState<string>('0.00');
 
     const loadData = async () => {
         try {
@@ -64,6 +65,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                 use_points_value: usePointsValue,
             });
             onChange?.({...response.data});
+            setOrderTotal(response.data.total);
         } catch (e: unknown) {
             console.error(e);
         }
@@ -341,7 +343,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                             onClick={handleCrateOrder}
                         >
                             {submitting ? <Spinner
-                                className={'text-white'}/> : `${t('checkout.placeOrder')} · €${totalPrice.toFixed(2)}`}
+                                className={'text-white'}/> : `${t('checkout.placeOrder')} · €${orderTotal}`}
                         </Button>
                     )
                 }
