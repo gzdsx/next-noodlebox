@@ -40,7 +40,7 @@ export default function SmsLoginClient() {
                 });
             }, 1000);
         } catch (err: any) {
-            setError(err.message || '发送验证码失败');
+            setError(err.message || 'Send code failed');
         } finally {
             setLoading(false);
         }
@@ -75,7 +75,7 @@ export default function SmsLoginClient() {
     return (
         <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-                <Label htmlFor="phone">手机号</Label>
+                <Label htmlFor="phone">Phone Number</Label>
                 <InputGroup className={'h-11'}>
                     <InputGroupInput
                         id="phone_number"
@@ -104,12 +104,12 @@ export default function SmsLoginClient() {
                 </InputGroup>
             </div>
             <div className="space-y-2">
-                <Label htmlFor="code">验证码</Label>
+                <Label htmlFor="code">Verification Code</Label>
                 <div className="flex gap-2">
                     <Input
                         id="code"
                         type="text"
-                        placeholder="请输入验证码"
+                        placeholder="Your verification code"
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
                         maxLength={6}
@@ -122,13 +122,13 @@ export default function SmsLoginClient() {
                         disabled={countdown > 0 || loading}
                         className="whitespace-nowrap h-11"
                     >
-                        {countdown > 0 ? `${countdown}s` : '获取验证码'}
+                        {countdown > 0 ? `${countdown}s` : 'Get Code'}
                     </Button>
                 </div>
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             <Button type="submit" className="w-full h-11 mt-4" disabled={loading}>
-                {loading ? '登录中...' : '登录'}
+                {loading ? 'Logging...' : 'Login'}
             </Button>
         </form>
     );

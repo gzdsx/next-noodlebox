@@ -16,7 +16,7 @@ const SocialLoginClient = () => {
         <div>
             <div className="relative flex items-center justify-center gap-2">
                 <div className={'grow relative after:absolute after:inset-0 after:border-t after:border-gray-300'}></div>
-                <div className={'py-2'}>Or continue with</div>
+                <div className={'py-2'}>or continue with</div>
                 <div className={'grow relative after:absolute after:inset-0 after:border-t after:border-gray-300'}></div>
             </div>
             <div className="mt-6">

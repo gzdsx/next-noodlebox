@@ -40,7 +40,7 @@ export function LocaleProvider({children}: { children: ReactNode }) {
         //         // }
         //     }
         // })()
-        setLocaleState('en');
+        // setLocaleState('en');
     }, []);
 
     const setLocale = (newLocale: Locale) => {
