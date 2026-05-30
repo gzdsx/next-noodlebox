@@ -137,7 +137,7 @@ export default function Page() {
             title: t('createdAt'),
             dataIndex: 'created_at',
             key: 'created_at',
-            width: 170,
+            width: 140,
         },
         {
             title: t('createdVia'),
@@ -287,6 +287,11 @@ export default function Page() {
     }, {wait: 2000});
 
     useEchoPublic('noodlebox', '.order.created', (data: any) => {
+        //console.log('order.created', data);
+        refreshOrders();
+    });
+
+    useEchoPublic('noodlebox', '.order.updated', (data: any) => {
         //console.log('order.created', data);
         refreshOrders();
     });
