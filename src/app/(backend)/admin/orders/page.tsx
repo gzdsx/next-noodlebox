@@ -152,7 +152,7 @@ export default function Page() {
             width: 80,
             align: 'end',
             render: (_, record) => (
-                <Space size="small">
+                <Space size="small" orientation={'vertical'}>
                     <Button
                         type="link"
                         size="small"
