@@ -130,7 +130,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         setShipping(prevState => ({
             ...prevState,
             ...options.shipping_address,
-            eircode: options.shipping_address.eircode || '353'
+            iddcode: options.shipping_address.iddcode || '353'
         }));
     }, [options.shipping_address]);
 
