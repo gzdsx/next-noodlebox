@@ -144,7 +144,7 @@ export function CartProvider({children}: { children: ReactNode }) {
                                         <ProductInfoClient
                                             product={currentProduct}
                                             scrollViewStyle={{
-                                                maxHeight: '60vh',
+                                                maxHeight: '50vh',
                                                 overflowY: 'auto',
                                                 overflowX: 'hidden',
                                             }}

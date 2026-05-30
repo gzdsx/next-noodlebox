@@ -1,7 +1,7 @@
 'use client'
 
 import {CartOptionItem, Product, VariantItem, VariantOptionItem} from "@/types";
-import {useCart} from "@/contexts/CartContext";
+import {useCart, useProductModal} from "@/contexts/CartContext";
 import React, {useMemo, useState} from "react";
 import ProductImageGallery from "@/components/frontend/ProductImageGallery";
 import {NumberInput} from "@/components/ui/number-input";
@@ -19,6 +19,7 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
     scrollViewStyle?: React.CSSProperties
 }) => {
     const {addItem} = useCart();
+    const productModal = useProductModal();
     const [quantity, setQuantity] = useState(1);
     const [variants, setVariants] = useState<VariantItem[]>(product.variation_list || []);
     const [additionalOptions, setAdditionalOptions] = useState<VariantOptionItem[]>(product.additional_options || []);
@@ -76,6 +77,7 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
                 additional_options: skuData.additional_options,
                 purchase_via: usePoints ? 'point' : 'cash',
             });
+            productModal.close();
         } catch (e) {
 
         }
