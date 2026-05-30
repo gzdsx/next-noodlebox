@@ -132,6 +132,8 @@ export interface Order {
     payment_fee?: string;
     metas?: Record<string, any>[];
     deleted_at?: string;
+    printed_at?: string;
+    is_printed?: boolean;
 }
 
 export interface OrderItem {

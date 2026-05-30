@@ -144,7 +144,16 @@ export default function Page() {
             dataIndex: 'created_via',
             key: 'created_via',
             width: 100,
-            render: (created_via: string) => createViaMap[created_via]
+            render: (created_via: string, record) => (
+                <>
+                    <p>{createViaMap[created_via]}</p>
+                    {
+                        record.printed_at && (
+                            <p className={'text-green-600'}>Printed</p>
+                        )
+                    }
+                </>
+            )
         },
         {
             title: tc('actions'),
@@ -154,7 +163,8 @@ export default function Page() {
             render: (_, record) => (
                 <Space size="small" orientation={'vertical'}>
                     <Button
-                        type="link"
+                        variant="link"
+                        color={'primary'}
                         size="small"
                         icon={<EyeOutlined/>}
                         onClick={() => {
@@ -165,9 +175,10 @@ export default function Page() {
                         {t('view')}
                     </Button>
                     <Button
-                        type="link"
+                        variant="link"
                         size="small"
                         className={'px-0!'}
+                        color={record.printed_at ? 'primary' : 'red'}
                         icon={<PrinterOutlined/>}
                         onClick={() => {
                             apiGet(`/orders/${record.id}/print`).then(() => {
@@ -180,7 +191,8 @@ export default function Page() {
                         }}
                     >{t('print')}</Button>
                     <Button
-                        type="link"
+                        variant="link"
+                        color={'primary'}
                         size="small"
                         className={'px-0!'}
                         icon={<ToolOutlined/>}
