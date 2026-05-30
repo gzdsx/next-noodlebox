@@ -152,6 +152,11 @@ export default function Page() {
         refreshOrders();
     });
 
+    useEchoPublic('noodlebox', '.order.updated', (data: any) => {
+        //console.log('order.updated', data);
+        refreshOrders();
+    });
+
     useEffect(() => {
         fetchOrders();
         fetchDrivers();
@@ -252,10 +257,10 @@ export default function Page() {
                 (currentDriver && isDriverModalOpen) && (
                     <ModalDriverOrders
                         driver={currentDriver}
-                        onConfirm={()=>{
+                        onConfirm={() => {
                             fetchOrders();
                         }}
-                        onCancel={()=>{
+                        onCancel={() => {
                             setCurrentDriver({})
                             setIsDriverModalOpen(false);
                         }}

@@ -127,6 +127,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     }, [shippingZoneId, shippingMethod, paymentMethod, usePointsValue]);
 
     useEffect(() => {
+        //console.log(options.shipping_address.iddcode);
         setShipping(prevState => ({
             ...prevState,
             ...options.shipping_address,
@@ -170,9 +171,13 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                             <InputGroupAddon>
                                 <Select
                                     value={shipping.iddcode}
-                                    onValueChange={(value) => setShipping(prev => ({...prev, iddcode: value}))}>
+                                    onValueChange={(value) => setShipping(prev => ({
+                                        ...prev,
+                                        iddcode: value || '353'
+                                    }))}>
                                     <SelectTrigger className="w-full max-w-48 border-0 text-white">
-                                        <SelectValue placeholder="Select a iddcode"/>
+                                        <SelectValue placeholder="Select a iddcode"
+                                                     className={'placeholder:text-white'}/>
                                     </SelectTrigger>
                                     <SelectContent className={'border-0 placeholder:text-white'}>
                                         <SelectGroup>
