@@ -50,7 +50,7 @@ const ModalOrderProcessor = ({
             if (newShippingTotal !== oldShippingTotal) {
                 newCostTotal += newShippingTotal - oldShippingTotal;
             }
-            newCostTotal += Number(shippingTotal) - Number(order?.shipping_total || 0);
+
             if (paymentFee !== order?.payment_fee) {
                 newCostTotal += Number(paymentFee) - Number(order?.payment_fee || 0);
             }
