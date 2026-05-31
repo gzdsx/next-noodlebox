@@ -4,9 +4,9 @@ import {CartOptionItem, Product, VariantItem, VariantOptionItem} from "@/types";
 import {useCart, useProductModal} from "@/contexts/CartContext";
 import React, {useMemo, useState} from "react";
 import ProductImageGallery from "@/components/frontend/ProductImageGallery";
-import {NumberInput} from "@/components/ui/number-input";
 import {ShoppingCartIcon} from "lucide-react";
 import {Badge} from "@/components/ui/badge";
+import ProductNumberInput from "@/components/frontend/ProductNumberInput";
 
 const spicyMap: Record<string, string> = {
     slightly: '/spicy-slightly.png',
@@ -245,7 +245,7 @@ export const ProductInfoClient = ({product, scrollViewStyle}: {
 
 
                     <div className="flex items-center gap-3 mt-8">
-                        <NumberInput
+                        <ProductNumberInput
                             min={1}
                             max={99999}
                             value={quantity}

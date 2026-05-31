@@ -2,15 +2,15 @@ import * as React from "react";
 import {cn} from "@/lib/utils";
 import {Minus, Plus} from "lucide-react";
 
-function NumberInput({
-                         value,
-                         onChange,
-                         min,
-                         max,
-                         step = 1,
-                         disabled,
-                         className,
-                     }: {
+function ProductNumberInput({
+                                value,
+                                onChange,
+                                min,
+                                max,
+                                step = 1,
+                                disabled,
+                                className,
+                            }: {
     value: number;
     onChange: (value: number) => void;
     min?: number;
@@ -49,23 +49,9 @@ function NumberInput({
             >
                 <Minus className="h-3 w-3"/>
             </button>
-            <input
-                type="number"
-                value={value}
-                onChange={handleChange}
-                min={min}
-                max={max}
-                step={step}
-                disabled={true}
-                inputMode={'none'}
-                readOnly={true}
-                onBlur={(e) => {
-                    e.nativeEvent.preventDefault();
-                    e.nativeEvent.stopPropagation();
-                    return false;
-                }}
-                className="h-9 w-14 border-y border-input bg-background text-center text-sm focus:outline-none focus:ring-1 focus:ring-ring [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
+            <div className="h-9 w-14 border-y border-input bg-background text-center text-sm flex items-center justify-center">
+                <span>{value}</span>
+            </div>
             <button
                 type="button"
                 onClick={increment}
@@ -78,4 +64,4 @@ function NumberInput({
     );
 }
 
-export {NumberInput};
+export default ProductNumberInput;
