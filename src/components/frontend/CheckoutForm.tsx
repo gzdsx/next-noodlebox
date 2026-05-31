@@ -95,11 +95,11 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
             });
 
             const {order_id, payment_method} = response.data;
-            newOrderId.current = order_id;
-            reloadCart();
-
-            if (payment_method !== 'paypal') {
-                await onPlaced?.(order_id, 'placed');
+            if (payment_method === 'paypal') {
+                newOrderId.current = order_id;
+            } else {
+                reloadCart();
+                onPlaced?.(order_id, 'placed');
             }
         } catch (e: any) {
             toast.error(e.message);
@@ -113,7 +113,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
             return paypalOrderId.current;
         }
 
-        if (newOrderId.current === null) {
+        if (!newOrderId.current) {
             await handleCrateOrder();
         }
 
@@ -128,7 +128,10 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         } catch (e: any) {
             toast.error(e.message);
         } finally {
-            await onPlaced?.(newOrderId.current || 0, 'placed');
+            reloadCart();
+            onPlaced?.(newOrderId.current || 0, 'placed');
+            newOrderId.current = null;
+            paypalOrderId.current = null;
         }
     }
 
@@ -255,7 +258,8 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                     >
                                         {
                                             options?.shipping_zones?.map((zone: ShippingZone) => (
-                                                <option key={zone.title} value={zone.id} className={'bg-black text-white'}>{zone.title}(€{zone.fee})</option>
+                                                <option key={zone.title} value={zone.id}
+                                                        className={'bg-black text-white'}>{zone.title}(€{zone.fee})</option>
                                             ))
                                         }
                                     </select>
