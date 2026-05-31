@@ -255,7 +255,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                     >
                                         {
                                             options?.shipping_zones?.map((zone: ShippingZone) => (
-                                                <option key={zone.title} value={zone.id}>{zone.title}(€{zone.fee})</option>
+                                                <option key={zone.title} value={zone.id} className={'bg-black text-white'}>{zone.title}(€{zone.fee})</option>
                                             ))
                                         }
                                     </select>
