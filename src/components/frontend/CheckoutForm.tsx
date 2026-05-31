@@ -120,7 +120,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         }
     }
 
-    const handlePapalCancel = () => {
+    const handlePapalCancel = (data: any) => {
         onPlaced?.(orderId);
     }
 
@@ -143,6 +143,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                             className="h-11 placeholder:text-white"
                             placeholder={t('checkout.name')}
                             value={shipping.name}
+                            autoComplete={'new-password'}
                             onChange={(e) => {
                                 setShipping(prev => ({...prev, name: e.target.value}));
                             }}
@@ -154,6 +155,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                         <InputGroup className={'h-11'}>
                             <InputGroupInput
                                 id="phone_number"
+                                autoComplete={'new-password'}
                                 className={'placeholder:text-white'}
                                 placeholder={t('checkout.phone')}
                                 value={shipping.phone_number}
@@ -218,18 +220,20 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                         setShipping(prev => ({...prev, ...value}));
 
                                         const address = value.address.toLowerCase();
-                                        options.shipping_zones.forEach((zone: ShippingZone) => {
-                                            if (address.includes(zone.title.toLowerCase())) {
+                                        for (const zone of options.shipping_zones) {
+                                            console.log(address.lastIndexOf(zone.title.toLowerCase()));
+                                            if (address.lastIndexOf(zone.title.toLowerCase()) !== -1) {
                                                 setShippingZoneId(zone.id);
+                                                break;
                                             }
-                                        });
+                                        }
                                     }}
                                 />
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="city">{t('checkout.city')}</Label>
+                                    <Label htmlFor="city">{'Delivery Area'}</Label>
                                     <select
                                         className={'w-full border border-gray-300 rounded-sm shadow-sm h-11 px-2'}
                                         value={shippingZoneId}
@@ -248,6 +252,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                     <Label htmlFor="eircode">{'Eircode'}</Label>
                                     <Input
                                         id="eircode"
+                                        autoComplete={'new-password'}
                                         className="h-11 placeholder:text-white"
                                         placeholder={'Your Eircode'}
                                         value={shipping.eircode}
@@ -305,6 +310,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                     <InputGroupInput
                                         placeholder=""
                                         value={pointsValue}
+                                        autoComplete={'new-password'}
                                         onChange={(e) => setPointsValue(e.target.value)}
                                     />
                                     <InputGroupAddon align={'inline-end'}>
@@ -330,7 +336,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                 onCancel={handlePapalCancel}
                                 onError={(error) => {
                                     console.error("Error:", error);
-                                    onPlaced?.(orderId);
+                                    toast.error((error as any).message);
                                 }}
                             />
                         </div>

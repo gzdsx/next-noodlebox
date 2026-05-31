@@ -89,7 +89,8 @@ export default function OrderHistoryList() {
 
     const handlePayOrder = (orderId: number) => {
         apiPost(`/orders/${orderId}/create-paypal-order`, {
-            return_url: window.location.origin + '/user/orders/paypal/capture'
+            return_url: window.location.origin + '/api/paypal/orders/capture',
+            cancel_url: window.location.origin + '/user/orders'
         }).then(response => {
             //console.log('response', response.data);
             window.location.href = response.data.links[1].href;
