@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {Button} from '@/components/ui/button';
@@ -29,7 +29,7 @@ import AutoAddressInput from "@/components/frontend/AutoAddressInput";
 interface CheckoutFormProps {
     options?: any;
     onChange?: (values: any) => void;
-    onPlaced?: (orderId: number) => void;
+    onPlaced?: (orderId: number, status: string) => void;
 }
 
 export default function CheckoutForm({options, onChange, onPlaced}: CheckoutFormProps) {
@@ -52,8 +52,9 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     const [usePointsValue, setUsePointsValue] = useState('0');
     const [isVerifyOpen, setIsVerifyOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const [orderId, setOrderId] = useState<number>(0);
     const [orderTotal, setOrderTotal] = useState<string>(totalPrice.toFixed(2));
+    const newOrderId = useRef<number | null>(null);
+    const paypalOrderId = useRef<number | null>(null);
 
     const loadData = async () => {
         try {
@@ -94,14 +95,11 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
             });
 
             const {order_id, payment_method} = response.data;
-            setOrderId(order_id);
+            newOrderId.current = order_id;
             reloadCart();
 
-            if (payment_method === 'paypal') {
-                response = await apiPost(`/orders/${order_id}/create-paypal-order`);
-                return response.data.id;
-            } else {
-                await onPlaced?.(order_id);
+            if (payment_method !== 'paypal') {
+                await onPlaced?.(order_id, 'placed');
             }
         } catch (e: any) {
             toast.error(e.message);
@@ -110,18 +108,32 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         }
     }
 
+    const handleCreatePaypalOrder = async () => {
+        if (paypalOrderId.current) {
+            return paypalOrderId.current;
+        }
+
+        if (newOrderId.current === null) {
+            await handleCrateOrder();
+        }
+
+        const response = await apiPost(`/orders/${newOrderId.current}/create-paypal-order`);
+        paypalOrderId.current = response.data.id;
+        return response.data.id;
+    }
+
     const handleApprove = async (data: any) => {
         try {
             await apiPost(`/orders/${data.orderID}/capture-paypal-order`);
         } catch (e: any) {
             toast.error(e.message);
         } finally {
-            await onPlaced?.(orderId);
+            await onPlaced?.(newOrderId.current || 0, 'placed');
         }
     }
 
     const handlePapalCancel = (data: any) => {
-        onPlaced?.(orderId);
+        //onPlaced?.(newOrderId.current || 0, 'pending');
     }
 
     useEffect(() => {
@@ -331,7 +343,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                     paymentMethod === 'paypal' ? (
                         <div className="w-full mt-8">
                             <PayPalButtons
-                                createOrder={handleCrateOrder}
+                                createOrder={handleCreatePaypalOrder}
                                 onApprove={handleApprove}
                                 onCancel={handlePapalCancel}
                                 onError={(error) => {

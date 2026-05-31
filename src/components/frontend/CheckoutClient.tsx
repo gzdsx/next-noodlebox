@@ -15,7 +15,6 @@ export default function CheckoutClient({options}: {
 }) {
     const {t} = useTranslations('ecommerce');
     const {clearCart} = useCart();
-    const [orderPlaced, setOrderPlaced] = useState(false);
     const [orderData, setOrderData] = useState<CheckoutOrderInfo>({
         total: 0,
         subtotal: 0,
@@ -23,14 +22,34 @@ export default function CheckoutClient({options}: {
         payment_fee: 0,
     });
     const [showWarning, setShowWarning] = useState(!options.in_delivery_hours);
+    const [orderStatus, setOrderStatus] = useState('');
 
-    if (orderPlaced) {
+    if (orderStatus === 'placed') {
         return (
             <div className="max-w-7xl mx-auto px-4 py-16">
                 <ResultPage
                     status="success"
                     title={t('checkout.orderPlaced')}
                     description={t('checkout.orderPlacedSubtitle')}
+                >
+                    <Link href="/user/orders">
+                        <Button>{t('header.myOrders')}</Button>
+                    </Link>
+                    <Link href="/">
+                        <Button variant="outline">{t('checkout.backToHome')}</Button>
+                    </Link>
+                </ResultPage>
+            </div>
+        );
+    }
+
+    if (orderStatus === 'pending') {
+        return (
+            <div className="max-w-7xl mx-auto px-4 py-16">
+                <ResultPage
+                    status="success"
+                    title={'Your order has been created but not yet paid.'}
+                    description={'You can click \'My Orders\' to complete your payment.'}
                 >
                     <Link href="/user/orders">
                         <Button>{t('header.myOrders')}</Button>
@@ -55,9 +74,9 @@ export default function CheckoutClient({options}: {
                             onChange={values => {
                                 setOrderData(prevState => ({...prevState, ...values}));
                             }}
-                            onPlaced={() => {
+                            onPlaced={(orderId: number, status: string) => {
                                 clearCart();
-                                setOrderPlaced(true);
+                                setOrderStatus(status);
                             }}
                         />
                     </div>
