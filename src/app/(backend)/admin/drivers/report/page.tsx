@@ -15,6 +15,7 @@ import type {ColumnsType} from 'antd/es/table';
 import {apiGet} from "@/lib/backendApi";
 import {useTranslations} from '@/contexts/BackendLocaleContext';
 import Link from "next/link";
+import ModalDriverReport from "@/components/backend/ModalDriverReport";
 
 interface DriverBillType {
     id: number;
@@ -47,6 +48,8 @@ export default function DriverBillsPage() {
 
     const [bills, setBills] = useState<DriverBillType[]>([]);
     const [loading, setLoading] = useState(false);
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+    const [editingDriver, setEditingDriver] = useState<any>({});
 
     const handlePrint = (record: DriverBillType) => {
         window.open(record.links?.report?.href || `/admin/driver-bills/${record.id}/print`);
@@ -57,8 +60,11 @@ export default function DriverBillsPage() {
             title: t('driver'),
             dataIndex: 'name',
             key: 'name',
-            render: (name: string) => (
-                <strong className={'text-gray-600'}>{name}</strong>
+            render: (name: string, record) => (
+                <strong className={'text-gray-600 cursor-pointer'} onClick={() => {
+                    setEditingDriver(record);
+                    setIsReportModalOpen(true);
+                }}>{name}</strong>
             ),
         },
         {
@@ -156,6 +162,14 @@ export default function DriverBillsPage() {
                     rowKey={record => record.id}
                 />
             </Card>
+            {
+                isReportModalOpen && (
+                    <ModalDriverReport driver={editingDriver} onClose={() => {
+                        setIsReportModalOpen(false);
+                        fetchBills();
+                    }}/>
+                )
+            }
         </div>
     );
 }
