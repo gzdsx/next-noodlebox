@@ -37,6 +37,11 @@ interface DriverTransactionType {
     actual_total: string;
     status: string;
     created_at: string;
+    links: {
+        invoice: {
+            href: string;
+        };
+    };
 }
 
 export default function DriverTransactionsPage() {
@@ -55,7 +60,7 @@ export default function DriverTransactionsPage() {
     const [editingTransaction, setEditingTransaction] = useState<any>({});
 
     const handlePrint = (record: DriverTransactionType) => {
-        window.open(`/admin/drivers/transactions/${record.id}/print`, '_blank');
+        window.open(record.links.invoice.href, '_blank');
     };
 
     const columns: ColumnsType<DriverTransactionType> = [
@@ -64,8 +69,8 @@ export default function DriverTransactionsPage() {
             dataIndex: ['deliveryer', 'name'],
             key: 'deliveryer_name',
             width: 120,
-            render: (name: string,record) => (
-                <strong className={'text-gray-600 cursor-pointer'} onClick={()=>{
+            render: (name: string, record) => (
+                <strong className={'text-gray-600 cursor-pointer'} onClick={() => {
                     setEditingTransaction(record);
                     setIsModalOpen(true);
                 }}>{name}</strong>
