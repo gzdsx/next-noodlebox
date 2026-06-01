@@ -19,6 +19,7 @@ import type {ColumnsType} from 'antd/es/table';
 import {apiGet, apiDelete} from "@/lib/backendApi";
 import {useTranslations} from '@/contexts/BackendLocaleContext';
 import dayjs from 'dayjs';
+import ModalDriverTransaction from "@/components/backend/ModalDriverTransaction";
 
 const {RangePicker} = DatePicker;
 
@@ -50,6 +51,8 @@ export default function DriverTransactionsPage() {
     const [selectedItems, setSelectedItems] = useState<React.Key[]>([]);
     const [batchAction, setBatchAction] = useState<string>('');
     const [dateRange, setDateRange] = useState<[dayjs.Dayjs | null, dayjs.Dayjs | null] | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingTransaction, setEditingTransaction] = useState<any>({});
 
     const handlePrint = (record: DriverTransactionType) => {
         window.open(`/admin/drivers/transactions/${record.id}/print`, '_blank');
@@ -61,8 +64,11 @@ export default function DriverTransactionsPage() {
             dataIndex: ['deliveryer', 'name'],
             key: 'deliveryer_name',
             width: 120,
-            render: (name: string) => (
-                <strong className={'text-gray-600'}>{name}</strong>
+            render: (name: string,record) => (
+                <strong className={'text-gray-600 cursor-pointer'} onClick={()=>{
+                    setEditingTransaction(record);
+                    setIsModalOpen(true);
+                }}>{name}</strong>
             ),
         },
         {
@@ -239,6 +245,15 @@ export default function DriverTransactionsPage() {
                     />
                 </div>
             </Card>
+            {
+                isModalOpen && (
+                    <ModalDriverTransaction
+                        transaction={editingTransaction}
+                        onClose={() => setIsModalOpen(false)}
+                        onSubmited={fetchTransactions}
+                    />
+                )
+            }
         </div>
     );
 }

@@ -1,18 +1,22 @@
 import {Button, Card, Descriptions, Form, Input, Modal, Select, Spin, Table} from "antd";
-import {apiGet, apiPost} from "@/lib/backendApi";
+import {apiGet, apiPut} from "@/lib/backendApi";
 import {useEffect, useState} from "react";
 import {useMessage} from "@/contexts/BackendAppContext";
 
-const ModalDriverReport = ({driver, onClose}: { driver: any, onClose: () => void }) => {
+const ModalDriverTransaction = ({transaction, onClose, onSubmited}: {
+    transaction: any,
+    onClose: () => void,
+    onSubmited: () => void
+}) => {
     const message = useMessage();
     const [loading, setLoading] = useState(true);
     const [submiting, setSubmiting] = useState(false);
     const [orders, setOrders] = useState<any[]>([]);
 
-    const report = driver.report || {};
+    const driver = transaction.deliveryer || {};
     const fetchOrders = () => {
-        apiGet(`/deliveryers/${driver.id}/unsettledorders`).then(response => {
-            setOrders([...response.data.items]);
+        apiGet(`/deliveryer/transactions/${transaction.id}/orders`).then(response => {
+            setOrders([...response.data]);
         }).catch(reason => {
             message.error(reason.message);
         }).finally(() => {
@@ -22,8 +26,9 @@ const ModalDriverReport = ({driver, onClose}: { driver: any, onClose: () => void
 
     const handleSubmit = (values: any) => {
         setSubmiting(true);
-        apiPost(`/deliveryers/${driver.id}/settlement`, values).then(() => {
+        apiPut(`/deliveryer/transactions/${transaction.id}`, values).then(() => {
             onClose();
+            onSubmited();
         }).catch(reason => {
             message.error(reason.message);
         }).finally(() => {
@@ -37,7 +42,7 @@ const ModalDriverReport = ({driver, onClose}: { driver: any, onClose: () => void
 
     return (
         <Modal
-            title={'Driver Report'}
+            title={`${driver?.name}(Order Count:${orders.length})`}
             open={true}
             onCancel={onClose}
             width={'80%'}
@@ -90,42 +95,42 @@ const ModalDriverReport = ({driver, onClose}: { driver: any, onClose: () => void
                                 {
                                     key: 'base_amount',
                                     label: 'Base Amount',
-                                    children: report.base_amount,
+                                    children: transaction.base_amount,
                                 },
                                 {
                                     label: 'Shipping Total',
                                     key: 'shipping_total',
-                                    children: report.shipping_total,
+                                    children: transaction.shipping_total,
                                 },
                                 {
                                     label: 'Online Total',
                                     key: 'online_total',
-                                    children: report.online_total,
+                                    children: transaction.online_total,
                                 },
                                 {
                                     label: 'Cash Total',
                                     key: 'cash_total',
-                                    children: report.cash_total,
+                                    children: transaction.cash_total,
                                 },
                                 {
                                     label: 'Card Total',
                                     key: 'card_total',
-                                    children: report.card_total,
+                                    children: transaction.card_total,
                                 },
                                 {
                                     label: 'Cost Total',
                                     key: 'cost_total',
-                                    children: report.cost_total,
+                                    children: transaction.cost_total,
                                 },
                                 {
                                     label: 'Order Total',
                                     key: 'total',
-                                    children: report.total,
+                                    children: transaction.total,
                                 },
                                 {
                                     label: 'Actual Total',
                                     key: 'actual_total',
-                                    children: report.actual_total,
+                                    children: transaction.actual_total,
                                 },
                             ]}
                         />
@@ -159,4 +164,4 @@ const ModalDriverReport = ({driver, onClose}: { driver: any, onClose: () => void
     );
 };
 
-export default ModalDriverReport;
+export default ModalDriverTransaction;
