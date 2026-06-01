@@ -16,6 +16,7 @@ import {apiGet} from "@/lib/backendApi";
 import Link from "next/link";
 import dayjs from "dayjs";
 import {capitalize} from "@/lib/utils";
+import {useAdministrator} from "@/contexts/BackendAppContext";
 
 const {Column} = Table;
 
@@ -35,6 +36,7 @@ const statusColorMap: Record<string, string> = {
 
 
 export default function AdminDashboard() {
+    const administrator = useAdministrator();
     const {t: tc} = useTranslations('common');
     const {t} = useTranslations('dashboard');
     const {t: ta} = useTranslations('admin');
@@ -87,6 +89,10 @@ export default function AdminDashboard() {
         fetchStats();
         fetchSoldAnalytics();
     }, []);
+
+    if (administrator?.role !== 'administrator') {
+        return null;
+    }
 
     return (
         <div>
