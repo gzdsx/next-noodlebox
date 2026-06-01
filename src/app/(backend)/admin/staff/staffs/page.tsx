@@ -21,11 +21,15 @@ import {
     PlusOutlined,
     SearchOutlined,
     EditOutlined,
+    FileOutlined,
+    FieldTimeOutlined
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
 import {apiGet, apiPost, apiPut, apiDelete} from "@/lib/backendApi";
 import {useTranslations} from '@/contexts/BackendLocaleContext';
 import {useMediaLibrary} from "@/contexts/BackendAppContext";
+import ModalStaffSchedules from "@/app/(backend)/admin/staff/staffs/ModalStaffSchedules";
+import ModelStaffInspection from "@/app/(backend)/admin/staff/staffs/ModelStaffInspection";
 
 const {Search} = Input;
 
@@ -56,6 +60,7 @@ interface GroupOption {
     title: string;
 }
 
+
 export default function StaffsPage() {
     const [form] = Form.useForm();
     const {message} = App.useApp();
@@ -79,6 +84,8 @@ export default function StaffsPage() {
     const [avatarUrl, setAvatarUrl] = useState<string>('');
 
     const [groups, setGroups] = useState<GroupOption[]>([]);
+    const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+    const [isInspectionModalOpen, setIsInspectionModalOpen] = useState(false);
 
     useEffect(() => {
         apiGet('/staff/groups', {limit: 100}).then(response => {
@@ -245,18 +252,44 @@ export default function StaffsPage() {
         {
             title: tc('actions'),
             key: 'action',
-            width: 80,
             align: 'end',
             render: (_, record) => (
                 <Space size="small">
                     <Button
-                        type="link"
+                        variant="link"
+                        color={'primary'}
                         size="small"
                         icon={<EditOutlined/>}
                         onClick={() => handleEdit(record)}
                         className={'px-0!'}
                     >
                         {tc('edit')}
+                    </Button>
+                    <Button
+                        variant="link"
+                        color={'primary'}
+                        size="small"
+                        icon={<FieldTimeOutlined/>}
+                        className={'px-0!'}
+                        onClick={() => {
+                            setEditingRecord(record);
+                            setIsScheduleModalOpen(true);
+                        }}
+                    >
+                        {'Schedules'}
+                    </Button>
+                    <Button
+                        variant="link"
+                        color={'primary'}
+                        size="small"
+                        icon={<FileOutlined/>}
+                        className={'px-0!'}
+                        onClick={() => {
+                            setEditingRecord(record);
+                            setIsInspectionModalOpen(true);
+                        }}
+                    >
+                        {'Inspection'}
                     </Button>
                 </Space>
             ),
@@ -534,6 +567,17 @@ export default function StaffsPage() {
                     </Form.Item>
                 </Form>
             </Modal>
+
+            {
+                isScheduleModalOpen && (
+                    <ModalStaffSchedules staff={editingRecord} onClose={() => setIsScheduleModalOpen(false)}/>
+                )
+            }
+            {
+                isInspectionModalOpen && (
+                    <ModelStaffInspection staff={editingRecord} onClose={() => setIsInspectionModalOpen(false)}/>
+                )
+            }
         </div>
     );
 }

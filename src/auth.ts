@@ -2,9 +2,6 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
 import {apiGet, apiPost} from "@/lib/api";
 import GoogleProvider from "next-auth/providers/google";
-import GithubProvider from "next-auth/providers/github";
-//import {cookies} from "next/headers";
-import Cookies from "js-cookie";
 
 export const {handlers, auth} = NextAuth({
     trustHost: true,

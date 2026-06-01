@@ -73,7 +73,7 @@ export default function AdminLayoutClient({
             key: '/admin',
             icon: <DashboardOutlined/>,
             label: <Link href="/admin">{t('dashboard')}</Link>,
-            roles: ['manager']
+            roles: []
         },
         {
             key: 'shop',
