@@ -100,7 +100,7 @@ export default function Page() {
             deliveryer_id: driver.id,
             orders: driver.orders.map((item: any) => item.id)
         }).then(() => {
-            setOrders(prevState => prevState.filter(item => !driver.orders.includes(item.id)));
+            setOrders(prevState => prevState.filter(item => !driver.orders.includes(item)));
             setDrivers(prevState => prevState.map(item => item.id === driver.id ? {
                 ...item,
                 orders: []
@@ -139,7 +139,7 @@ export default function Page() {
     // eslint-disable-next-line react-hooks/preserve-manual-memoization
     const filteredOrders = useMemo(() => {
         const assignedOrderIds = drivers.flatMap(driver => driver.orders);
-        return orders.filter(order => !assignedOrderIds.includes(order.id));
+        return orders.filter(order => !assignedOrderIds.includes(order));
     }, [drivers, orders]);
 
     const {run: refreshOrders} = useThrottleFn(() => {
