@@ -7,7 +7,7 @@
     "dev-https": "next dev -p 5001 --experimental-https",
     "build": "next build",
     "start": "next start",
-    "start:standalone": "PORT=3126 node .next/standalone/server.js",
+    "standalone": "PORT=3126 node .next/standalone/server.js",
     "lint": "next lint"
   },
   "dependencies": {
