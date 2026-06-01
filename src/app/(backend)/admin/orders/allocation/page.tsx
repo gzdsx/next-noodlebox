@@ -174,41 +174,6 @@ export default function Page() {
             </div>
             <Card loading={loading}>
                 <Layout style={{backgroundColor: '#fff'}}>
-                    <Sider style={{backgroundColor: '#fff'}} width={205}>
-                        <div className={'flex flex-col gap-2'}>
-                            {
-                                drivers.map(driver => (
-                                    <div key={driver.id}
-                                         className={'border border-gray-200 rounded-md overflow-hidden'}>
-                                        <div
-                                            onClick={() => {
-                                                setCurrentDriver({...driver});
-                                                setIsDriverModalOpen(true);
-                                            }}
-                                            className={'font-bold text-center bg-cyan-600 text-white py-2 cursor-pointer'}>{driver.name}</div>
-                                        <div className={'p-2 font-bold text-wrap flex flex-wrap gap-2'}>
-                                            {driver.orders.map((c: string) => (
-                                                <Tag key={c}
-                                                     className={'cursor-pointer'}
-                                                     onClick={() => handleRemoveOrder(driver, c)}>{c}</Tag>
-                                            ))}
-                                        </div>
-                                        <div className={'flex border-t border-gray-200'}>
-                                            <div
-                                                className={'grow py-2 text-center cursor-pointer'}
-                                                onClick={() => handleAllocate(driver)}
-                                            >+Orders
-                                            </div>
-                                            <div
-                                                className={'grow py-2 text-center cursor-pointer border-l border-gray-200'}
-                                                onClick={() => handleSetOut(driver)}>Set out
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    </Sider>
                     <Content className={'pl-4'}>
                         <SortableProvider onSortEnd={handleSortEnd}>
                             <div className={'grid grid-cols-2 md:grid-cols-4 gap-4'}>
@@ -251,6 +216,45 @@ export default function Page() {
                             </div>
                         </SortableProvider>
                     </Content>
+                    <Sider style={{backgroundColor: '#fff'}} width={280}>
+                        <div className={'flex flex-col gap-2'}>
+                            {
+                                drivers.map(driver => (
+                                    <div key={driver.id}
+                                         className={'border border-gray-200 rounded-md overflow-hidden flex flex-row'}>
+                                        <div
+                                            className={'py-2 text-center cursor-pointer bg-cyan-600 text-white w-14'}
+                                            onClick={() => handleAllocate(driver)}
+                                        >
+                                            <p>+</p>
+                                            <p>Orders</p>
+                                        </div>
+                                        <div className={'flex-1 flex flex-col gap-y-2'}>
+                                            <div
+                                                onClick={() => {
+                                                    setCurrentDriver({...driver});
+                                                    setIsDriverModalOpen(true);
+                                                }}
+                                                className={'font-bold text-center py-2 cursor-pointer bg-gray-200'}>{driver.name}</div>
+                                            <div className={'p-2 font-bold text-wrap flex flex-wrap gap-2'}>
+                                                {driver.orders.map((c: string) => (
+                                                    <Tag key={c}
+                                                         className={'cursor-pointer'}
+                                                         onClick={() => handleRemoveOrder(driver, c)}>{c}</Tag>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div
+                                            className={'py-2 text-center cursor-pointer border-l bg-cyan-600 text-white w-14'}
+                                            onClick={() => handleSetOut(driver)}>
+                                            <p>Set</p>
+                                            <p>Out</p>
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </Sider>
                 </Layout>
             </Card>
             {
