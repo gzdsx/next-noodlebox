@@ -82,10 +82,9 @@ export default function Page() {
     }
 
     const handleAllocate = (driver: any) => {
-        const ids = selectedItems.map(item => item.id);
         setDrivers(prevState => prevState.map(item => item.id === driver.id ? {
             ...item,
-            orders: [...new Set([...item.orders, ...ids])]
+            orders: [...item.orders, ...selectedItems]
         } : item));
         //setOrders(prevState => prevState.filter(item => !ids.includes(item.id)));
         setSelectedItems([]);
@@ -99,7 +98,7 @@ export default function Page() {
         spinner.show();
         apiPost(`/orders/allocate`, {
             deliveryer_id: driver.id,
-            orders: driver.orders
+            orders: driver.orders.map((item: any) => item.id)
         }).then(() => {
             setOrders(prevState => prevState.filter(item => !driver.orders.includes(item.id)));
             setDrivers(prevState => prevState.map(item => item.id === driver.id ? {
@@ -113,14 +112,14 @@ export default function Page() {
         })
     }
 
-    const handleRemoveOrder = (driver: any, id: any) => {
+    const handleRemoveOrder = (driver: any, order: any) => {
         modal.confirm({
             title: 'Confirm',
             content: 'Are you sure to remove this order?',
             onOk: () => {
                 setDrivers(prevState => prevState.map(item => item.id === driver.id ? {
                     ...item,
-                    orders: item.orders.filter((c: any) => c !== id)
+                    orders: item.orders.filter((c: any) => c.id !== order.id)
                 } : item));
             }
         })
@@ -237,10 +236,10 @@ export default function Page() {
                                                 }}
                                                 className={'font-bold text-center py-2 cursor-pointer bg-gray-200'}>{driver.name}</div>
                                             <div className={'p-2 font-bold text-wrap flex flex-wrap gap-2'}>
-                                                {driver.orders.map((c: string) => (
-                                                    <Tag key={c}
+                                                {driver.orders.map((o: any) => (
+                                                    <Tag key={o.id}
                                                          className={'cursor-pointer'}
-                                                         onClick={() => handleRemoveOrder(driver, c)}>{c}</Tag>
+                                                         onClick={() => handleRemoveOrder(driver, o)}>{o.short_code}</Tag>
                                                 ))}
                                             </div>
                                         </div>
