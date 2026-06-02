@@ -65,7 +65,7 @@ export default function Page() {
     });
 
     useEchoPublic('noodlebox', '.order.changed', (data: any) => {
-        //console.log('order.created', data);
+        console.log('order.changed', data);
         refreshOrders();
     });
 
