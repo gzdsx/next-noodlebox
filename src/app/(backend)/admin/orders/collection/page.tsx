@@ -69,6 +69,11 @@ export default function Page() {
         refreshOrders();
     });
 
+    useEchoPublic('noodlebox', '.order.deleted', (data: any) => {
+        //console.log('order.created', data);
+        refreshOrders();
+    });
+
     useEffect(() => {
         setTimeout(() => {
             fetchOrders();

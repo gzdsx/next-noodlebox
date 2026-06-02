@@ -119,7 +119,7 @@ export default function Page() {
                 <div>
                     <div>{'€' + amount}</div>
                     <div
-                        className={`text-ellipsis ${record.is_paid ? 'text-green-600' : 'text-gray-600'}`}>{record.payment_method_title}</div>
+                        className={`text-ellipsis ${record.is_paid ? 'text-green-600' : 'text-red-500'}`}>{record.payment_method_title}</div>
                 </div>
             ),
         },
