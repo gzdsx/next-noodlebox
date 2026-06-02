@@ -164,10 +164,11 @@ export default function DriverBillsPage() {
             </Card>
             {
                 isReportModalOpen && (
-                    <ModalDriverReport driver={editingDriver} onClose={() => {
-                        setIsReportModalOpen(false);
-                        fetchBills();
-                    }}/>
+                    <ModalDriverReport
+                        driver={editingDriver}
+                        onClose={() => setIsReportModalOpen(false)}
+                        onSubmited={fetchBills}
+                    />
                 )
             }
         </div>

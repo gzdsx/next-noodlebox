@@ -56,9 +56,15 @@ export default function Page() {
 
     const {run: refreshOrders} = useThrottleFn(() => {
         fetchOrders();
+        fetchStats();
     }, {wait: 2000});
 
     useEchoPublic('noodlebox', '.order.created', (data: any) => {
+        //console.log('order.created', data);
+        refreshOrders();
+    });
+
+    useEchoPublic('noodlebox', '.order.changed', (data: any) => {
         //console.log('order.created', data);
         refreshOrders();
     });
@@ -94,7 +100,7 @@ export default function Page() {
                                 <div
                                     key={`order-${order.id}`}
                                     className={'border border-gray-200 rounded-md p-2 flex flex-col gap-y-1 cursor-pointer'}
-                                    onClick={() => processor.open(order, fetchOrders)}
+                                    onClick={() => processor.open(order, refreshOrders)}
                                 >
                                     <div className={'grid grid-cols-[80px_1fr] gap-1'}>
                                         <div className={'font-bold'}>OrderN</div>

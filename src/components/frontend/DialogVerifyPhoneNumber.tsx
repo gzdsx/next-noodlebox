@@ -12,6 +12,8 @@ import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/
 import {apiPost} from "@/lib/api";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
+import {ButtonGroup} from "@/components/ui/button-group";
+import {Input} from "@/components/ui/input";
 
 const DialogVerifyPhoneNumber = ({iddCode, phoneNumber, onSuccess, onClose}: {
     iddCode: string,
@@ -36,9 +38,9 @@ const DialogVerifyPhoneNumber = ({iddCode, phoneNumber, onSuccess, onClose}: {
             intervalRef.current = setInterval(() => {
                 setSeconds(prev => prev - 1);
             }, 1000);
-        } catch(e: unknown) {
+        } catch (e: unknown) {
             setWaiting(false);
-            if (intervalRef.current){
+            if (intervalRef.current) {
                 clearInterval(intervalRef.current);
             }
         } finally {
@@ -84,9 +86,17 @@ const DialogVerifyPhoneNumber = ({iddCode, phoneNumber, onSuccess, onClose}: {
     }, []);
 
     return (
-        <Dialog open={true} modal={true} onOpenChange={() => onClose?.()}>
+        <Dialog
+            open={true}
+            modal={true}
+            onOpenChange={() => onClose?.()}
+        >
             <DialogTrigger>Open</DialogTrigger>
-            <DialogContent className={'w-125 max-w-[96vw] border-[#444]'}>
+            <DialogContent
+                className={'w-125 max-w-[96vw] border-[#444] z-100'}
+                onInteractOutside={(e) => e.preventDefault()}
+                onEscapeKeyDown={(e) => e.preventDefault()}
+            >
                 <DialogHeader>
                     <DialogTitle>Verify Your Phone Number</DialogTitle>
                 </DialogHeader>
@@ -94,11 +104,15 @@ const DialogVerifyPhoneNumber = ({iddCode, phoneNumber, onSuccess, onClose}: {
                     <div className={'text-center text-gray-400'}>Please enter the verification code sent to your phone
                         number.
                     </div>
-                    <div className={'text-[#f19e39] font-bold text-[18px] text-center'}>+{iddCode + '' + phoneNumber}</div>
+                    <div className={'text-center text-gray-400'}>You can click &#34;GET CODE&#34; to receive your verification
+                        code.
+                    </div>
+                    <div
+                        className={'text-[#f19e39] font-bold text-[18px] text-center'}>+{iddCode + '' + phoneNumber}</div>
                 </div>
                 <div className={'mt-8'}>
-                    <InputGroup className={'h-11'}>
-                        <InputGroupInput
+                    <ButtonGroup className={'w-full'}>
+                        <Input
                             name={'verify-phone-number'}
                             inputMode={'numeric'}
                             id={'verify-phone-number'}
@@ -107,14 +121,11 @@ const DialogVerifyPhoneNumber = ({iddCode, phoneNumber, onSuccess, onClose}: {
                             value={vercode}
                             onChange={(e) => setVercode(e.target.value)}
                         />
-                        <InputGroupAddon align={'inline-end'}>
-                            <InputGroupButton
-                                className={'cursor-pointer'}
-                                onClick={handleGetCode}
-                            >{waiting ? `${seconds}s remaining` : 'Get Code'}</InputGroupButton>
-                        </InputGroupAddon>
-                    </InputGroup>
-
+                        <Button
+                            className={'cursor-pointer'}
+                            onClick={handleGetCode}
+                        >{waiting ? `${seconds}s remaining` : 'GET CODE'}</Button>
+                    </ButtonGroup>
                     <div className={'mt-8'}>
                         <Button
                             onClick={handleSubmit}

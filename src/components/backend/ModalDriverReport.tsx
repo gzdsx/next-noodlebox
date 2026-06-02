@@ -3,7 +3,11 @@ import {apiGet, apiPost} from "@/lib/backendApi";
 import {useEffect, useState} from "react";
 import {useMessage} from "@/contexts/BackendAppContext";
 
-const ModalDriverReport = ({driver, onClose}: { driver: any, onClose: () => void }) => {
+const ModalDriverReport = ({driver, onClose, onSubmited}: {
+    driver: any,
+    onClose: () => void,
+    onSubmited: () => void
+}) => {
     const message = useMessage();
     const [loading, setLoading] = useState(true);
     const [submiting, setSubmiting] = useState(false);
@@ -24,6 +28,7 @@ const ModalDriverReport = ({driver, onClose}: { driver: any, onClose: () => void
         setSubmiting(true);
         apiPost(`/deliveryers/${driver.id}/settlement`, values).then(() => {
             onClose();
+            onSubmited();
         }).catch(reason => {
             message.error(reason.message);
         }).finally(() => {

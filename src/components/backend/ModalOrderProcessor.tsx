@@ -99,8 +99,9 @@ const ModalOrderProcessor = ({
                     value: payByCardValue
                 }
             ]
-        }).then(_ => {
-            messgae.success('订单已更新');
+        }).then(() => {
+            messgae.success('Order Updated Successfully');
+            onClose();
         }).catch(reason => {
             messgae.error(reason.message);
         }).finally(() => {

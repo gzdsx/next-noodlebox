@@ -109,17 +109,24 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     }
 
     const handleCreatePaypalOrder = async () => {
-        if (paypalOrderId.current) {
-            return paypalOrderId.current;
-        }
+        try {
+            if (paypalOrderId.current) {
+                return paypalOrderId.current;
+            }
 
-        if (!newOrderId.current) {
-            await handleCrateOrder();
-        }
+            if (!newOrderId.current) {
+                await handleCrateOrder();
+            }
 
-        const response = await apiPost(`/orders/${newOrderId.current}/create-paypal-order`);
-        paypalOrderId.current = response.data.id;
-        return response.data.id;
+            if (newOrderId.current) {
+                const response = await apiPost(`/orders/${newOrderId.current}/create-paypal-order`);
+                paypalOrderId.current = response.data.id;
+                return response.data.id;
+            }
+        } catch (e: any) {
+            //toast.error(e.message);
+        }
+        return null;
     }
 
     const handleApprove = async (data: any) => {
@@ -136,7 +143,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     }
 
     const handlePapalCancel = (data: any) => {
-        //onPlaced?.(newOrderId.current || 0, 'pending');
+        onPlaced?.(newOrderId.current || 0, 'pending');
     }
 
     useEffect(() => {
@@ -194,7 +201,6 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                         <SelectGroup>
                                             <SelectItem value="353">+353</SelectItem>
                                             <SelectItem value="44">+44</SelectItem>
-                                            <SelectItem value="86">+86</SelectItem>
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
@@ -352,7 +358,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                 onCancel={handlePapalCancel}
                                 onError={(error) => {
                                     console.error("Error:", error);
-                                    toast.error((error as any).message);
+                                    //toast.error((error as any).message);
                                 }}
                             />
                         </div>
