@@ -1,32 +1,34 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { User } from 'lucide-react';
-import { useTranslations } from '@/contexts/LocaleContext';
-import { toast } from 'sonner';
+import React, {useState} from 'react';
+import {Card, CardContent} from '@/components/ui/card';
+import {Input} from '@/components/ui/input';
+import {Label} from '@/components/ui/label';
+import {Button} from '@/components/ui/button';
+import {Avatar, AvatarImage, AvatarFallback} from '@/components/ui/avatar';
+import {useTranslations} from '@/contexts/LocaleContext';
+import {toast} from 'sonner';
+import {User} from 'lucide-react';
+import {apiPost} from "@/lib/api";
 
 interface ProfileClientProps {
     session: any;
 }
 
-export default function ProfileClient({ session }: ProfileClientProps) {
+export default function ProfileClient({session}: ProfileClientProps) {
     const {t} = useTranslations('ecommerce');
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState(session.user?.name || '');
-    const [email] = useState(session.user?.email || '');
+    const [email, setEmail] = useState(session.user?.email || '');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-    const handleProfileSubmit = async (e: React.FormEvent) => {
+    const handleProfileSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();
-        setLoading(true);
         try {
+            setLoading(true);
+            await apiPost(`/user/profile`, {name, email});
             toast.success(t('user.updateSuccess'));
         } catch {
             toast.error(t('user.updateFailed'));
@@ -35,9 +37,22 @@ export default function ProfileClient({ session }: ProfileClientProps) {
         }
     };
 
-    const handlePasswordSubmit = async (e: React.FormEvent) => {
+    const handlePasswordSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();
         // Password change logic
+        try {
+            setLoading(true);
+            await apiPost(`/user/update-password`, {
+                password: currentPassword,
+                new_password: newPassword,
+                new_password_confirmation: confirmNewPassword
+            });
+            toast.success(t('user.changePasswordSuccess'));
+        } catch (e: any) {
+            toast.error(e.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -77,10 +92,10 @@ export default function ProfileClient({ session }: ProfileClientProps) {
                                 className="h-11"
                                 placeholder="Email"
                                 value={email}
-                                disabled
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
-                        <Button type="submit" disabled={loading} size="lg">
+                        <Button type="submit" disabled={!name.length || !email.length || loading} size="lg">
                             {loading ? '...' : t('user.updateProfile')}
                         </Button>
                     </form>

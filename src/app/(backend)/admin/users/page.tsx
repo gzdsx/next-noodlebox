@@ -17,7 +17,7 @@ import {
 import {
     DeleteOutlined,
     DollarCircleOutlined,
-    EditOutlined,
+    EditOutlined, FileOutlined,
     PlusOutlined,
     SearchOutlined,
     UserOutlined,
@@ -127,7 +127,8 @@ export default function UsersManagement() {
                         <Space style={{marginTop: 4}}>
                             <Link href={`/admin/users/${record.id}/edit`}>
                                 <Button
-                                    type="link"
+                                    variant="link"
+                                    color={'primary'}
                                     size="small"
                                     icon={<EditOutlined/>}
                                     className="px-0!"
@@ -142,16 +143,17 @@ export default function UsersManagement() {
                                 cancelText={t('cancel')}
                             >
                                 <Button
-                                    type={"link"}
+                                    variant={"link"}
+                                    color={'danger'}
                                     size={"small"}
                                     icon={<DeleteOutlined/>}
                                     className={'px-0!'}
-                                    danger
                                 >{tc('delete')}</Button>
                             </Popconfirm>
                             <Link href={`/admin/points-records?user=${record.id}`} target={'_blank'}>
                                 <Button
-                                    type="link"
+                                    variant="link"
+                                    color={'primary'}
                                     size="small"
                                     icon={<DollarCircleOutlined/>}
                                     className="px-0!"
@@ -160,7 +162,8 @@ export default function UsersManagement() {
                                 </Button>
                             </Link>
                             <Button
-                                type="link"
+                                variant="link"
+                                color={'primary'}
                                 size="small"
                                 icon={<EditOutlined/>}
                                 className="px-0!"
@@ -171,6 +174,17 @@ export default function UsersManagement() {
                             >
                                 {t('editPoints')}
                             </Button>
+                            <Link href={`/admin/orders?user=${record.id}`} target={'_blank'}>
+                                <Button
+                                    variant="link"
+                                    color={'primary'}
+                                    size="small"
+                                    icon={<FileOutlined/>}
+                                    className="px-0!"
+                                >
+                                    {'Orders'}
+                                </Button>
+                            </Link>
                         </Space>
                     </div>
                 </Space>
@@ -215,7 +229,7 @@ export default function UsersManagement() {
             title: t('createdAt'),
             dataIndex: 'created_at',
             key: 'created_at',
-            width: 180,
+            width: 140,
             align: 'end'
         },
     ];

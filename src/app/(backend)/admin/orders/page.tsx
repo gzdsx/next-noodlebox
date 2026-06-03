@@ -27,7 +27,8 @@ import PaymentSelect from "@/components/backend/PaymentSelect";
 import DriverSelect from "@/components/backend/DriverSelect";
 import dayjs from "dayjs";
 import {useEchoPublic} from "@laravel/echo-react";
-import {useThrottleFn} from 'ahooks'; // 推荐使用 ahooks
+import {useThrottleFn} from 'ahooks';
+import {useSearchParams} from "next/navigation"; // 推荐使用 ahooks
 
 const {RangePicker} = DatePicker;
 
@@ -58,6 +59,7 @@ export default function Page() {
     const [filterParams, setFilterParams] = useState<any>({});
 
     const message = useMessage();
+    const searchParams = useSearchParams();
     const processor = useOrderProcessor();
     const {t: tc} = useTranslations('common');
     const {t} = useTranslations('orders');
@@ -207,6 +209,7 @@ export default function Page() {
         setLoading(true);
         apiGet('/orders', {
             ...filterParams,
+            user: searchParams.get('user') || '',
             offset,
             limit: 20,
         }).then(response => {
