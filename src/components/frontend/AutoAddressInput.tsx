@@ -7,8 +7,8 @@ import {Input} from "@/components/ui/input";
 const AutoAddressInput = ({defaultValue, onChange}: {
     defaultValue: string,
     onChange: (value: {
-        eircode: string,
-        address: string,
+        eircode?: string,
+        address?: string,
         city?: string,
         state?: string,
         addressLine1?: string,
@@ -94,7 +94,6 @@ const AutoAddressInput = ({defaultValue, onChange}: {
                 });
         } else {
             onChange?.({
-                eircode: '',
                 address: item.address
             });
             setShowSuggestion(false);
@@ -115,7 +114,7 @@ const AutoAddressInput = ({defaultValue, onChange}: {
     return (
         <div className={'relative'}
              onClick={(e) => {
-                 e.stopPropagation();
+                 e.nativeEvent.stopPropagation();
              }}
         >
             <Input
@@ -131,6 +130,9 @@ const AutoAddressInput = ({defaultValue, onChange}: {
                         setItems([]);
                     }
                     setInputValue(address);
+                    onChange({
+                        address: address
+                    });
                 }}
                 onFocus={(e) => {
                     e.stopPropagation();

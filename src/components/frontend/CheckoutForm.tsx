@@ -240,7 +240,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                         //console.log('value:', value);
                                         setShipping(prev => ({...prev, ...value}));
 
-                                        const address = value.address.toLowerCase();
+                                        const address = (value.address || '').toLowerCase();
                                         for (const zone of options.shipping_zones) {
                                             console.log(address.lastIndexOf(zone.title.toLowerCase()));
                                             if (address.lastIndexOf(zone.title.toLowerCase()) !== -1) {

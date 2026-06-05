@@ -225,7 +225,7 @@ export default function Page() {
                                             className={'py-2 text-center cursor-pointer bg-cyan-600 text-white w-14'}
                                             onClick={() => handleAllocate(driver)}
                                         >
-                                            <p>+</p>
+                                            <p>Add</p>
                                             <p>Orders</p>
                                         </div>
                                         <div className={'flex-1 flex flex-col gap-y-2'}>
