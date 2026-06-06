@@ -619,7 +619,9 @@
 		"methodCollection": "到店自取",
 		"methodTakeAway": "外带",
 		"date": "日期",
-		"paymentMethod": "支付方式"
+		"paymentMethod": "支付方式",
+		"keywords": "关键词",
+		"keywordsPlaceholder": "输入订单号, 客户姓名, 收货地址等"
 	},
 	"mediaLibrary": {
 		"title": "媒体库",

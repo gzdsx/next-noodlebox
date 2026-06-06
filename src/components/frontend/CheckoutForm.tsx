@@ -42,7 +42,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
         address: '',
         eircode: '',
         ...options.shipping_address,
-        iddcode: ['353', '44'].includes(options.shipping_address.iddcode || '') ? options.shipping_address.iddcode : '353',
+        iddcode: ['353', '44'].includes(options.shipping_address?.iddcode || '') ? options.shipping_address?.iddcode : '353',
     });
     const [shippingMethod, setShippingMethod] = useState('flat_rate');
     const [shippingZoneId, setShippingZoneId] = useState<string | number | undefined>(options?.shipping_zone_id);

@@ -304,13 +304,13 @@ export default function Page() {
             <h2 style={{marginBottom: 24, fontSize: 24, fontWeight: 'bold'}}>{t('orderManagement')}</h2>
             <Card>
                 <div style={{marginBottom: 16, display: 'flex', columnGap: 16, flexWrap: 'wrap'}}>
-                    <Form.Item label={t('orderNo')}>
+                    <Form.Item label={t('keywords')}>
                         <Input
                             allowClear={true}
                             style={{width: 200}}
-                            placeholder={t('orderNoPlaceholder')}
+                            placeholder={t('keywordsPlaceholder')}
                             onChange={e => {
-                                setFilterParams((prev: any) => ({...prev, order_no: e.target.value}));
+                                setFilterParams((prev: any) => ({...prev, q: e.target.value}));
                             }}
                         />
                     </Form.Item>

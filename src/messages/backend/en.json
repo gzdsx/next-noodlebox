@@ -611,7 +611,9 @@
 		"methodCollection": "Collection",
 		"methodTakeAway": "Take Away",
 		"date": "Date",
-		"paymentMethod": "Payment Method"
+		"paymentMethod": "Payment Method",
+		"keywords": "Keywords",
+		"keywordsPlaceholder": "Enter order no. or customer name or address"
 	},
 	"mediaLibrary": {
 		"title": "Media Library",
