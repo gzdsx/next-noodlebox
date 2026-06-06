@@ -10,7 +10,7 @@ import CheckoutSummary, {CheckoutOrderInfo} from "@/components/frontend/Checkout
 import {useCart} from "@/contexts/CartContext";
 import CheckoutNoticeDialog from "@/components/frontend/CheckoutNoticeDialog";
 
-export default function CheckoutClient({options}: {
+export default function CheckoutClient({options = {}}: {
     options?: any,
 }) {
     const {clearCart} = useCart();

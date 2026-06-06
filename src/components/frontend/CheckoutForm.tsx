@@ -32,7 +32,7 @@ interface CheckoutFormProps {
     onPlaced?: (orderId: number, status: string) => void;
 }
 
-export default function CheckoutForm({options, onChange, onPlaced}: CheckoutFormProps) {
+export default function CheckoutForm({options = {}, onChange, onPlaced}: CheckoutFormProps) {
     const {totalPrice, reloadCart} = useCart();
     const currentUser = useCurrentUser();
     const {t} = useTranslations('ecommerce');
@@ -242,7 +242,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                         setShipping(prev => ({...prev, ...value}));
 
                                         const address = (value.address || '').toLowerCase();
-                                        for (const zone of options.shipping_zones) {
+                                        for (const zone of (options?.shipping_zones || [])) {
                                             //console.log(address.lastIndexOf(zone.title.toLowerCase()));
                                             if (address.lastIndexOf(zone.title.toLowerCase()) !== -1) {
                                                 setShippingZoneId(zone.id);
@@ -264,7 +264,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
                                         }}
                                     >
                                         {
-                                            options?.shipping_zones?.map((zone: ShippingZone) => (
+                                            (options?.shipping_zones||[]).map((zone: ShippingZone) => (
                                                 <option key={zone.title} value={zone.id}
                                                         className={'bg-black text-white'}>{zone.title}(€{zone.fee})</option>
                                             ))
