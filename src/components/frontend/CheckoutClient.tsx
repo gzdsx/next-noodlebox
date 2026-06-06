@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {ResultPage} from '@/components/ui/result-page';
 import {useTranslations} from '@/contexts/LocaleContext';
@@ -13,8 +13,8 @@ import CheckoutNoticeDialog from "@/components/frontend/CheckoutNoticeDialog";
 export default function CheckoutClient({options}: {
     options?: any,
 }) {
+    const {clearCart} = useCart();
     const {t} = useTranslations('ecommerce');
-    const {clearCart, items} = useCart();
     const [orderData, setOrderData] = useState<CheckoutOrderInfo>({
         total: 0,
         subtotal: 0,
@@ -23,14 +23,6 @@ export default function CheckoutClient({options}: {
     });
     const [showWarning, setShowWarning] = useState(!options.in_delivery_hours);
     const [orderStatus, setOrderStatus] = useState('');
-
-    useEffect(() => {
-        if (items.length === 0) {
-            window.location.href = '/cart';
-        }
-    }, []);
-
-    if (items.length === 0) return null;
 
     if (orderStatus === 'placed') {
         return (
