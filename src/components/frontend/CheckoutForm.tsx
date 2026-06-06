@@ -130,6 +130,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
     }
 
     const handleApprove = async (data: any) => {
+        console.log('paypal data:', data);
         try {
             await apiPost(`/orders/${data.orderID}/capture-paypal-order`);
         } catch (e: any) {
@@ -242,7 +243,7 @@ export default function CheckoutForm({options, onChange, onPlaced}: CheckoutForm
 
                                         const address = (value.address || '').toLowerCase();
                                         for (const zone of options.shipping_zones) {
-                                            console.log(address.lastIndexOf(zone.title.toLowerCase()));
+                                            //console.log(address.lastIndexOf(zone.title.toLowerCase()));
                                             if (address.lastIndexOf(zone.title.toLowerCase()) !== -1) {
                                                 setShippingZoneId(zone.id);
                                                 break;
