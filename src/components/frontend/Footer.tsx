@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {Mail, Phone, Facebook, Instagram, Youtube} from 'lucide-react';
+import "@/lib/arms";
 
 export default function Footer() {
     return (
