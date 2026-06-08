@@ -71,7 +71,12 @@ export default async function FrontendLayout({
         <body className="bg-[#444] text-gray-100 min-h-screen w-full overflow-x-hidden pb-14 lg:pb-0">
         <LocaleProvider>
             <SessionProvider session={session}>
-                <AppProvider categories={categories} webconfig={webconfig}>
+                <AppProvider categories={categories} webconfig={{
+                    title: webconfig.sitename,
+                    keywords: webconfig.keywords,
+                    description: webconfig.description,
+                    home_page_banner_src: webconfig.home_page_banner_src,
+                }}>
                     <CartProvider>
                         <LotteryProvider>
                             <Header/>
