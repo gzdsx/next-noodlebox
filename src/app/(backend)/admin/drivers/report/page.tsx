@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
     Table,
     Card,
@@ -50,6 +50,7 @@ export default function DriverBillsPage() {
     const [loading, setLoading] = useState(false);
     const [isReportModalOpen, setIsReportModalOpen] = useState(false);
     const [editingDriver, setEditingDriver] = useState<any>({});
+    const intervalRef = useRef<any>(null);
 
     const handlePrint = (record: DriverBillType) => {
         window.open(record.links?.report?.href || `/admin/driver-bills/${record.id}/print`);
@@ -143,6 +144,14 @@ export default function DriverBillsPage() {
 
     React.useEffect(() => {
         fetchBills();
+
+        intervalRef.current = setInterval(() => {
+            fetchBills();
+        }, 60000);
+
+        return () => {
+            clearInterval(intervalRef.current);
+        };
     }, []);
 
     return (
