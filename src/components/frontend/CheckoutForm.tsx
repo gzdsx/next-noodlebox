@@ -124,7 +124,7 @@ export default function CheckoutForm({options = {}, onChange, onPlaced}: Checkou
                 return response.data.id;
             }
         } catch (e: any) {
-            //toast.error(e.message);
+            toast.error(e.message);
         }
         return null;
     }

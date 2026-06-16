@@ -8,7 +8,6 @@ import {ProductClientPC} from "@/app/(frontend)/shop/ProductClientPC";
 import ProductClientMobile from "@/app/(frontend)/shop/ProductClientMobile";
 import {Metadata} from "next";
 
-
 const getProducts = async (): Promise<Category[]> => {
     try {
         const response = await apiGet('/products/grouped');
