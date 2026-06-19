@@ -21,6 +21,7 @@ import dayjs from 'dayjs';
 import {apiGet, apiPost} from "@/lib/backendApi";
 import {useTranslations} from "@/contexts/BackendLocaleContext";
 import {useMediaLibrary} from "@/contexts/BackendAppContext";
+import PaymentCheckboxGroup from "@/components/backend/PaymentCheckboxGroup";
 
 export default function ShopSettingsPage() {
     const [form] = Form.useForm();
@@ -69,7 +70,8 @@ export default function ShopSettingsPage() {
                 till_password: data.till_password,
                 discount_password: data.discount_password,
                 holiday_pay_rate: data.holiday_pay_rate,
-                casher_report_password: data.casher_report_password
+                casher_report_password: data.casher_report_password,
+                pos_payment_methods: data.pos_payment_methods,
             });
 
             if (data.float_image) {
@@ -358,6 +360,16 @@ export default function ShopSettingsPage() {
                             </Form.Item>
                             <Form.Item label={t('printNodePrinterName')} name="printnode_printer_id">
                                 <Input placeholder={t('printNodePrinterNamePlaceholder')} style={{width: 400}}/>
+                            </Form.Item>
+                        </Card>
+
+                        <Card
+                            type="inner"
+                            title={'POS 设置'}
+                            style={{marginBottom: 16}}
+                        >
+                            <Form.Item label={'付款方式'} name="pos_payment_methods">
+                                <PaymentCheckboxGroup/>
                             </Form.Item>
                         </Card>
 

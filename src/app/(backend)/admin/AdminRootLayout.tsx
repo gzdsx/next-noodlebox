@@ -1,12 +1,14 @@
 'use client'
 
+import {Spin} from "antd";
+import {useLayoutEffect, useState} from "react";
 import {BackendAppProvider} from "@/contexts/BackendAppContext";
 import AdminLayoutClient from "@/app/(backend)/admin/AdminLayoutClient";
 import OrderNotification from "@/components/backend/OrderNotification";
-import {useLayoutEffect, useState} from "react";
-import {Spin} from "antd";
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 
 
+const queryClient = new QueryClient();
 const AdminRootLayout = ({children}: { children: React.ReactNode }) => {
     const [loaidng, setLoaidng] = useState(true);
 
@@ -25,10 +27,12 @@ const AdminRootLayout = ({children}: { children: React.ReactNode }) => {
     }
 
     return (
-        <BackendAppProvider>
-            <AdminLayoutClient>{children}</AdminLayoutClient>
-            <OrderNotification/>
-        </BackendAppProvider>
+        <QueryClientProvider client={queryClient}>
+            <BackendAppProvider>
+                <AdminLayoutClient>{children}</AdminLayoutClient>
+                <OrderNotification/>
+            </BackendAppProvider>
+        </QueryClientProvider>
     );
 };
 
