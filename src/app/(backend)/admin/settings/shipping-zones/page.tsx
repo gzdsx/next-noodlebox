@@ -289,11 +289,7 @@ export default function ShippingZonesManagement() {
                         label={'Order'}
                         name="sort_num"
                     >
-                        <InputNumber
-                            min={0}
-                            precision={2}
-                            style={{width: '100%'}}
-                        />
+                        <Input style={{width: '100%'}}/>
                     </Form.Item>
                 </Form>
             </Modal>
