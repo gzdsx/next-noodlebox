@@ -123,7 +123,7 @@ export default function ShippingZonesManagement() {
             title: 'Order',
             dataIndex: 'sort_num',
             key: 'sort_num',
-            width: 140,
+            width: 100,
         },
         {
             title: tc('actions'),
