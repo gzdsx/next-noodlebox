@@ -31,6 +31,7 @@ interface ShippingZoneType {
     title: string;
     description: string;
     fee: number;
+    sort_num: number;
     created_at: string;
 }
 
@@ -64,6 +65,7 @@ export default function ShippingZonesManagement() {
             title: record.title,
             description: record.description,
             fee: record.fee,
+            sort_num: record.sort_num,
         });
         setModalOpen(true);
     };
@@ -115,6 +117,12 @@ export default function ShippingZonesManagement() {
             title: t('fee'),
             dataIndex: 'fee',
             key: 'fee',
+            width: 140,
+        },
+        {
+            title: 'Order',
+            dataIndex: 'sort_num',
+            key: 'sort_num',
             width: 140,
         },
         {
@@ -275,6 +283,16 @@ export default function ShippingZonesManagement() {
                             precision={2}
                             style={{width: '100%'}}
                             placeholder={t('feePlaceholder')}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        label={'Order'}
+                        name="sort_num"
+                    >
+                        <InputNumber
+                            min={0}
+                            precision={2}
+                            style={{width: '100%'}}
                         />
                     </Form.Item>
                 </Form>
