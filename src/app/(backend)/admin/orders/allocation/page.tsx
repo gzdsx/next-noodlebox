@@ -173,7 +173,7 @@ export default function Page() {
             </div>
             <Card loading={loading}>
                 <Layout style={{backgroundColor: '#fff'}}>
-                    <Content className={'pl-4'}>
+                    <Content className={'pr-4'}>
                         <SortableProvider onSortEnd={handleSortEnd}>
                             <div className={'grid grid-cols-2 md:grid-cols-4 gap-4'}>
                                 {
