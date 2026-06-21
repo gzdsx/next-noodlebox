@@ -108,7 +108,7 @@ export default function ProductsManagement() {
             dataIndex: 'price',
             key: 'price',
             width: 100,
-            render: (price: number | string) => `¥${Number(price).toFixed(2)}`,
+            render: (price: number | string) => `€${Number(price).toFixed(2)}`,
         },
         {
             title: t('status'),
