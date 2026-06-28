@@ -8,7 +8,8 @@ export default function PaypalProvider({children}: { children: React.ReactNode }
             clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '',
             currency: 'EUR',
             dataNamespace: "paypal_sdk",
-            locale: 'en_GB'
+            locale: 'en_GB',
+            components:['buttons']
         }}>
             {children}
         </PayPalScriptProvider>

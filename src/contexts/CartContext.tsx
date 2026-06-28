@@ -52,7 +52,7 @@ export function CartProvider({children}: { children: ReactNode }) {
         setCurrentProduct(null);
     }
 
-    const fetchItems = async () => {
+    const fetchItems = useCallback(async () => {
         if (session.status === 'authenticated') {
             try {
                 const items = await loadCarts();
@@ -61,14 +61,14 @@ export function CartProvider({children}: { children: ReactNode }) {
 
             }
         }
-    }
+    }, [session.status]);
 
     // Load from localStorage on mount
     useEffect(() => {
         (async () => {
             await fetchItems();
         })()
-    }, [session]);
+    }, [fetchItems, session.status]);
 
     // Sync to localStorage on change
     useEffect(() => {
