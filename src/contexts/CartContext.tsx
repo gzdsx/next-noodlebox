@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/dialog"
 import {ProductInfoClient} from "@/components/frontend/ProductInfoClient";
 import {loadCarts, addCartItem, removeCartItem, updateCartQuantity} from "@/actions/cart";
-import {toast} from "sonner";
 import {useTranslations} from "@/contexts/LocaleContext";
 import {useSession} from "next-auth/react";
+import {toast} from "sonner";
 
 
 interface CartContextType {
@@ -56,9 +56,10 @@ export function CartProvider({children}: { children: ReactNode }) {
         if (session.status === 'authenticated') {
             try {
                 const items = await loadCarts();
+                //console.log('加载购物车成功:', items);
                 setItems([...items]);
-            } catch {
-
+            } catch(e: any) {
+                console.log('加载购物车失败:', e);
             }
         }
     }, [session.status]);

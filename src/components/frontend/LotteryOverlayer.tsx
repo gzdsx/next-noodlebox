@@ -1,6 +1,5 @@
 'use client'
 
-import {apiGet} from "@/lib/frontendApi";
 import {useState} from "react";
 import {Spinner} from "@/components/ui/spinner";
 import LotteryPrizeClient from "@/components/frontend/LotteryPrizeClient";
@@ -9,6 +8,7 @@ import {toast} from "sonner";
 import {useCart} from "@/contexts/CartContext";
 import {X} from "lucide-react";
 import {useSession} from "next-auth/react";
+import {getLotteryResult} from "@/actions/lottery";
 
 const LotteryOverlayer = ({settings, onClose}: { settings: Record<string, string>, onClose?: () => void }) => {
     const {reloadCart} = useCart();
@@ -19,19 +19,19 @@ const LotteryOverlayer = ({settings, onClose}: { settings: Record<string, string
     const [showPoints, setShowPoints] = useState(false);
     const [error, setError] = useState('');
 
-    const getPrize = () => {
+    const getPrize = async () => {
         if (session.status === 'authenticated') {
-            setLoading(true);
-            apiGet(`/lottery/draw`).then(res => {
-                setPrize({...res.data});
+            try {
+                setLoading(true);
+                const response = await getLotteryResult();
+                setPrize({...response.data});
                 setShowPrize(true);
                 session.update({...session.data, updatedAt: new Date().toISOString()});
-            }).catch(e => {
-                //console.error(e);
+            } catch (e) {
                 setError((e as Error).message);
-            }).finally(() => {
+            } finally {
                 setLoading(false);
-            });
+            }
         } else {
             window.location.href = '/auth/login?redirect=' + encodeURIComponent(window.location.origin + window.location.pathname);
         }
