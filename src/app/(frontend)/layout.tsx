@@ -6,13 +6,13 @@ import Footer from "@/components/frontend/Footer";
 import MobileTabbar from "@/components/frontend/MobileTabbar";
 import {Toaster} from "sonner";
 import {AppProvider} from "@/contexts/AppContext";
-import './globals.css';
 import {apiGet} from "@/lib/api";
 import {Category} from "@/types";
 import {LotteryProvider} from "@/contexts/LotteryContext";
 import {Metadata} from "next";
 import {SessionProvider} from "next-auth/react";
 import CookieClient from "@/components/frontend/CookieClient";
+import './globals.css';
 
 const getConfig = async () => {
     try {
