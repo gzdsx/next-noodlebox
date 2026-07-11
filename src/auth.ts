@@ -166,6 +166,6 @@ export const {handlers, auth} = NextAuth({
         signIn: '/auth/login',
         error: '/auth/login',
     },
-    debug: true,
+    debug: false,
     secret: process.env.AUTH_SECRET,
 });
