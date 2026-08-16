@@ -12,6 +12,7 @@ export default function CartItemRow({item}: { item: CartItem }) {
     const {updateQuantity, removeItem} = useCart();
     const {t} = useTranslations('ecommerce');
 
+    //console.log('cart item', item);
     const optionNames: string[] = useMemo(() => {
         const names: string[] = [];
         const regex = /^(?!.*(none|original)).*$/i;

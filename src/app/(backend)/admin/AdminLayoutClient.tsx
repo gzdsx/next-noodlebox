@@ -81,15 +81,15 @@ export default function AdminLayoutClient({
             label: t('ecomManagement'),
             children: [
                 {
-                    key: '/admin/products',
-                    icon: <ShoppingOutlined/>,
-                    label: <Link href="/admin/products">{t('productManagement')}</Link>,
-                    roles: ['manager']
-                },
-                {
                     key: '/admin/orders',
                     icon: <UnorderedListOutlined/>,
                     label: <Link href="/admin/orders">{t('orderManagement')}</Link>,
+                    roles: ['manager']
+                },
+                {
+                    key: '/admin/products',
+                    icon: <ShoppingOutlined/>,
+                    label: <Link href="/admin/products">{t('productManagement')}</Link>,
                     roles: ['manager']
                 },
                 {
