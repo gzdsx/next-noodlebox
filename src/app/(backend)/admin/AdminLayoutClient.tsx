@@ -147,6 +147,12 @@ export default function AdminLayoutClient({
                     roles: ['manager']
                 },
                 {
+                    key: '/admin/tax-report',
+                    icon: <ReconciliationOutlined/>,
+                    label: <Link href="/admin/tax-report">{t('taxReport')}</Link>,
+                    roles: ['manager']
+                },
+                {
                     key: '/admin/comment-colors',
                     icon: <FormatPainterOutlined/>,
                     label: <Link href="/admin/comment-colors">{t('commentColors')}</Link>,
