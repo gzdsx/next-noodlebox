@@ -19,7 +19,7 @@ import {
     GiftOutlined, TrophyOutlined, FileSearchOutlined, ControlOutlined,
     SolutionOutlined, CalendarOutlined, DollarOutlined, FileProtectOutlined,
     CheckCircleOutlined, AccountBookOutlined, BarChartOutlined, ReconciliationOutlined,
-    CarOutlined, DesktopOutlined,
+    CarOutlined, DesktopOutlined, DatabaseOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
 import {usePathname, useRouter} from 'next/navigation';
@@ -362,6 +362,12 @@ export default function AdminLayoutClient({
                     key: '/admin/finance/bills',
                     icon: <ReconciliationOutlined/>,
                     label: <Link href="/admin/finance/bills">{t('financeBills')}</Link>,
+                    roles: []
+                },
+                {
+                    key: '/admin/backup',
+                    icon: <DatabaseOutlined/>,
+                    label: <Link href="/admin/backup">{t('dataBackup')}</Link>,
                     roles: []
                 },
             ],
