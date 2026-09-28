@@ -474,7 +474,14 @@ export default function DriversPage() {
                         <Checkbox.Group options={posmachineOptions}/>
                     </Form.Item>
 
-                    <Form.Item label={t('color')} name="color">
+                    <Form.Item
+                        label={t('color')}
+                        name="color"
+                        getValueFromEvent={(color) => {
+                            if (typeof color === 'string') return color;
+                            return color ? color.toHexString() : '';
+                        }}
+                    >
                         <ColorPicker format={'hex'}/>
                     </Form.Item>
                 </Form>

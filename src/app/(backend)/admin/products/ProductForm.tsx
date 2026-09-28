@@ -60,6 +60,7 @@ interface ProductType {
     metas: MetaItem[];
     variation_list: ProductVariant[];
     additional_options: ProductVariantOption[];
+
     [key: string]: any;
 }
 
@@ -188,10 +189,15 @@ export const ProductForm = ({
 
                     <Row gutter={16}>
                         <Col>
-                            <Form.Item label={t('titleColor')}>
-                                <ColorPicker format={'hex'} value={initialValues.title_color} onChange={(value) => {
-                                    form.setFieldsValue({title_color: value.toHexString()})
-                                }}/>
+                            <Form.Item
+                                label={t('titleColor')}
+                                name={'title_color'}
+                                getValueFromEvent={(color) => {
+                                    if (typeof color === 'string') return color;
+                                    return color ? color.toHexString() : '';
+                                }}
+                            >
+                                <ColorPicker format={'hex'}/>
                             </Form.Item>
                         </Col>
                         <Col>
