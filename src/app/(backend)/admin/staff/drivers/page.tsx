@@ -475,7 +475,7 @@ export default function DriversPage() {
                     </Form.Item>
 
                     <Form.Item label={t('color')} name="color">
-                        <ColorPicker/>
+                        <ColorPicker format={'hex'}/>
                     </Form.Item>
                 </Form>
             </Modal>

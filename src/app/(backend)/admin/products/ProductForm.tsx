@@ -21,6 +21,7 @@ import ProductVariantInput from "@/components/backend/ProductVariantInput";
 import ProductAdditionalInput from "@/components/backend/ProductAdditionalInput";
 import {ProductVariant, ProductVariantOption} from "@/components/backend/ProductVariantModal";
 import ProductBageInput from "@/components/backend/ProductBageInput";
+
 interface MetaItem {
     meta_key: string;
     meta_value: string;
@@ -187,7 +188,7 @@ export const ProductForm = ({
                     <Row gutter={16}>
                         <Col>
                             <Form.Item label={t('titleColor')} name={'title_color'}>
-                                <ColorPicker/>
+                                <ColorPicker format={'hex'}/>
                             </Form.Item>
                         </Col>
                         <Col>
