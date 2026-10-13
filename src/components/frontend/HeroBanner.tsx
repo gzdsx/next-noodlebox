@@ -25,7 +25,7 @@ export default function HeroBanner() {
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
                 <img
-                    src="https://www.noodlebox.ie/storage/image/2024/04/EorwaqdQLuw4FZ7vxOL3rcLne0pXvI8NMNenWDYq.png"
+                    src={webconfig.home_page_logo}
                     alt="Noodle Box"
                     className="w-[90%] md:w-[65%] mb-8"
                 />
