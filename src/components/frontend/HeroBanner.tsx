@@ -7,6 +7,7 @@ import {useWebConfig} from "@/contexts/AppContext";
 
 export default function HeroBanner() {
     const webconfig = useWebConfig();
+
     return (
         <section className="relative w-full h-screen min-h-150 overflow-hidden">
             {/* Video Background */}

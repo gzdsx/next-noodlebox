@@ -75,6 +75,8 @@ export default async function FrontendLayout({
                     title: webconfig.sitename,
                     keywords: webconfig.keywords,
                     description: webconfig.description,
+                    logo: webconfig.logo,
+                    home_page_logo: webconfig.home_page_logo,
                     home_page_banner_src: webconfig.home_page_banner_src,
                 }}>
                     <CartProvider>
