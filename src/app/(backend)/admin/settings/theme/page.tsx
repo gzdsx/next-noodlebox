@@ -35,6 +35,7 @@ export default function ThemeSettingsPage() {
         try {
             const response = await apiGet('/settings');
             const data = response.data;
+            console.log('data', data);
 
             form.setFieldsValue({
                 logo: data.logo,
@@ -134,7 +135,7 @@ export default function ThemeSettingsPage() {
                             </div>
                         </Form.Item>
 
-                        <Form.Item label={t('homeLogo')} name="home_logo">
+                        <Form.Item label={t('homeLogo')} name="home_page_logo">
                             <div style={{
                                 display: 'flex',
                                 flexDirection: 'column',
