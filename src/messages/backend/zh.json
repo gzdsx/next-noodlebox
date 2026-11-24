@@ -549,6 +549,7 @@
 		"new": "新品",
 		"active": "出售中",
 		"inactive": "已下架",
+		"delisted": "已下架",
 		"soldout": "已售罄",
 		"allCategories": "全部分类",
 		"publish": "上架",

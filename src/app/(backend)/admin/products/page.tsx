@@ -47,6 +47,13 @@ interface CategoryOption {
     name: string;
 }
 
+const statusColorMap: Record<string, string> = {
+    'onsale': 'success',
+    'draft': 'default',
+    'offsale': 'error',
+    'delisted': 'error',
+    'pending': 'warning',
+}
 export default function ProductsManagement() {
     const [total, setTotal] = useState<number>(0);
     const [products, setProducts] = useState<ProductType[]>([]);
@@ -78,7 +85,7 @@ export default function ProductsManagement() {
             key: 'thumbnail',
             width: 80,
             render: (thumbnail: string) => (
-                <img src={thumbnail} width={80} height={80} alt={thumbnail} className={'object-cover rounded-sm'} />
+                <img src={thumbnail} width={80} height={80} alt={thumbnail} className={'object-cover rounded-sm'}/>
             ),
         },
         {
@@ -116,8 +123,7 @@ export default function ProductsManagement() {
             key: 'status',
             width: 100,
             render: (status: string, record: ProductType) => {
-                const color = record.status === 'active' ? 'success' : 'default';
-                return <Tag color={color}>{t(status)}</Tag>;
+                return <Tag color={statusColorMap[record.status]}>{t(status)}</Tag>;
             },
         },
         {
@@ -202,7 +208,7 @@ export default function ProductsManagement() {
             setLoading(true);
             apiPut(`/products/batch`, {
                 ids: selectedItems,
-                data: {status: 'offsale'},
+                data: {status: 'delisted'},
             }).then(() => {
                 message.success(t('unpublishSuccess'));
                 setSelectedItems([]);
@@ -239,7 +245,7 @@ export default function ProductsManagement() {
                         options={[
                             {label: t('allStatus'), value: 'all'},
                             {label: t('active'), value: 'onsale'},
-                            {label: t('inactive'), value: 'offsale'},
+                            {label: t('inactive'), value: 'delisted'},
                             {label: t('soldout'), value: 'soldout'},
                         ]}
                     />
