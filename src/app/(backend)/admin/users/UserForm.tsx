@@ -59,7 +59,6 @@ const UserForm = ({
                                 label={t('email')}
                                 name="email"
                                 rules={[
-                                    {required: true, message: t('emailRequired')},
                                     {type: 'email', message: t('emailInvalid')},
                                 ]}
                             >

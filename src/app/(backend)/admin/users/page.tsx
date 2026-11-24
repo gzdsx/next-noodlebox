@@ -23,7 +23,7 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import type {ColumnsType} from 'antd/es/table';
-import {apiGet, apiDelete, apiPost} from '@/lib/backendApi';
+import {apiGet, apiDelete, apiPost, apiPut} from '@/lib/backendApi';
 import {useTranslations} from '@/contexts/BackendLocaleContext';
 import Link from "next/link";
 import UserRoleSelect from "./UserRoleSelect";
@@ -93,6 +93,27 @@ export default function UsersManagement() {
             setLoading(true);
             apiDelete('/users/batch', {ids: selectedItems as number[]}).then(() => {
                 message.success(t('deleteSuccess'));
+                setSelectedItems([]);
+                fetchUsers();
+            }).catch(reason => {
+                message.error(reason.message);
+            }).finally(() => {
+                setLoading(false);
+            });
+        } else {
+            setLoading(true);
+            let status = 'active';
+            if (batchAction === 'ban') {
+                status = 'banned';
+            }
+            if (batchAction === 'dormant') {
+                status = 'dormant';
+            }
+            if (batchAction === 'pending') {
+                status = 'pending';
+            }
+            apiPut('/users/batch', {ids: selectedItems as number[], data: {status}}).then(() => {
+                message.success(t('updateSuccess'));
                 setSelectedItems([]);
                 fetchUsers();
             }).catch(reason => {
@@ -296,7 +317,7 @@ export default function UsersManagement() {
                     rowSelection={{
                         type: 'checkbox',
                         selectedRowKeys: selectedItems,
-                        onChange: (selectedRowKeys) => {
+                        onChange: (selectedRowKeys, selectedRows) => {
                             setSelectedItems([...selectedRowKeys]);
                         },
                     }}
@@ -304,7 +325,7 @@ export default function UsersManagement() {
                     dataSource={users}
                     loading={loading}
                     pagination={false}
-                    rowKey={record => 'user_' + record.id}
+                    rowKey={record => record.id}
                 />
 
                 <div className="flex justify-between items-center mt-4">
@@ -316,10 +337,13 @@ export default function UsersManagement() {
                             onChange={(value) => setBatchAction(value)}
                             options={[
                                 {label: t('batchAction'), value: ''},
+                                {label: t('batchBan'), value: 'ban'},
+                                {label: t('batchUnban'), value: 'unban'},
+                                {label: t('batchActivate'), value: 'activate'},
                                 {label: t('batchDelete'), value: 'delete'},
                             ]}
                         />
-                        <Button type="primary" disabled={selectedItems.length === 0}
+                        <Button type="primary" disabled={selectedItems.length === 0 || batchAction === ''}
                                 onClick={handleBatchAction}>{t('apply')}</Button>
                     </div>
                     <Pagination
